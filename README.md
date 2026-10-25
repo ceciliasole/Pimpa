@@ -1,11 +1,15 @@
-# Sílabas y Sonidos
+# Pimpa
 
-Página estática de una sola pieza (`index.html`), sin dependencias ni paso de compilación. Pensada para publicarse en Vercel, igual que el portal de horas.
+App de ejercicios de lectoescritura y conciencia fonológica para chicos, pensada para familias y uso en casa. Página estática de una sola pieza (index.html), sin dependencias ni paso de compilación.
 
-## Publicar en `jose.impactese.com`
+## Publicación
 
-1. <https://vercel.com/new> → **Import** `ceciliasole/Jose`. Framework: **Other**. Sin build command ni output directory. Production Branch: la rama que quieras publicar.
-2. **Project → Settings → Domains → Add** → `jose.impactese.com`.
-3. En el DNS de `impactese.com`, crear el `CNAME` de `jose` con el destino que muestre Vercel (si usás Cloudflare, "DNS only" hasta que emita el certificado). No tocar los registros existentes.
+Sitio: https://pimpa.impactese.com
 
-`vercel.json` pide a los buscadores que no indexen el sitio (`X-Robots-Tag: noindex`). Borrá ese bloque cuando quieran que aparezca en Google.
+Hosting: proyecto `pimpa` en Vercel, conectado a este repo. Cada commit a la rama `claude/jose-silabas-sonidos` se publica solo en producción.
+
+DNS: CNAME `pimpa` en GoDaddy apuntando al destino que muestra Vercel (Project → Settings → Domains).
+
+Para actualizar la app: reemplazar `index.html` y hacer commit.
+
+`vercel.json` pide a los buscadores que no indexen el sitio (X-Robots-Tag: noindex). Borrá ese bloque cuando quieran que aparezca en Google.
