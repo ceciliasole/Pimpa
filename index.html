@@ -1,14 +1,44 @@
 <!doctype html><html><head><meta charset=utf8><meta property="og:type" content="website"><meta property="og:site_name" content="Pimpa"><meta property="og:title" content="Pimpa"><meta property="og:description" content="Letras, sonidos y sílabas para aprender jugando."><meta property="og:url" content="https://pimpa.impactese.com/"><meta property="og:image" content="https://pimpa.impactese.com/og.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Pimpa, la luciérnaga, saludando"><meta property="og:locale" content="es_AR"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="Letras, sonidos y sílabas para aprender jugando."><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT"><div class="gbox"><h1 id="gateT">Pimpa</h1><p id="gateM">Cargando…</p><button type="button" id="gateGo" hidden>Entrar con Google</button><button type="button" id="gateRetry" class="g2" hidden>Reintentar</button></div></div>
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT">
+  <i class="gb gb1"></i><i class="gb gb2"></i><i class="gb gb3"></i><i class="gb gb4"></i><i class="gb gb5"></i>
+  <div class="gbox">
+    <h1 id="gateT"><img class="glogo" src="assets/pimpa-logo.webp" alt="Pimpa" width="520" height="173" draggable="false"></h1>
+    <img class="gpimpa" src="assets/pimpa-hola.webp" alt="" width="420" height="418" draggable="false">
+    <p class="gtag">Letras, sonidos y sílabas para aprender jugando.</p>
+    <p id="gateM" class="gmsg">Cargando…</p>
+    <button type="button" id="gateGo" hidden><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Entrar con Google</span></button>
+    <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
+    <p class="gfoot">Acceso para profesionales y familias invitadas.</p>
+  </div>
+</div>
 <style>
-#gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg,#FFF9EC);color:var(--ink,#17305C);font-family:var(--font-body,system-ui,sans-serif);font-size:16px;text-align:center}
+#gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;background:var(--bg,#FFF9EC);color:var(--ink,#17305C);font-family:var(--font-body,system-ui,sans-serif);font-size:16px;text-align:center}
 #gate[hidden]{display:none!important}
-#gate .gbox{max-width:360px;width:100%}
-#gate h1{margin:0 0 8px;font:700 2.4rem/1.1 var(--font-display,system-ui,sans-serif)}
-#gate p{margin:0 0 20px;line-height:1.4;font-size:1.05rem}
-#gate button{display:block;width:100%;margin:10px 0 0;padding:14px 18px;border:0;border-radius:16px;background:var(--vowel,#D8483D);color:#fff;font:600 1.05rem var(--font-body,system-ui,sans-serif);box-shadow:0 4px 0 rgba(0,0,0,.18);cursor:pointer}
-#gate button.g2{background:#fff;color:var(--ink,#17305C);border:2px solid var(--line,#E8DCBF);box-shadow:none}
+#gate .gb{position:absolute;border-radius:50%;pointer-events:none;opacity:.2}
+#gate .gb1{width:300px;height:300px;left:-90px;top:-80px;background:#FFD24F;opacity:.35}
+#gate .gb2{width:220px;height:220px;right:-60px;top:12%;background:#2076BD}
+#gate .gb3{width:260px;height:260px;left:-70px;bottom:-60px;background:#56B892}
+#gate .gb4{width:170px;height:170px;right:6%;bottom:-40px;background:#D8483D;opacity:.22}
+#gate .gb5{width:70px;height:70px;left:18%;top:62%;background:#5D3497;opacity:.14}
+#gate .gbox{position:relative;width:100%;max-width:380px;margin:auto;padding:22px 22px 18px;background:#fff;border:2px solid var(--line,#E8DCBF);border-radius:32px;box-shadow:0 6px 0 #EADFC4}
+#gate h1{margin:0;line-height:0}
+#gate .glogo{width:min(210px,62%);height:auto}
+#gate .gpimpa{display:block;width:min(200px,52vw);height:auto;margin:2px auto 0;animation:gfloat 3.4s ease-in-out infinite}
+#gate .gtag{margin:6px 0 4px;font-size:1.05rem;line-height:1.35;color:var(--ink-2,#506082)}
+#gate .gmsg{margin:12px 0 4px;font-weight:600;line-height:1.35;min-height:1.35em}
+#gate button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:12px 0 0;padding:14px 18px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1.05rem var(--font-body,system-ui,sans-serif);box-shadow:0 4px 0 #EADFC4;cursor:pointer;transition:transform .12s,box-shadow .12s}
+#gate button:hover{transform:translateY(-1px);box-shadow:0 5px 0 #EADFC4}
+#gate button:active{transform:translateY(3px);box-shadow:0 1px 0 #EADFC4}
+#gate button:disabled{opacity:.6;cursor:default}
+#gate button.g2{box-shadow:none}
 #gate button[hidden]{display:none!important}
+#gate .gfoot{margin:16px 0 0;font-size:.82rem;color:var(--ink-2,#506082)}
+@keyframes gfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media (prefers-reduced-motion:reduce){#gate .gpimpa{animation:none}}
+@media (max-height:640px){#gate .gpimpa{width:130px}#gate .gtag{display:none}}
+.acct{display:inline-flex;align-items:center;gap:6px;padding:2px 10px 2px 3px;border:1.5px solid var(--line,#E8DCBF);border-radius:999px;background:var(--surface,#fff);font-size:.85rem;font-weight:600;color:var(--ink,#17305C);white-space:nowrap}
+.acct .av{position:relative;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;overflow:hidden;background:var(--sun,#FFD24F);color:var(--ink,#17305C);font-size:.8rem;font-weight:700}
+.acct .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 </style>
 <script src="vendor/supabase-2.45.4.js"></script>
 <script>
@@ -18,33 +48,66 @@ var SB_URL='https://fhzqiuvubcytuewwktyf.supabase.co';
 var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 var gate=document.getElementById('gate'),msg=document.getElementById('gateM'),go=document.getElementById('gateGo'),retry=document.getElementById('gateRetry');
 var CK='pimpa-ok-';
-var sb=null,busy=false,opened=false,wasDenied=false;
-function show(m,btn,rbtn){gate.hidden=false;opened=false;msg.textContent=m;go.hidden=!btn;retry.hidden=!rbtn;}
-function cacheGet(e){try{return localStorage.getItem(CK+e)==='1';}catch(x){return false;}}
-function cacheSet(e,v){try{if(v)localStorage.setItem(CK+e,'1');else localStorage.removeItem(CK+e);}catch(x){}}
-var curEmail='';
-function setAcct(){var a=document.getElementById('acctEmail');if(a)a.textContent=curEmail;}
+var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
+function show(m,btn,rbtn){gate.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
+function cacheGet(e){try{return localStorage.getItem(CK+e);}catch(x){return null;}}
+function cacheSet(e,v){try{if(v!==null)localStorage.setItem(CK+e,v);else localStorage.removeItem(CK+e);}catch(x){}}
+function firstName(s){return String(s||'').trim().split(/\s+/)[0]||'';}
+function paintAv(el,u){
+  if(!el)return;
+  el.textContent='';
+  var t=document.createElement('span');t.textContent=(u.nombre||u.email||'?').charAt(0).toUpperCase();el.appendChild(t);
+  if(u.avatar){
+    var im=document.createElement('img');im.alt='';im.referrerPolicy='no-referrer';
+    im.onerror=function(){if(im.parentNode)im.parentNode.removeChild(im);};
+    im.src=u.avatar;el.appendChild(im);
+  }
+}
+function setAcct(){
+  if(!cur)return;
+  var chip=document.getElementById('acctChip');if(chip)chip.hidden=false;
+  ['acctName','acctName2'].forEach(function(id){var n=document.getElementById(id);if(n)n.textContent=cur.nombre;});
+  paintAv(document.getElementById('acctAv'),cur);paintAv(document.getElementById('acctAv2'),cur);
+  var e=document.getElementById('acctEmail');if(e)e.textContent=cur.email;
+}
 document.addEventListener('DOMContentLoaded',setAcct);
-function open(email){
-  opened=true;gate.hidden=true;curEmail=email;setAcct();
+function tryBoot(){
+  if(!pending||booted||!window.__pimpaBoot)return;
+  booted=pending.email;window.__pimpaUser=pending;
+  try{window.__pimpaBoot();}
+  catch(e){console.error(e);booted=null;show('No se pudo iniciar la app. Recargá la página.',false,true);return;}
+  cur=pending;gate.hidden=true;setAcct();
   try{if(location.search.indexOf('code=')>-1||location.hash.indexOf('access_token')>-1){history.replaceState(null,'',location.pathname);}}catch(x){}
 }
+window.__pimpaTry=tryBoot;
+function openFor(u){pending=u;tryBoot();}
 async function check(session){
+  var email=String(session&&session.user&&session.user.email||'').toLowerCase();
+  if(booted){
+    if(!session){location.reload();}
+    return;
+  }
   if(busy)return;busy=true;
   try{
-    if(!session){show('Entrá con tu cuenta de Google para usar Pimpa.',true,false);return;}
-    var email=String(session.user&&session.user.email||'').toLowerCase();
-    var r=await sb.from('allowed_emails').select('email').eq('email',email).maybeSingle();
+    if(!session){show('Entrá con tu cuenta para empezar.',true,false);return;}
+    var md=session.user.user_metadata||{};
+    var avatar=md.avatar_url||md.picture||'';
+    var r=await sb.from('allowed_emails').select('email,nombre').eq('email',email).maybeSingle();
     if(r.error){
-      if(cacheGet(email)){open(email);return;}
+      var c=cacheGet(email);
+      if(c!==null){openFor({email:email,nombre:(c&&c!=='1'?c:firstName(md.full_name||md.name)||email.split('@')[0]),avatar:avatar});return;}
       show('No pude comprobar tu cuenta. Revisá la conexión e intentá de nuevo.',false,true);return;
     }
-    if(r.data){cacheSet(email,true);open(email);return;}
-    cacheSet(email,false);
+    if(r.data){
+      var nombre=r.data.nombre||firstName(md.full_name||md.name)||email.split('@')[0];
+      cacheSet(email,nombre);openFor({email:email,nombre:nombre,avatar:avatar});return;
+    }
+    cacheSet(email,null);
     wasDenied=true;
     await sb.auth.signOut();
     show('La cuenta '+email+' todavía no está autorizada. Pedile a Cecilia que la agregue.',true,false);
   }catch(e){
+    console.error(e);
     show('Algo salió mal al entrar. Intentá de nuevo.',false,true);
   }finally{busy=false;}
 }
@@ -59,7 +122,7 @@ function start(){
 go.onclick=function(){
   go.disabled=true;
   sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+'/',queryParams:{prompt:'select_account'}}}).then(function(r){
-    if(r&&r.error){go.disabled=false;show('No se pudo iniciar el ingreso con Google. Intentá de nuevo.',true,false);}
+    if(r&&r.error){show('No se pudo iniciar el ingreso con Google. Intentá de nuevo.',true,false);}
   });
 };
 retry.onclick=function(){location.reload();};
@@ -856,7 +919,7 @@ body.isfs .fsb{display:none}
   <aside class="side">
   <header class="top">
     <div class="brand"><div><h1 class="logoh"><img class="logo" id="logoimg" alt="Pimpa" draggable="false"></h1><p class="acro"><b class="a1">Practicar</b> · <b class="a2">Interactuar</b> · <b class="a3">Memorizar</b> · <b class="a4">Pensar</b> · <b class="a5">Aprender</b></p></div><span class="tag">Prototipo de prueba</span></div>
-    <div class="who"><span class="whoname" id="whoName"></span><span class="pill" id="whoMode"></span><button class="starbal" id="starBal" type="button" aria-label="Mis estrellas"></button></div>
+    <div class="who"><span class="acct" id="acctChip" hidden title="Cuenta que está usando Pimpa"><span class="av" id="acctAv"></span><span id="acctName"></span></span><span class="whoname" id="whoName"></span><span class="pill" id="whoMode"></span><button class="starbal" id="starBal" type="button" aria-label="Mis estrellas"></button></div>
   </header>
 
   <details class="adj" id="adj">
@@ -891,9 +954,10 @@ body.isfs .fsb{display:none}
       </div>
       <div class="field">
         <span class="lab">Cuenta</span>
-        <div class="line"><span class="hint" id="acctEmail"></span><button class="sw" id="logout" type="button">Cerrar sesión</button></div>
+        <div class="line"><span class="acct"><span class="av" id="acctAv2"></span><span id="acctName2"></span></span><button class="sw" id="logout" type="button">Cerrar sesión</button></div>
+        <p class="hint" id="acctEmail"></p>
       </div>
-      <p class="hint">Los perfiles y el progreso se guardan solo en este navegador.</p>
+      <p class="hint">Los perfiles y el progreso se guardan en este navegador, separados por cuenta.</p>
     </div>
   </details>
 
@@ -907,7 +971,7 @@ body.isfs .fsb{display:none}
 </div>
 
 <script>
-(function(){
+window.__pimpaBoot=function(){
 'use strict';
 var $=function(s,r){return (r||document).querySelector(s);};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
@@ -938,7 +1002,13 @@ function ctok(c){return c==='q'?'qu':c;}
 function sylPool(cons){var out=[];cons.forEach(function(c){vowelsFor(c).forEach(function(v){out.push(ctok(c)+v);});});return out;}
 
 /* ---------- Datos ---------- */
-var KEY='silabas-y-sonidos-v2';
+var KEY0='silabas-y-sonidos-v2';
+var KEY=KEY0+(window.__pimpaUser&&window.__pimpaUser.email?':'+window.__pimpaUser.email:'');
+try{ /* los perfiles que ya había en este navegador pasan a la primera cuenta que entra; después cada cuenta tiene los suyos */
+  if(window.__pimpaUser&&window.__pimpaUser.email&&!localStorage.getItem(KEY)&&localStorage.getItem(KEY0)&&!localStorage.getItem('pimpa-legacy-claimed')){
+    localStorage.setItem(KEY,localStorage.getItem(KEY0));localStorage.setItem('pimpa-legacy-claimed',window.__pimpaUser.email);
+  }
+}catch(e){}
 var store={profiles:[],current:null,mode:'educador',upper:true};
 try{var raw=localStorage.getItem(KEY);if(raw){var s0=JSON.parse(raw);if(s0&&Array.isArray(s0.profiles)&&s0.profiles.length){store=s0;}}}catch(e){}
 function newProfile(alias){return {id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),alias:alias,progress:{}};}
@@ -2840,7 +2910,8 @@ function wirePrt(n){
 
 syncUI();
 showTab('quien');
-})();
+};
+if(window.__pimpaTry)window.__pimpaTry();
 </script>
 
 
