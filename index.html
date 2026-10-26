@@ -81,7 +81,7 @@ function tryBoot(){
   try{if(location.search.indexOf('code=')>-1||location.hash.indexOf('access_token')>-1){history.replaceState(null,'',location.pathname);}}catch(x){}
 }
 window.__pimpaTry=tryBoot;
-function openFor(u){pending=u;tryBoot();}
+function openFor(u){pending=u;window.__pimpaSb=sb;tryBoot();}
 async function check(session){
   var email=String(session&&session.user&&session.user.email||'').toLowerCase();
   if(booted){
@@ -96,12 +96,12 @@ async function check(session){
     var r=await sb.from('allowed_emails').select('email,nombre').eq('email',email).maybeSingle();
     if(r.error){
       var c=cacheGet(email);
-      if(c!==null){openFor({email:email,nombre:(c&&c!=='1'?c:firstName(md.full_name||md.name)||email.split('@')[0]),avatar:avatar});return;}
+      if(c!==null){openFor({id:session.user.id,email:email,nombre:(c&&c!=='1'?c:firstName(md.full_name||md.name)||email.split('@')[0]),avatar:avatar});return;}
       show('No pude comprobar tu cuenta. Revisá la conexión e intentá de nuevo.',false,true);return;
     }
     if(r.data){
       var nombre=r.data.nombre||firstName(md.full_name||md.name)||email.split('@')[0];
-      cacheSet(email,nombre);openFor({email:email,nombre:nombre,avatar:avatar});return;
+      cacheSet(email,nombre);openFor({id:session.user.id,email:email,nombre:nombre,avatar:avatar});return;
     }
     cacheSet(email,null);
     wasDenied=true;
@@ -957,8 +957,9 @@ body.isfs .fsb{display:none}
         <span class="lab">Cuenta</span>
         <div class="line"><span class="acct"><span class="av" id="acctAv2"></span><span id="acctName2"></span></span><button class="sw" id="logout" type="button">Cerrar sesión</button></div>
         <p class="hint" id="acctEmail"></p>
+        <p class="hint" id="syncState"></p>
       </div>
-      <p class="hint">Los perfiles y el progreso se guardan en este navegador, separados por cuenta.</p>
+      <p class="hint">Los perfiles y el progreso se guardan en tu cuenta y se ven desde cualquier dispositivo donde entres. Usá solo un apodo, nunca apellido ni DNI.</p>
     </div>
   </details>
 
@@ -1016,7 +1017,110 @@ function newProfile(alias){return {id:'p'+Date.now().toString(36)+Math.random().
 if(!store.profiles.length){var p0=newProfile('Perfil 1');store.profiles.push(p0);store.current=p0.id;}
 if(store.mode!=='familia'&&store.mode!=='educador')store.mode='educador'; /* niño (familia): se desbloquea por niveles, 8 de 10. Adulto (educador): todo abierto, se puede saltar */
 if(typeof store.upper!=='boolean')store.upper=true;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+/* ---------- Sincronización con la cuenta (Supabase, tabla perfiles) ----------
+   Cada chico es una fila. La copia del navegador sigue existiendo: si no hay internet todo funciona y se sube después.
+   Si dos dispositivos cambian el mismo chico, gana el último cambio (por fecha). Los borrados viajan como marca (deleted). */
+if(!store.known)store.known={};   /* ids que ya existen en la nube */
+if(!store.tomb)store.tomb={};     /* borrados pendientes de avisar a la nube: id -> fecha */
+var SY={sb:window.__pimpaSb||null,uid:(window.__pimpaUser||{}).id||'',ready:false,dirty:{},hash:{},timer:null,busy:false,pulling:false,lastPull:0};
+function ph(p){var c={};Object.keys(p).forEach(function(k){if(k!=='_u')c[k]=p[k];});return JSON.stringify(c);}
+function blankP(p){return p.alias==='Perfil 1'&&!p.stars&&!allStat(p).touched;}
+store.profiles.forEach(function(p){SY.hash[p.id]=ph(p);});
+function syncMsg(st){
+  var el=document.getElementById('syncState');
+  if(el)el.textContent=({ok:'Guardado en tu cuenta.',sync:'Guardando…',off:'Sin conexión: se guarda en este dispositivo y se sube cuando vuelva.',local:'Sin cuenta: se guarda solo en este dispositivo.'})[st]||'';
+}
+function stamp(){
+  var ids={};
+  store.profiles.forEach(function(p){
+    ids[p.id]=1;var h=ph(p);
+    if(SY.hash[p.id]!==h){SY.hash[p.id]=h;p._u=Date.now();if(!blankP(p))SY.dirty[p.id]=1;}
+  });
+  Object.keys(store.known).forEach(function(id){if(!ids[id]&&!store.tomb[id])store.tomb[id]=Date.now();});
+  Object.keys(SY.hash).forEach(function(id){if(!ids[id])delete SY.hash[id];});
+}
+function saveRaw(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
+function save(){stamp();saveRaw();pushSoon();}
+function pushSoon(){if(!SY.sb||!SY.ready)return;clearTimeout(SY.timer);SY.timer=setTimeout(push,1500);syncMsg('sync');}
+async function push(){
+  if(!SY.sb||!SY.ready||SY.busy)return;
+  var rows=[],sent={},tombs=[];
+  Object.keys(SY.dirty).forEach(function(id){
+    var p=store.profiles.filter(function(q){return q.id===id;})[0];
+    if(!p||blankP(p)){delete SY.dirty[id];return;}
+    rows.push({owner:SY.uid,id:id,alias:p.alias,data:p,deleted:false,updated_at:new Date(p._u||Date.now()).toISOString()});sent[id]=p._u;
+  });
+  Object.keys(store.tomb).forEach(function(id){rows.push({owner:SY.uid,id:id,alias:'',data:{},deleted:true,updated_at:new Date(store.tomb[id]).toISOString()});tombs.push(id);});
+  if(!rows.length){syncMsg('ok');return;}
+  SY.busy=true;syncMsg('sync');
+  var ok=false;
+  try{
+    var r=await SY.sb.from('perfiles').upsert(rows,{onConflict:'owner,id'});
+    if(r.error)throw r.error;
+    Object.keys(sent).forEach(function(id){var p=store.profiles.filter(function(q){return q.id===id;})[0];if(p&&p._u===sent[id])delete SY.dirty[id];store.known[id]=1;});
+    tombs.forEach(function(id){delete store.tomb[id];delete store.known[id];});
+    saveRaw();ok=true;
+  }catch(e){syncMsg('off');clearTimeout(SY.timer);SY.timer=setTimeout(push,15000);}
+  finally{SY.busy=false;}
+  if(ok){if(Object.keys(SY.dirty).length||Object.keys(store.tomb).length)pushSoon();else syncMsg('ok');}
+}
+function mergeRemote(rows){
+  var changed=false,remote={},live=0;
+  rows.forEach(function(r){
+    remote[r.id]=1;
+    var ts=Date.parse(r.updated_at)||0;
+    var local=store.profiles.filter(function(q){return q.id===r.id;})[0];
+    if(r.deleted){
+      delete store.known[r.id];
+      if(local){
+        if((local._u||0)<=ts){store.profiles=store.profiles.filter(function(q){return q!==local;});changed=true;}
+        else if(!blankP(local))SY.dirty[r.id]=1;
+      }
+      return;
+    }
+    live++;
+    if(store.tomb[r.id]&&store.tomb[r.id]>=ts){return;}  /* lo borré yo después: el aviso de borrado sale en el próximo push */
+    store.known[r.id]=1;
+    var d=r.data&&typeof r.data==='object'?JSON.parse(JSON.stringify(r.data)):{};
+    if(!local){d.id=r.id;d._u=ts;if(!d.progress)d.progress={};store.profiles.push(d);SY.hash[r.id]=ph(d);changed=true;}
+    else{
+      var lu=local._u||0;
+      if(ts>lu){Object.keys(local).forEach(function(k){delete local[k];});Object.keys(d).forEach(function(k){local[k]=d[k];});local.id=r.id;local._u=ts;if(!local.progress)local.progress={};SY.hash[r.id]=ph(local);changed=true;}
+      else if(lu>ts)SY.dirty[r.id]=1;
+    }
+  });
+  store.profiles.forEach(function(p){if(!remote[p.id]&&!blankP(p)){if(!p._u)p._u=Date.now();SY.dirty[p.id]=1;}});
+  if(live>0){var n0=store.profiles.length;store.profiles=store.profiles.filter(function(p){return !blankP(p)||remote[p.id];});if(store.profiles.length!==n0)changed=true;}
+  if(!store.profiles.length){var q=newProfile('Perfil 1');store.profiles.push(q);SY.hash[q.id]=ph(q);changed=true;}
+  if(!store.profiles.some(function(p){return p.id===store.current;})){store.current=store.profiles[0].id;changed=true;}
+  return changed;
+}
+async function pull(){
+  if(!SY.sb||!SY.uid||SY.pulling)return;
+  SY.pulling=true;
+  try{
+    var r=await SY.sb.from('perfiles').select('id,alias,data,deleted,updated_at');
+    if(r.error)throw r.error;
+    var changed=mergeRemote(r.data||[]);
+    SY.ready=true;SY.lastPull=Date.now();
+    saveRaw();
+    if(changed){
+      var typing=document.activeElement&&document.activeElement.tagName==='INPUT';
+      if(document.body.classList.contains('playing')||typing)syncUI();else refresh();
+    }
+    if(Object.keys(SY.dirty).length||Object.keys(store.tomb).length)pushSoon();else syncMsg('ok');
+  }catch(e){syncMsg('off');if(!SY.ready)setTimeout(pull,15000);}
+  finally{SY.pulling=false;}
+}
+function syncInit(){
+  if(!SY.sb||!SY.uid){syncMsg('local');return;}
+  syncMsg('sync');pull();
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='visible'){if(!SY.ready||Date.now()-SY.lastPull>30000)pull();else pushSoon();}
+    else if(SY.ready){clearTimeout(SY.timer);push();}
+  });
+  window.addEventListener('online',function(){if(SY.ready)push();else pull();});
+}
 function curProfile(){return store.profiles.filter(function(p){return p.id===store.current;})[0]||store.profiles[0];}
 function UP(s){return s.toUpperCase().replace(/I/g,'\u0130');} /* I mayúscula con puntito, para que no se confunda con la T */
 function D(s){return store.upper?s.toUpperCase():s.toLowerCase();}
@@ -2033,7 +2137,7 @@ function renderQuien(){
       var st=allStat(q);
       return '<button class="wb'+(i===0?' main':'')+'" data-id="'+q.id+'" type="button"><span class="wn">'+(i===0?'Seguir con ':'')+esc(q.alias)+'</span>'+pbar(st)+'<span class="hs">'+st.done+' de '+st.total+' ejercicios superados</span></button>';
     }).join('')+'</div>'+
-    '<div class="newk"><label class="lab" for="nk">Tu nombre</label><div class="line"><input id="nk" class="inp" maxlength="24" autocomplete="off" placeholder="Escribí tu nombre"><button class="btn" id="nkb" type="button">Empezar</button></div></div></div>';
+    '<div class="newk"><label class="lab" for="nk">Tu nombre</label><div class="line"><input id="nk" class="inp" maxlength="24" autocomplete="off" placeholder="Escribí tu nombre"><button class="btn" id="nkb" type="button">Empezar</button></div><p class="hint">Usá solo un apodo, sin apellido.</p></div></div>';
   function enter(id){store.current=id;save();nav=[{s:'home'}];syncUI();showTab('camino');}
   $$('.wb',stage).forEach(function(b){b.onclick=function(){enter(b.dataset.id);};});
   function addk(){var v=$('#nk').value.trim().slice(0,24);if(!v){$('#nk').focus();return;}var q=newProfile(v);store.profiles.push(q);enter(q.id);}
@@ -2911,6 +3015,7 @@ function wirePrt(n){
 
 syncUI();
 showTab('quien');
+syncInit();
 };
 if(window.__pimpaTry)window.__pimpaTry();
 </script>
