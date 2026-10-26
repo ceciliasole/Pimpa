@@ -1382,8 +1382,10 @@ function navBack(){if(nav.length>1)nav.pop();renderCamino();}
 var LV={};
 function reg(lv){LV[lv.id]=lv;return lv;}
 LEVELS.forEach(reg);
-var STATIC=null;
-function isStatic(id){if(!STATIC){STATIC={};LEVELS.forEach(function(l){STATIC[l.id]=1;});TLEVELS.forEach(function(t){STATIC[t.id]=1;});}return !!STATIC[id];}
+/* catálogo completo: niveles fijos + pasos de Mi camino, sin duplicar */
+function ALLLV(){var seen={},out=[];LEVELS.concat(SEQ).forEach(function(l){if(!seen[l.id]){seen[l.id]=1;out.push(l);}});return out;}
+var STATIC=null,STATICN=-1;
+function isStatic(id){if(!STATIC||STATICN!==SEQ.length){STATIC={};ALLLV().forEach(function(l){STATIC[l.id]=1;});TLEVELS.forEach(function(t){STATIC[t.id]=1;});STATICN=SEQ.length;}return !!STATIC[id];}
 var GNAME={voc:'Vocales',fre:'Premium',men:'Clásicas',poc:'Poco frecuentes'};
 var GLET={voc:VOW,fre:PREM,men:CLAS,poc:POCO};
 GLET.sil=PREM.concat(CLAS,POCO,['ñ']);GNAME.sil='Sílabas';
@@ -1392,9 +1394,7 @@ function recOf(id,p){p=p||curProfile();return (p.progress&&p.progress[id])||(p.t
 function cardIds(k){
   if(k==='tra')return TLEVELS.map(function(t){return t.id;});
   var g={voc:['Vocales'],fre:['Premium'],men:['Clásicas'],poc:['Poco frecuentes'],cons:['Premium','Clásicas','Poco frecuentes'],pal:['Palabras'],art:['Articulemas'],inv:['Inversas y artículos'],may:['Mayúscula y minúscula'],num:['Números'],cal:['Calendario']}[k];
-  return LEVELS.filter(function(l){return g.indexOf(l.grp)>-1;}).map(function(l){return l.id;});
-}
-function statOf(ids,p){
+  return ALLLV().filter(function(l){return g.indexOf(l.grp)>-1;}).map(function(l){return l.id;}); } function statOf(ids,p){
   var d=0,t=0;
   ids.forEach(function(id){var r=recOf(id,p);if(r&&r.passed)d++;if(r&&r.attempts)t++;});
   return {done:d,total:ids.length,touched:t};
@@ -1871,9 +1871,7 @@ function summaryText(){
   lines.push('General: '+st.done+' de '+st.total+' ejercicios superados.');
   ['voc','fre','men','poc','pal','art','tra','inv','may','num','cal'].forEach(function(k){var c=cardStat(k);lines.push('- '+CARDN[k]+': '+c.done+' de '+c.total);});
   lines.push('');
-  LEVELS.forEach(function(lv){
-    var r=p.progress[lv.id];
-    if(r)lines.push('- '+lv.grp+' · '+plainTitle(lv)+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));
+  ALLLV().forEach(function(lv){ var r=p.progress[lv.id]; if(r)lines.push('- '+lv.grp+' · '+plainTitle(lv)+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));
   });
   extraIds(p).forEach(function(id){var r=p.progress[id];lines.push('- '+r.grp+' · '+r.title+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));});
   TLEVELS.forEach(function(tl){var r=traceRec(tl.id);if(r&&r.attempts)lines.push('- '+tl.grp+' · '+tl.title+': hecho '+r.attempts+(r.attempts===1?' vez':' veces'));});
@@ -1882,9 +1880,7 @@ function summaryText(){
 function exportRows(){
   var rows=[['Perfil','Grupo','Nivel','Mejor %','Intentos','Estado','Última vez']];
   function fd(d){if(!d)return '';var x=new Date(d);return isNaN(x)?'':x.toLocaleDateString('es-AR')+' '+x.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});}
-  store.profiles.forEach(function(p){
-    LEVELS.forEach(function(lv){
-      var r=p.progress&&p.progress[lv.id];if(!r)return;
+  store.profiles.forEach(function(p){ ALLLV().forEach(function(lv){ var r=p.progress&&p.progress[lv.id];if(!r)return;
       rows.push([p.alias,lv.grp,plainTitle(lv),r.best*10,r.attempts,r.passed?'Superado':'En práctica',fd(r.last)]);
     });
     extraIds(p).forEach(function(id){var r=p.progress[id];rows.push([p.alias,r.grp,r.title,r.best*10,r.attempts,r.passed?'Superado':'En práctica',fd(r.last)]);});
@@ -1903,10 +1899,10 @@ function prow(label,r,tr){
 }
 function renderProgreso(){
   var p=curProfile(),st=allStat(p),rows='',last=null;
-  var gorder=[];LEVELS.forEach(function(l){if(gorder.indexOf(l.grp)<0)gorder.push(l.grp);});
+  var gorder=[];ALLLV().forEach(function(l){if(gorder.indexOf(l.grp)<0)gorder.push(l.grp);});
   gorder.forEach(function(gn){
     rows+='<tr class="gr"><td colspan="4">'+esc(gn)+'</td></tr>';
-    LEVELS.filter(function(l){return l.grp===gn;}).forEach(function(lv){rows+=prow(richTitle(lv),p.progress[lv.id]);});
+    ALLLV().filter(function(l){return l.grp===gn;}).forEach(function(lv){rows+=prow(richTitle(lv),p.progress[lv.id]);});
   });
   rows+='<tr class="gr"><td colspan="4">Trazo</td></tr>'+TLEVELS.map(function(tl){return prow(esc(tl.title),traceRec(tl.id),true);}).join('');
   var ex=extraIds(p);
