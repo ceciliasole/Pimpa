@@ -1581,7 +1581,14 @@ function cardIds(k){
   ids.forEach(function(id){var r=recOf(id,p);if(r&&r.passed)d++;if(r&&r.attempts)t++;});
   return {done:d,total:ids.length,touched:t};
 }
-function cardStat(k,p){return statOf(cardIds(k),p);}
+/* Las mezclas armadas (varias letras a la vez) no están entre los ejercicios fijos, así que no suman al "x de y". Se cuentan aparte para que no figure "sin empezar" ni cero cuando ya se jugaron. */
+var CGRP={voc:['Vocales'],fre:['Premium'],men:['Clásicas'],poc:['Poco frecuentes'],cons:['Premium','Clásicas','Poco frecuentes']};
+function cardStat(k,p){
+  var s=statOf(cardIds(k),p),g=CGRP[k];
+  if(g){p=p||curProfile();s.mix=0;extraIds(p).forEach(function(id){var r=p.progress[id];if(g.indexOf(r.grp)<0)return;if(r.attempts)s.touched++;if(r.passed)s.mix++;});}
+  return s;
+}
+function mixTxt(st){return st&&st.mix?' · '+st.mix+(st.mix===1?' mezcla superada':' mezclas superadas'):'';}
 function allIds(){return cardIds('voc').concat(cardIds('cons'),cardIds('pal'),cardIds('art'),cardIds('tra'),cardIds('inv'),cardIds('may'),cardIds('num'),cardIds('cal'));}
 function allStat(p){return statOf(allIds(),p);}
 function pbar(st){var w=st.total?Math.round(st.done*100/st.total):0;return '<div class="pbar" role="img" aria-label="'+st.done+' de '+st.total+'"><i style="width:'+w+'%"></i></div>';}
@@ -1621,7 +1628,7 @@ function traceBtn(ti){
 function hcard(act,title,glyph,st,sub,desc){
   var fresh=st&&!st.touched;
   return '<button class="hcard'+(fresh?' new':'')+'" data-act="'+act+'" type="button"><span class="hg">'+glyph+'</span><span class="ht">'+title+'</span>'+(desc?'<span class="hd">'+desc+'</span>':'')+
-    (st?pbar(st)+'<span class="hs">'+st.done+' de '+st.total+(fresh?' · sin empezar':'')+'</span>':'<span class="hs">'+sub+'</span>')+'</button>';
+    (st?pbar(st)+'<span class="hs">'+st.done+' de '+st.total+mixTxt(st)+(fresh?' · sin empezar':'')+'</span>':'<span class="hs">'+sub+'</span>')+'</button>';
 }
 function lettersGlyph(arr){return arr.map(L).join('');}
 
@@ -2090,7 +2097,7 @@ function renderProgreso(){
   var ex=extraIds(p);
   if(ex.length)rows+='<tr class="gr"><td colspan="4">Mezclas armadas</td></tr>'+ex.map(function(id){var r=p.progress[id];return prow(esc(r.grp+' · '+r.title),r);}).join('');
   var cards=['voc','fre','men','poc','pal','art','tra','inv','may','num','cal'].map(function(k){var c=cardStat(k);
-    return '<div class="pc"><div class="gtop"><b>'+CARDN[k]+'</b><span>'+c.done+' de '+c.total+'</span></div>'+pbar(c)+'</div>';}).join('');
+    return '<div class="pc"><div class="gtop"><b>'+CARDN[k]+'</b><span>'+c.done+' de '+c.total+mixTxt(c)+'</span></div>'+pbar(c)+'</div>';}).join('');
   stage.innerHTML=
     '<div class="bar"><h2 class="h2">Progreso de '+esc(p.alias)+'</h2></div>'+
     '<div class="gprog"><div class="gtop"><b>Progreso general</b><span>'+st.done+' de '+st.total+' ejercicios superados</span></div>'+pbar(st)+'</div>'+
