@@ -686,6 +686,10 @@ body.playing .qopt .qty span{font-size:clamp(.8rem,2.5dvh,1.15rem);line-height:1
 }
 
 
+/* Pantalla completa (mejora Jose): lo que el chico tiene que tocar tiene prioridad. Menos relleno alrededor en modo juego, y todo se ajusta al alto real de la pantalla (ver fitScreen) */
+body.playing .app{padding-block:6px;padding-inline:clamp(8px,1.4vw,16px)}
+body.playing .stage{padding-block:clamp(8px,1.6dvh,16px)}
+.app{transform-origin:top center}
 /* ---- Final de nivel: volver / repetir / siguiente ---- */
 .endnav{display:flex;gap:clamp(12px,4vw,26px);justify-content:center;align-items:flex-start}
 .ebtn{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer;font:inherit;font-weight:700;color:var(--ink);font-size:1rem}
@@ -2909,6 +2913,37 @@ function wirePrt(n){
   $$('[data-pa]',stage).forEach(function(b){b.onclick=function(){openPrint(n.area,prtSel(n,letters),b.dataset.pa);};});
 }
 
+/* Pantalla completa (mejora Jose): ajuste al alto de la pantalla. En modo juego, si el contenido (Pimpa, progreso, fichas y botón Siguiente) no entra en el alto real de la pantalla, se achica todo junto hasta que entre completo. El lugar de Siguiente se cuenta aunque todavía esté oculto, para que el tamaño no cambie al acertar. */
+var fitApp=document.querySelector('.app'),fitMO=null,fitQ=0;
+/* Las letras de la escena (ej. CH, LL) conservan su lugar en porcentaje, pero nunca se salen del cuadro de la escena */
+function fitScene(){
+  $$('.scene').forEach(function(sc){
+    var W=sc.clientWidth,H=sc.clientHeight;
+    $$('.sl',sc).forEach(function(b){
+      if(b.dataset.l0===undefined){b.dataset.l0=parseFloat(b.style.left)||0;b.dataset.t0=parseFloat(b.style.top)||0;}
+      b.style.left=b.dataset.l0+'%';b.style.top=b.dataset.t0+'%';
+      var l=b.offsetLeft,t=b.offsetTop,w=b.offsetWidth,h=b.offsetHeight;
+      var nl=Math.max(4,Math.min(l,W-w-4)),nt=Math.max(4,Math.min(t,H-h-4));
+      if(nl!==l)b.style.left=nl+'px';
+      if(nt!==t)b.style.top=nt+'px';
+    });
+  });
+}
+function fitScreen(){
+  if(!fitApp)return;
+  fitApp.style.transform='';fitApp.style.marginBottom='';
+  if(!document.body.classList.contains('playing'))return;
+  fitTiles();fitBtns();fitScene();
+  var nb=document.getElementById('next'),was=!!(nb&&nb.hidden);
+  if(was)nb.hidden=false;
+  var vh=window.innerHeight,off=fitApp.offsetHeight,h=Math.max(off,document.documentElement.scrollHeight);
+  if(was)nb.hidden=true;
+  if(h>vh+1){var k=Math.max(.2,(vh-1)/h);fitApp.style.transform='scale('+k.toFixed(4)+')';fitApp.style.marginBottom=(h*k-off).toFixed(1)+'px';}
+}
+function fitSoon(){cancelAnimationFrame(fitQ);fitQ=requestAnimationFrame(function(){fitScreen();if(fitMO)fitMO.takeRecords();});}
+if(window.MutationObserver){fitMO=new MutationObserver(fitSoon);fitMO.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden']});}
+window.addEventListener('resize',fitSoon);
+document.addEventListener('fullscreenchange',fitSoon);document.addEventListener('webkitfullscreenchange',fitSoon);
 syncUI();
 showTab('quien');
 };
