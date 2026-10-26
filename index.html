@@ -64,6 +64,8 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .stage{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:18px;align-items:center;min-height:520px}
 .bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;width:100%}
 .lvname{font-weight:600}
+.xcode{font-size:.66rem;font-weight:600;letter-spacing:.03em;color:var(--ink-2);opacity:.6;margin-left:.5em;white-space:nowrap;font-family:var(--font-body)}
+.xcode.xb{display:block;margin:.15em 0 0}
 .h2{font-family:var(--font-display);font-size:1.3rem;font-weight:600;margin:0}
 .itemarea{display:flex;flex-direction:column;gap:18px;align-items:center;width:100%}
 .q{font-family:var(--font-display);font-size:1.5rem;font-weight:500;margin:0;text-align:center;text-wrap:balance}
@@ -1386,6 +1388,19 @@ LEVELS.forEach(reg);
 function ALLLV(){var seen={},out=[];LEVELS.concat(SEQ).forEach(function(l){if(!seen[l.id]){seen[l.id]=1;out.push(l);}});return out;}
 var STATIC=null,STATICN=-1;
 function isStatic(id){if(!STATIC||STATICN!==SEQ.length){STATIC={};ALLLV().forEach(function(l){STATIC[l.id]=1;});TLEVELS.forEach(function(t){STATIC[t.id]=1;});STATICN=SEQ.length;}return !!STATIC[id];}
+/* Códigos fijos de ejercicios, para citarlos en "Pimpa - Mejoras". NUNCA se renumeran: lo nuevo toma el siguiente libre de su rama,
+   y algo que va entre medio de 2.1.3 y 2.1.4 es 2.1.3.1. La profundidad no tiene significado fijo. */
+var CODES={"v-r":"1.6.1","v-s":"1.6.2","a-v":"5.1","a-p":"5.2","m-s":"2.1.1.1","m-sil":"2.1.1.8","p-s":"2.1.2.1","p-sil":"2.1.2.8","t-s":"2.1.3.1","t-sil":"2.1.3.8","l-s":"2.1.4.1","l-sil":"2.1.4.8","s-s":"2.1.5.1","s-sil":"2.1.5.8","f-s":"2.1.6.1","f-sil":"2.1.6.8","mx-fre":"2.1.7","pal-1":"4.1","pal-1b":"4.2","b-s":"2.2.1.1","b-sil":"2.2.1.8","n-s":"2.2.2.1","n-sil":"2.2.2.8","c-s":"2.2.3.1","c-sil":"2.2.3.8","j-s":"2.2.4.1","j-sil":"2.2.4.8","d-s":"2.2.5.1","d-sil":"2.2.5.8","mx-men":"2.2.6","pal-2":"4.3","pal-2b":"4.4","pf-r-s":"2.3.1.1","pf-r-sil":"2.3.1.8","pf-g-s":"2.3.2.1","pf-g-sil":"2.3.2.8","pf-v-s":"2.3.3.1","pf-v-sil":"2.3.3.8","pf-ll-s":"2.3.5.1","pf-ll-sil":"2.3.5.8","pf-ch-s":"2.3.4.1","pf-ch-sil":"2.3.4.8","pf-q-s":"2.3.6.1","pf-q-sil":"2.3.6.8","pf-y-s":"2.3.8.1","pf-y-sil":"2.3.8.8","pf-z-s":"2.3.9.1","pf-z-sil":"2.3.9.8","mx-poc":"2.3.10","pal-3":"4.5","pal-3b":"4.6","inv-1":"7.1","art-1":"7.2","ma-v":"8.1","ma-p":"8.2","ma-c":"8.3","ma-x":"8.4","n-r3":"9.1","n-r5":"9.2","n-r10":"9.3","n-c3":"9.4","n-c5":"9.5","n-c10":"9.6","n-dado":"9.7","n-o5":"9.8","n-o10":"9.9","n-d5":"9.10","n-d10":"9.11","n-r20":"9.12","n-s20":"9.13","n-dec":"9.14","n-f20":"9.15","n-f30":"9.16","n-f40":"9.17","n-f50":"9.18","n-f60":"9.19","n-f70":"9.20","n-f80":"9.21","n-f90":"9.22","cal-1":"10.1","cal-2":"10.2","cal-3":"10.3","cal-4":"10.4","sq-v-a":"1.1.1","sq-pf-a":"1.1.2","sq-sh-a":"1.1.3","sq-sc-a":"1.1.4","sq-v-e":"1.2.1","sq-pf-e":"1.2.2","sq-sh-e":"1.2.3","sq-sc-e":"1.2.4","sq-v-ae":"1.6.3","sq-v-i":"1.3.1","sq-pf-i":"1.3.2","sq-sh-i":"1.3.3","sq-sc-i":"1.3.4","sq-v-aei":"1.6.4","sq-v-o":"1.4.1","sq-pf-o":"1.4.2","sq-sh-o":"1.4.3","sq-sc-o":"1.4.4","sq-v-aeio":"1.6.5","sq-v-u":"1.5.1","sq-pf-u":"1.5.2","sq-sh-u":"1.5.3","sq-sc-u":"1.5.4","sq-v-aeiou":"1.6.6","sq-pf-m":"2.1.1.2","sq-sh-m":"2.1.1.3","sq-sc-m":"2.1.1.4","sq-rv-m":"2.1.1.6","sq-pf-p":"2.1.2.2","sq-sh-p":"2.1.2.3","sq-sc-p":"2.1.2.4","sq-rc-p":"2.1.2.5","sq-rv-p":"2.1.2.6","sq-pf-t":"2.1.3.2","sq-sh-t":"2.1.3.3","sq-sc-t":"2.1.3.4","sq-rc-t":"2.1.3.5","sq-rv-t":"2.1.3.6","sq-pf-l":"2.1.4.2","sq-sh-l":"2.1.4.3","sq-sc-l":"2.1.4.4","sq-rc-l":"2.1.4.5","sq-rv-l":"2.1.4.6","sq-pf-s":"2.1.5.2","sq-sh-s":"2.1.5.3","sq-sc-s":"2.1.5.4","sq-rc-s":"2.1.5.5","sq-rv-s":"2.1.5.6","sq-pf-f":"2.1.6.2","sq-sh-f":"2.1.6.3","sq-sc-f":"2.1.6.4","sq-rc-f":"2.1.6.5","sq-rv-f":"2.1.6.6","sq-pr-m":"2.1.1.7","sq-pr-p":"2.1.2.7","sq-sr-p":"2.1.2.9","sq-pr-t":"2.1.3.7","sq-sr-t":"2.1.3.9","sq-pr-l":"2.1.4.7","sq-sr-l":"2.1.4.9","sq-pr-s":"2.1.5.7","sq-sr-s":"2.1.5.9","sq-pr-f":"2.1.6.7","sq-sr-f":"2.1.6.9","sq-pf-b":"2.2.1.2","sq-sh-b":"2.2.1.3","sq-sc-b":"2.2.1.4","sq-pr-b":"2.2.1.7","sq-pf-n":"2.2.2.2","sq-sh-n":"2.2.2.3","sq-sc-n":"2.2.2.4","sq-pr-n":"2.2.2.7","sq-pf-c":"2.2.3.2","sq-sh-c":"2.2.3.3","sq-sc-c":"2.2.3.4","sq-pr-c":"2.2.3.7","sq-pf-j":"2.2.4.2","sq-sh-j":"2.2.4.3","sq-sc-j":"2.2.4.4","sq-pr-j":"2.2.4.7","sq-pf-d":"2.2.5.2","sq-sh-d":"2.2.5.3","sq-sc-d":"2.2.5.4","sq-pr-d":"2.2.5.7","sq-pf-r":"2.3.1.2","sq-sh-r":"2.3.1.3","sq-sc-r":"2.3.1.4","sq-pr-r":"2.3.1.7","sq-pf-g":"2.3.2.2","sq-sh-g":"2.3.2.3","sq-sc-g":"2.3.2.4","sq-pr-g":"2.3.2.7","sq-pf-v":"2.3.3.2","sq-sh-v":"2.3.3.3","sq-sc-v":"2.3.3.4","sq-pr-v":"2.3.3.7","sq-pf-ch":"2.3.4.2","sq-sh-ch":"2.3.4.3","sq-sc-ch":"2.3.4.4","sq-pr-ch":"2.3.4.7","sq-pf-ll":"2.3.5.2","sq-sh-ll":"2.3.5.3","sq-sc-ll":"2.3.5.4","sq-pr-ll":"2.3.5.7","sq-pf-q":"2.3.6.2","sq-sh-q":"2.3.6.3","sq-sc-q":"2.3.6.4","sq-ñ-s":"2.3.7.1","sq-sh-ñ":"2.3.7.3","sq-sc-ñ":"2.3.7.4","sq-ñ-sil":"2.3.7.8","sq-pr-q":"2.3.6.7","sq-tr-ce":"2.3.11.1","sq-tr-que":"2.3.11.2","sq-tr-gue":"2.3.11.3","sq-pf-y":"2.3.8.2","sq-sh-y":"2.3.8.3","sq-sc-y":"2.3.8.4","sq-pr-y":"2.3.8.7","sq-pf-z":"2.3.9.2","sq-sh-z":"2.3.9.3","sq-sc-z":"2.3.9.4","sq-pr-z":"2.3.9.7","tr-v":"6.1","tr-p":"6.2","tr-c":"6.3","tr-x":"6.4"};
+function codeOf(id,lvo){if(CODES[id])return CODES[id];
+  /* ejercicios que se arman al momento (letras elegidas, mezclas): comparten código por tipo, con 0 donde iría la letra; la letra se ve en el título */
+  var lv=lvo||LV[id],gn={'Premium':1,'Clásicas':2,'Poco frecuentes':3},m;
+  if(m=/^sil-([alb])-/.exec(id))return '3.'+({a:1,l:2,b:3})[m[1]];
+  if(/^mx-/.test(id))return lv&&gn[lv.grp]?'2.'+gn[lv.grp]+'.0':'';
+  if(m=/^ms-(t|pf|sh|sc)-/.exec(id)){var k=({t:1,pf:2,sh:3,sc:4})[m[1]];return lv&&lv.grp==='Vocales'?'1.0.'+k:(lv&&gn[lv.grp]?'2.'+gn[lv.grp]+'.0.'+k:'');}
+  if(m=/^v(r|s|d|f)-/.exec(id))return lv&&lv.grp==='Vocales'?'1.0.'+({r:(lv.vstyle==='cards'?1:5),s:3,d:4,f:2})[m[1]]:'';
+  return '';}
+function codeTag(id,blk,lvo){var c=codeOf(id,lvo);return c?'<small class="xcode'+(blk?' xb':'')+'">'+c+'</small>':'';}
+function cpre(id){var c=codeOf(id);return c?'['+c+'] ':'';}
 var GNAME={voc:'Vocales',fre:'Premium',men:'Clásicas',poc:'Poco frecuentes'};
 var GLET={voc:VOW,fre:PREM,men:CLAS,poc:POCO};
 GLET.sil=PREM.concat(CLAS,POCO,['ñ']);GNAME.sil='Sílabas';
@@ -1429,12 +1444,12 @@ function lvBtn(lv){
   if(r&&r.passed)pill='<span class="pill ok">Superado · '+r.best*10+'%</span>';
   else if(r)pill='<span class="pill warn">Mejor: '+r.best*10+'%</span>';
   else pill='<span class="pill">Sin empezar</span>';
-  return '<button class="lvc" data-lid="'+esc(lv.id)+'" type="button"><span>'+cardTitle(lv)+'</span>'+pill+'</button>';
+  return '<button class="lvc" data-lid="'+esc(lv.id)+'" type="button"><span>'+cardTitle(lv)+codeTag(lv.id,1,lv)+'</span>'+pill+'</button>';
 }
 function traceBtn(ti){
   var tl=TLEVELS[ti],r=traceRec(tl.id);
   var pill=r&&r.passed?'<span class="pill ok">Hecho · '+r.attempts+(r.attempts===1?' vez':' veces')+'</span>':'<span class="pill">Sin empezar</span>';
-  return '<button class="lvc" data-t="'+ti+'" type="button"><span>'+esc(tl.title)+'<br><span class="hint">'+giTxt(tl.letters.map(function(c){return UP(c);}).join(' '))+'</span></span>'+pill+'</button>';
+  return '<button class="lvc" data-t="'+ti+'" type="button"><span>'+esc(tl.title)+'<br><span class="hint">'+giTxt(tl.letters.map(function(c){return UP(c);}).join(' '))+'</span>'+codeTag(tl.id,1)+'</span>'+pill+'</button>';
 }
 function hcard(act,title,glyph,st,sub,desc){
   var fresh=st&&!st.touched;
@@ -1689,7 +1704,7 @@ function seqHTML(){
         (cur?'<img class="tpim '+(x>=0?'l':'r')+'" src="'+pimImg(p)+'" alt="">':'')+
         '<button class="tnb" type="button" data-i="'+i+'" aria-label="'+esc(plainTitle(lv))+'"><img class="tbtn" src="'+DEC2[btn]+'" alt="">'+(open||done?'<span class="tlab">'+sqLab(lv)+'</span>':'<img class="tlock" src="'+DEC2.lock+'" alt="">')+'</button>'+
         (done?'<img class="tstar" src="'+DEC.star+'" alt="">':'')+
-        '<span class="tnl">'+richTitle(lv)+'</span></div>';
+        '<span class="tnl">'+richTitle(lv)+codeTag(lv.id,1)+'</span></div>';
     });
     h+='<div class="tmile'+(dn===g.ix.length?' won':'')+'">'+(dn===g.ix.length?'<img class="mp" src="'+PP2.cofre+'" alt="">':'<img src="'+DEC2.chestC+'" alt="">')+(gi===groups.length-1?'<img class="mp" src="'+(dn===g.ix.length?PP2.podio:PP2.bandera)+'" alt="">':'')+'</div>';
     h+='<img class="tmead" src="'+DEC.meadow+'" alt=""></section>';
@@ -1871,22 +1886,22 @@ function summaryText(){
   lines.push('General: '+st.done+' de '+st.total+' ejercicios superados.');
   ['voc','fre','men','poc','pal','art','tra','inv','may','num','cal'].forEach(function(k){var c=cardStat(k);lines.push('- '+CARDN[k]+': '+c.done+' de '+c.total);});
   lines.push('');
-  ALLLV().forEach(function(lv){ var r=p.progress[lv.id]; if(r)lines.push('- '+lv.grp+' · '+plainTitle(lv)+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));
+  ALLLV().forEach(function(lv){ var r=p.progress[lv.id]; if(r)lines.push('- '+cpre(lv.id)+lv.grp+' · '+plainTitle(lv)+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));
   });
-  extraIds(p).forEach(function(id){var r=p.progress[id];lines.push('- '+r.grp+' · '+r.title+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));});
-  TLEVELS.forEach(function(tl){var r=traceRec(tl.id);if(r&&r.attempts)lines.push('- '+tl.grp+' · '+tl.title+': hecho '+r.attempts+(r.attempts===1?' vez':' veces'));});
+  extraIds(p).forEach(function(id){var r=p.progress[id];lines.push('- '+cpre(id)+r.grp+' · '+r.title+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));});
+  TLEVELS.forEach(function(tl){var r=traceRec(tl.id);if(r&&r.attempts)lines.push('- '+cpre(tl.id)+tl.grp+' · '+tl.title+': hecho '+r.attempts+(r.attempts===1?' vez':' veces'));});
   return lines.join('\n');
 }
 function exportRows(){
-  var rows=[['Perfil','Grupo','Nivel','Mejor %','Intentos','Estado','Última vez']];
+  var rows=[['Perfil','Grupo','Nivel','Mejor %','Intentos','Estado','Última vez','Código']];
   function fd(d){if(!d)return '';var x=new Date(d);return isNaN(x)?'':x.toLocaleDateString('es-AR')+' '+x.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});}
   store.profiles.forEach(function(p){ ALLLV().forEach(function(lv){ var r=p.progress&&p.progress[lv.id];if(!r)return;
-      rows.push([p.alias,lv.grp,plainTitle(lv),r.best*10,r.attempts,r.passed?'Superado':'En práctica',fd(r.last)]);
+      rows.push([p.alias,lv.grp,plainTitle(lv),r.best*10,r.attempts,r.passed?'Superado':'En práctica',fd(r.last),codeOf(lv.id)]);
     });
-    extraIds(p).forEach(function(id){var r=p.progress[id];rows.push([p.alias,r.grp,r.title,r.best*10,r.attempts,r.passed?'Superado':'En práctica',fd(r.last)]);});
+    extraIds(p).forEach(function(id){var r=p.progress[id];rows.push([p.alias,r.grp,r.title,r.best*10,r.attempts,r.passed?'Superado':'En práctica',fd(r.last),codeOf(id)]);});
     TLEVELS.forEach(function(tl){
       var r=p.trace&&p.trace[tl.id];if(!r||!r.attempts)return;
-      rows.push([p.alias,tl.grp,tl.title,'',r.attempts,r.passed?'Hecho':'En práctica',fd(r.last)]);
+      rows.push([p.alias,tl.grp,tl.title,'',r.attempts,r.passed?'Hecho':'En práctica',fd(r.last),codeOf(tl.id)]);
     });
   });
   return rows;
@@ -1902,9 +1917,9 @@ function renderProgreso(){
   var gorder=[];ALLLV().forEach(function(l){if(gorder.indexOf(l.grp)<0)gorder.push(l.grp);});
   gorder.forEach(function(gn){
     rows+='<tr class="gr"><td colspan="4">'+esc(gn)+'</td></tr>';
-    ALLLV().filter(function(l){return l.grp===gn;}).forEach(function(lv){rows+=prow(richTitle(lv),p.progress[lv.id]);});
+    ALLLV().filter(function(l){return l.grp===gn;}).forEach(function(lv){rows+=prow(richTitle(lv)+codeTag(lv.id),p.progress[lv.id]);});
   });
-  rows+='<tr class="gr"><td colspan="4">Trazo</td></tr>'+TLEVELS.map(function(tl){return prow(esc(tl.title),traceRec(tl.id),true);}).join('');
+  rows+='<tr class="gr"><td colspan="4">Trazo</td></tr>'+TLEVELS.map(function(tl){return prow(esc(tl.title)+codeTag(tl.id),traceRec(tl.id),true);}).join('');
   var ex=extraIds(p);
   if(ex.length)rows+='<tr class="gr"><td colspan="4">Mezclas armadas</td></tr>'+ex.map(function(id){var r=p.progress[id];return prow(esc(r.grp+' · '+r.title),r);}).join('');
   var cards=['voc','fre','men','poc','pal','art','tra','inv','may','num','cal'].map(function(k){var c=cardStat(k);
@@ -1931,7 +1946,7 @@ function renderProgreso(){
 }
 
 /* ---------- Actividad ---------- */
-function levelName(lv){return esc(lv.grp)+' · '+richTitle(lv);}
+function levelName(lv){return esc(lv.grp)+' · '+richTitle(lv)+codeTag(lv.id,0,lv);}
 function openLevel(idx){openLevelObj(LEVELS[idx]);}
 function openLevelObj(lv){
   run={idx:-1,lv:lv,items:buildItems(lv),i:0,hits:0,res:[]};
@@ -2388,7 +2403,7 @@ function openTrace(ti){
   var tl=TLEVELS[ti];
   run={trace:true,ti:ti,tl:tl,i:0};
   document.body.classList.add('playing');
-  stage.innerHTML='<div class="bar"><button class="rbtn" id="back" type="button" aria-label="Volver"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="lvname">'+esc(tl.grp)+' · '+esc(tl.title)+'</div><div id="dots"></div><button class="rbtn" id="spk" type="button" aria-label="Voz y sonidos"></button></div><div class="itemarea" id="item"></div>';
+  stage.innerHTML='<div class="bar"><button class="rbtn" id="back" type="button" aria-label="Volver"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="lvname">'+esc(tl.grp)+' · '+esc(tl.title)+codeTag(tl.id)+'</div><div id="dots"></div><button class="rbtn" id="spk" type="button" aria-label="Voz y sonidos"></button></div><div class="itemarea" id="item"></div>';
   $('#back').onclick=function(){stopSpeech();showTab('camino');};
   wireSpk();
   drawTrace();
