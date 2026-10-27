@@ -814,6 +814,9 @@ body.playing .stage{padding-block:clamp(8px,1.6dvh,16px)}
 /* Calendario: los días de la semana (MIÉRCOLES, DOMINGO) no entran en una sola fila en el celular */
 body.playing .copts:has(.dopt){flex-wrap:wrap}
 body.playing .copts>.dopt{flex:1 1 42%;font-size:clamp(.85rem,4.2vw,1.15rem);padding:12px 6px;letter-spacing:0;overflow-wrap:normal}
+/* Los días no se parten (VI-ERNES, DOMI-NGO): la I con punto (.gi) es inline-block y abría un corte de línea. Una sola línea; fitBtns() achica la letra si no entra */
+.copts .syl.dopt,body.playing .copts>.dopt{white-space:nowrap;word-break:keep-all;hyphens:none}
+.dopt .dw{display:inline-block;white-space:nowrap}
 .app,.stage{min-width:0;max-width:100%}
 html,body{overflow-x:hidden}
 
@@ -1218,7 +1221,7 @@ var DIAS=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
 var DIAS3=['lun','mar','mié','jue','vie','sáb','dom'];
 var QTYE=['🍎','⭐','🐟','🎈','🍓','🐥'];
 function numOpt(n){return {h:String(n),cls:'tile c'+(String(n).length>1?' long':'')};}
-function dayOpt(i){return {h:DH(DIAS[i]),cls:'syl dopt'};}
+function dayOpt(i){return {h:'<span class="dw">'+DH(DIAS[i])+'</span>',cls:'syl dopt'};}
 function optsOf(set,ans,mk){return shuffle([ans].concat(sample(set.filter(function(x){return x!==ans;}),2))).map(function(v){var o=mk(v);o.ok=(v===ans);return o;});}
 function qtyHTML(n,e){var h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return '<div class="qty">'+h+'</div>';}
 function seqRow(arr){return '<div class="seqrow">'+arr.map(function(x){return x==='?'?'<span class="tile q">?</span>':(x==='>'?'<span class="sarr">➜</span>':'<span class="tile c'+(String(x).length>1?' long':'')+'">'+x+'</span>');}).join('')+'</div>';}
