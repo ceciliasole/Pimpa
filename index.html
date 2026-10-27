@@ -682,7 +682,7 @@ body.playing .qopt .qty span{font-size:clamp(.8rem,2.5dvh,1.15rem);line-height:1
   /* más atractivo: tarjetas redondeadas con relieve, iguales para todas las opciones (el color no da pista) y un hundido al tocar */
   body.playing .syl:not(.ok):not(.bad):not(.miss){border-radius:clamp(22px,3.4dvh,36px);background-image:linear-gradient(#fff,#FFF6DC);box-shadow:0 7px 0 #E5D8B4}
   body.playing .syl,body.playing .shp,body.playing .tile,body.playing .qopt,body.playing .pico{transition:transform .12s ease}
-  body.playing .syl:active,body.playing .shp:active,body.playing .tile:active,body.playing .qopt:active,body.playing .pico:active{transform:translateY(4px) scale(.97)}
+  body.playing .syl:active,body.playing .shp:active,body.playing .tile:active,body.playing .qopt:active,body.playing .pico:active{transform:translateY(4px)}
 }
 
 
@@ -2212,7 +2212,7 @@ function colorTiles(it){
 function fitTiles(){
   $$('#item .tile',stage).forEach(function(t){
     if(t.classList.contains('mini')||t.classList.contains('q')||t.closest('.rowfit'))return;
-    var w=t.getBoundingClientRect().width;
+    var w=t.offsetWidth; /* offsetWidth no cambia con transform (apretar, escala de pantalla); getBoundingClientRect sí y achicaba la letra */
     if(w>20)t.style.fontSize=Math.round(w*(t.classList.contains('long')?0.4:0.54))+'px';
   });
 }
@@ -2220,9 +2220,13 @@ function fitTiles(){
 function fitBtns(){
   $$('#item [data-ok]',stage).forEach(function(b){
     if(b.classList.contains('tile'))return;
+    /* La tildita ✓ (.ok-mark::after) sobresale de la ficha a propósito: si cuenta como "no entra", el texto se achicaba 20 veces al acertar. Se mide sin ella */
+    var mk=b.classList.contains('ok-mark');
+    if(mk)b.classList.remove('ok-mark');
     b.style.fontSize='';
     var cs=getComputedStyle(b),fs=parseFloat(cs.fontSize),n=0;
     while(b.scrollWidth>b.clientWidth+1&&n<20){fs*=0.93;b.style.fontSize=fs+'px';b.style.letterSpacing='0';n++;}
+    if(mk)b.classList.add('ok-mark');
   });
 }
 window.addEventListener('resize',function(){fitTiles();fitBtns();});
