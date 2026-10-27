@@ -21,3 +21,9 @@ La app pide ingresar con Google (Supabase Auth, proyecto `pimpa` de la cuenta im
 - La librería supabase-js está fija en `vendor/` (versión 2.45.4), sin CDN.
 - Los perfiles de los chicos se guardan en el navegador, separados por cuenta (clave `silabas-y-sonidos-v2:<mail>`). Todavía no se sincronizan entre dispositivos.
 - Hay que entrar por `pimpa.impactese.com`; otras direcciones no están en la lista de redirecciones de Supabase.
+
+## Lista de espera
+
+La pantalla de ingreso tiene un campo para dejar el mail de Gmail (solo se aceptan cuentas `@gmail.com`). Los mails se guardan en la tabla `waitlist` de Supabase; se crea una sola vez con `supabase/002_lista_de_espera.sql` (SQL Editor). La web solo puede insertar: la lista se mira desde Supabase > Table Editor > waitlist.
+
+Para habilitar a alguien que ya pagó, se agrega su mail a `allowed_emails` (el SQL de ejemplo está al final de `002_lista_de_espera.sql`).

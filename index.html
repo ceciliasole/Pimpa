@@ -8,7 +8,17 @@
     <p id="gateM" class="gmsg">Cargando…</p>
     <button type="button" id="gateGo" hidden><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Entrar con Google</span></button>
     <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
-    <p class="gfoot">Por ahora el acceso es por invitación. Pronto Pimpa va a estar habilitada para todo el mundo.<br>Ante cualquier duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a><br>Al ingresar aceptás las <a href="/condiciones">condiciones del servicio</a> y la <a href="/privacidad">política de privacidad</a>.</p>
+    <form id="wl" class="gwl" novalidate>
+      <h2>Lista de espera</h2>
+      <p class="gwl-t">Pronto Pimpa va a estar habilitada para todas las familias. Dejanos tu mail y te avisamos cuando puedas entrar.</p>
+      <label class="gwl-l" for="wlMail">Tu mail de Gmail</label>
+      <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@gmail.com">
+      <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <button type="submit" id="wlGo">Anotarme en la lista</button>
+      <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
+      <p class="gwl-n">Por ahora solo se pueden habilitar cuentas de Gmail.</p>
+    </form>
+    <p class="gfoot">Por ahora el acceso es solo por invitación.<br>Ante cualquier duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a><br>Al ingresar aceptás las <a href="/condiciones">condiciones del servicio</a> y la <a href="/privacidad">política de privacidad</a>.</p>
   </div>
 </div>
 <style>
@@ -32,6 +42,19 @@
 #gate button:disabled{opacity:.6;cursor:default}
 #gate button.g2{box-shadow:none}
 #gate button[hidden]{display:none!important}
+#gate .gwl{position:relative;margin:20px 0 0;padding:16px 0 0;border-top:2px dashed var(--line,#E8DCBF);text-align:left}
+#gate .gwl h2{margin:0 0 4px;font-size:1.15rem;line-height:1.2;text-align:center;color:var(--ink,#17305C)}
+#gate .gwl-t{margin:0 0 12px;font-size:.92rem;line-height:1.4;text-align:center;color:var(--ink-2,#506082)}
+#gate .gwl-l{display:block;margin:0 0 4px 6px;font-size:.85rem;font-weight:700;color:var(--ink,#17305C)}
+#gate .gwl input[type=email]{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif)}
+#gate .gwl input[type=email]:focus{outline:3px solid #FFD24F;border-color:#2076BD}
+#gate .gwl button{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
+#gate .gwl button:hover{box-shadow:0 5px 0 #A9332A}
+#gate .gwl button:active{box-shadow:0 1px 0 #A9332A}
+#gate .gwl-m{margin:10px 0 0;min-height:1.3em;font-size:.92rem;font-weight:600;line-height:1.35;text-align:center}
+#gate .gwl-m.ok{color:#2E8A68}
+#gate .gwl-m.err{color:#B93A30}
+#gate .gwl-n{margin:6px 0 0;font-size:.8rem;line-height:1.35;text-align:center;color:var(--ink-2,#506082)}
 #gate .gfoot{margin:16px 0 0;font-size:.82rem;line-height:1.45;color:var(--ink-2,#506082)}
 #gate .gfoot a{color:var(--cons,#2076BD);font-weight:600;text-decoration:underline;text-underline-offset:2px}
 @keyframes gfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
@@ -50,6 +73,8 @@ var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 var gate=document.getElementById('gate'),msg=document.getElementById('gateM'),go=document.getElementById('gateGo'),retry=document.getElementById('gateRetry');
 var CK='pimpa-ok-';
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
+var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlMsg=document.getElementById('wlMsg');
+function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
 function show(m,btn,rbtn){gate.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
 function cacheGet(e){try{return localStorage.getItem(CK+e);}catch(x){return null;}}
 function cacheSet(e,v){try{if(v!==null)localStorage.setItem(CK+e,v);else localStorage.removeItem(CK+e);}catch(x){}}
@@ -106,7 +131,8 @@ async function check(session){
     cacheSet(email,null);
     wasDenied=true;
     await sb.auth.signOut();
-    show('La cuenta '+email+' todavía no está autorizada. Pedile a Cecilia que la agregue.',true,false);
+    if(/@gmail\.com$/.test(email)&&wlMail&&!wlMail.value)wlMail.value=email;
+    show('La cuenta '+email+' todavía no está habilitada. Dejá tu mail en la lista de espera y te avisamos.',true,false);
   }catch(e){
     console.error(e);
     show('Algo salió mal al entrar. Intentá de nuevo.',false,true);
@@ -126,6 +152,27 @@ go.onclick=function(){
     if(r&&r.error){show('No se pudo iniciar el ingreso con Google. Intentá de nuevo.',true,false);}
   });
 };
+wl.addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(wlHp.value){wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);return;}
+  var m=String(wlMail.value||'').trim().toLowerCase();
+  if(!/^[a-z0-9._%+-]+@gmail\.com$/.test(m)){wlSay('Escribí tu mail de Gmail, por ejemplo tunombre@gmail.com.',false);wlMail.focus();return;}
+  if(!sb){wlSay('No se pudo conectar. Recargá la página e intentá de nuevo.',false);return;}
+  wlGo.disabled=true;wlSay('',true);
+  try{
+    var r=await sb.from('waitlist').insert({email:m});
+    if(r.error&&r.error.code!=='23505'){
+      console.error(r.error);
+      wlSay('No pudimos anotarte ahora. Intentá de nuevo o escribinos a pimpa@impactese.com.',false);
+    }else{
+      wlMail.value='';
+      wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);
+    }
+  }catch(x){
+    console.error(x);
+    wlSay('No pudimos anotarte ahora. Intentá de nuevo o escribinos a pimpa@impactese.com.',false);
+  }finally{wlGo.disabled=false;}
+});
 retry.onclick=function(){location.reload();};
 document.addEventListener('click',function(e){
   var t=e.target&&e.target.closest&&e.target.closest('#logout');
