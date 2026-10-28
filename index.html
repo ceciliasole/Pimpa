@@ -14,6 +14,7 @@
       <label class="gwl-l" for="wlMail">Tu mail de Gmail</label>
       <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@gmail.com">
       <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
       <button type="submit" id="wlGo">Anotarme en la lista</button>
       <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
       <p class="gwl-n">Por ahora solo se pueden habilitar cuentas de Gmail.</p>
@@ -48,6 +49,8 @@
 #gate .gwl-l{display:block;margin:0 0 4px 6px;font-size:.85rem;font-weight:700;color:var(--ink,#17305C)}
 #gate .gwl input[type=email]{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif)}
 #gate .gwl input[type=email]:focus{outline:3px solid #FFD24F;border-color:#2076BD}
+#gate .gwl-c{display:flex;align-items:flex-start;gap:10px;margin:12px 4px 0;font-size:.88rem;line-height:1.35;color:var(--ink-2,#506082);cursor:pointer}
+#gate .gwl-c input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:#D8483D;cursor:pointer}
 #gate .gwl button{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
 #gate .gwl button:hover{box-shadow:0 5px 0 #A9332A}
 #gate .gwl button:active{box-shadow:0 1px 0 #A9332A}
@@ -73,7 +76,7 @@ var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 var gate=document.getElementById('gate'),msg=document.getElementById('gateM'),go=document.getElementById('gateGo'),retry=document.getElementById('gateRetry');
 var CK='pimpa-ok-';
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
-var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlMsg=document.getElementById('wlMsg');
+var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
 function show(m,btn,rbtn){gate.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
 function cacheGet(e){try{return localStorage.getItem(CK+e);}catch(x){return null;}}
@@ -160,12 +163,14 @@ wl.addEventListener('submit',async function(e){
   if(!sb){wlSay('No se pudo conectar. Recargá la página e intentá de nuevo.',false);return;}
   wlGo.disabled=true;wlSay('',true);
   try{
-    var r=await sb.from('waitlist').insert({email:m});
+    var row={email:m};if(wlPro.checked)row.es_profesional=true;
+    var r=await sb.from('waitlist').insert(row);
     if(r.error&&r.error.code!=='23505'){
       console.error(r.error);
       wlSay('No pudimos anotarte ahora. Intentá de nuevo o escribinos a pimpa@impactese.com.',false);
     }else{
       wlMail.value='';
+      wlPro.checked=false;
       wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);
     }
   }catch(x){

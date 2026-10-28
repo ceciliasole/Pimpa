@@ -27,3 +27,5 @@ La app pide ingresar con Google (Supabase Auth, proyecto `pimpa` de la cuenta im
 La pantalla de ingreso tiene un campo para dejar el mail de Gmail (solo se aceptan cuentas `@gmail.com`). Los mails se guardan en la tabla `waitlist` de Supabase; se crea una sola vez con `supabase/002_lista_de_espera.sql` (SQL Editor). La web solo puede insertar: la lista se mira desde Supabase > Table Editor > waitlist.
 
 Para habilitar a alguien que ya pagó, se agrega su mail a `allowed_emails` (el SQL de ejemplo está al final de `002_lista_de_espera.sql`).
+
+El formulario tiene un casillero opcional "Soy profesional de la psicopedagogía o la educación…". Si lo tildan, se guarda `es_profesional = true` en `waitlist` (se agrega con `supabase/003_lista_de_espera_profesionales.sql`). Si no lo tildan, el valor queda en `false`. La landing sigue pensada para familias.
