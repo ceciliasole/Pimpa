@@ -966,6 +966,33 @@ body.isfs .fsb{display:none}
 .fsmsg{position:fixed;top:64px;right:10px;z-index:60;max-width:min(300px,calc(100vw - 20px));background:#fff;border:2px solid #F0E3C5;border-radius:16px;padding:10px 14px;font-size:.85rem;line-height:1.3;color:var(--ink);box-shadow:0 4px 0 #EADFC4}
 @media (min-width:600px) and (max-width:1199px){.top{padding-right:58px}}
 @media print{.fsb,.fsmsg{display:none!important}}
+
+/* ---- Lección "Cómo se forman las sílabas" y su cierre: ocupan toda la pantalla (mejora Jose). Todo sale del alto disponible (--lh), nada de tamaños fijos chicos ---- */
+body.playing .stage:has(.lfan),body.playing .stage:has(.lend){min-height:calc(100dvh - 92px)}
+body.playing .stage:has(.lfan) .itemarea{flex:1;justify-content:center;gap:clamp(12px,3dvh,34px)}
+body.playing .stage:has(.lfan) .lfan{--lh:clamp(240px,calc(100dvh - 330px),780px);--fs:min(calc(var(--lh) / var(--n) * .8),11vw);width:min(100%,1500px);max-width:none;height:var(--lh);margin:0 auto}
+body.playing .stage:has(.lfan) .lleft{flex:0 0 min(calc(var(--lh) * .55),28vw);gap:clamp(6px,2dvh,22px)}
+body.playing .stage:has(.lfan) .lrows{flex:0 0 calc(var(--fs) * 4.5)}
+body.playing .stage:has(.lfan) .lfan .lcons{font-size:min(calc(var(--lh) * .36),26vw)}
+body.playing .stage:has(.lfan) .lfan .pic.small{--pw:clamp(90px,min(26vw,calc(var(--lh) * .46)),340px);width:var(--pw);font-size:calc(var(--pw) * .6)}
+body.playing .stage:has(.lfan) .llines{flex:0 0 min(calc(var(--lh) * .34),14vw);width:min(calc(var(--lh) * .34),14vw)}
+body.playing .stage:has(.lfan) .fl{stroke-width:clamp(3px,.5vw,7px)}
+body.playing .stage:has(.lfan) .lrows{gap:0}
+body.playing .stage:has(.lfan) .lfan .lcol{gap:clamp(8px,1.6vw,26px);align-items:center}
+body.playing .stage:has(.lfan) .lfan .lcol::before{border-left-width:calc(var(--fs) * .3);border-top-width:calc(var(--fs) * .19);border-bottom-width:calc(var(--fs) * .19);margin-right:0}
+body.playing .stage:has(.lfan) .lfan .tile.mini{font-size:var(--fs);min-width:calc(var(--fs) * .8)}
+body.playing .stage:has(.lfan) .lfan .lsy{font-size:var(--fs)}
+body.playing .stage:has(.lfan) .lfan .larr{font-size:calc(var(--fs) * .8)}
+body.playing .stage:has(.lfan) .lfan .lsy,body.playing .stage:has(.lfan) .lfan .larr,body.playing .stage:has(.lfan) .lfan .tile.mini{line-height:1}
+@media (min-width:900px){body.playing .stage:has(.lfan) #item .mascot.lm{right:100px}}
+body.playing .stage:has(.lfan) .row .btn{min-height:clamp(60px,9dvh,96px);font-size:clamp(1.3rem,3dvh,2rem);padding:0 clamp(28px,4vw,64px)}
+body.playing .stage:has(.lend){justify-content:center}
+body.playing .stage:has(.lend) .end{gap:clamp(10px,2.4dvh,28px)}
+.lendp{display:flex;justify-content:center}
+.lendp .pimpa{height:clamp(170px,36dvh,440px);width:auto}
+.lendt{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,5.4dvh,3.4rem);line-height:1.15;color:var(--ink);margin:0;max-width:20ch}
+body.playing .stage:has(.lend) .stars img{height:clamp(46px,8dvh,90px);width:auto}
+body.playing .stage:has(.lend) .ebtn .eic{width:clamp(72px,11dvh,120px)}
 </style>
 
 <button class="rbtn fsb" id="fs" type="button" aria-label="Pantalla completa" title="Pantalla completa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -2271,7 +2298,7 @@ function colorTiles(it){
 }
 function fitTiles(){
   $$('#item .tile',stage).forEach(function(t){
-    if(t.classList.contains('mini')||t.classList.contains('q')||t.closest('.rowfit'))return;
+    if(t.classList.contains('mini')||t.classList.contains('q')||t.classList.contains('lcons')||t.closest('.rowfit'))return; /* .lcons (la M de la lección) mide por su letra: con width:auto este cálculo la achicaba en cada repaso */
     var w=t.offsetWidth; /* offsetWidth no cambia con transform (apretar, escala de pantalla); getBoundingClientRect sí y achicaba la letra */
     if(w>20)t.style.fontSize=Math.round(w*(t.classList.contains('long')?0.4:0.54))+'px';
   });
@@ -2562,11 +2589,16 @@ function finishLesson(){
   var p=curProfile(),lvR=run.lv,rec=p.progress[run.lv.id]||{best:0,attempts:0,passed:false,last:null};
   rec.attempts++;rec.best=10;rec.passed=true;rec.last=new Date().toISOString();
   rec.title=plainTitle(run.lv);rec.grp=run.lv.grp;p.progress[run.lv.id]=rec;p.stars=(p.stars||0)+5;save();
-  stage.innerHTML='<div class="end">'+celebHTML(true)+starsHTML(3)+'<p class="gain">+5 <img src="'+DEC.star+'" alt=""> para tu Pimpa</p>'+endNav(!!nextLevelOf(lvR),true)+'</div>';
+  stage.innerHTML='<div class="end'+(lvR.presentOnly?' lend':'')+'">'+(lvR.presentOnly?lessonEndHTML():celebHTML(true))+starsHTML(3)+'<p class="gain">+5 <img src="'+DEC.star+'" alt=""> para tu Pimpa</p>'+endNav(!!nextLevelOf(lvR),true)+'</div>';
   $('#again').onclick=function(){openLevelObj(lvR);};
   $('#nextlv').onclick=function(){var nx=nextLevelOf(lvR);if(nx)openLevelObj(nx);};
   $('#home').onclick=function(){showTab('camino');};
   if(!lvR.presentOnly)sayEnd('mb'); /* la pantalla de flechas es solo para mirar: sin respuesta del chico no hay elogio */
+}
+
+/* Cierre de la lección de flechas (el chico solo mira): no 'pasó de nivel', aprendió. Pimpa leyendo, sin festejo ni trofeo */
+function lessonEndHTML(){
+  return '<div class="lendp" role="img" aria-label="Pimpa leyendo un libro">'+pimpaImg('lee')+'</div><p class="lendt">¡Qué bueno lo que aprendimos!</p>';
 }
 
 /* ---------- Cartel de felicitaciones: fuegos artificiales, fiesta y animales bailando, rotando ---------- */
