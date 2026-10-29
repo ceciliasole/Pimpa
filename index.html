@@ -10,11 +10,12 @@
     <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
     <form id="wl" class="gwl" novalidate>
       <h2>Lista de espera</h2>
-      <p class="gwl-t">Pronto Pimpa va a estar habilitada para todas las familias. Dejanos tu mail y te avisamos cuando puedas entrar.</p>
+      <p class="gwl-t">Pronto Pimpa va a estar habilitada para todas las familias. Va a ser una aplicación por suscripción, y a quienes se anoten ahora les vamos a ofrecer un precio de lanzamiento. Dejanos tu mail y te avisamos cuando puedas entrar.</p>
       <label class="gwl-l" for="wlMail">Tu mail de Gmail</label>
       <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@gmail.com">
       <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
+      <p id="wlProN" class="gwl-pn" hidden>Pimpa es una aplicación paga. Te escribimos para contarte cómo trabajar juntas y cómo van a funcionar los cupones de descuento para tus pacientes.</p>
       <button type="submit" id="wlGo">Anotarme en la lista</button>
       <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
       <p class="gwl-n">Por ahora solo se pueden habilitar cuentas de Gmail.</p>
@@ -51,6 +52,8 @@
 #gate .gwl input[type=email]:focus{outline:3px solid #FFD24F;border-color:#2076BD}
 #gate .gwl-c{display:flex;align-items:flex-start;gap:10px;margin:12px 4px 0;font-size:.88rem;line-height:1.35;color:var(--ink-2,#506082);cursor:pointer}
 #gate .gwl-c input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:#D8483D;cursor:pointer}
+#gate .gwl-pn{margin:8px 4px 0;padding:10px 12px;border-radius:16px;background:#FFF3CC;font-size:.85rem;line-height:1.35;color:var(--ink,#17305C)}
+#gate .gwl-pn[hidden]{display:none}
 #gate .gwl button{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
 #gate .gwl button:hover{box-shadow:0 5px 0 #A9332A}
 #gate .gwl button:active{box-shadow:0 1px 0 #A9332A}
@@ -76,7 +79,7 @@ var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 var gate=document.getElementById('gate'),msg=document.getElementById('gateM'),go=document.getElementById('gateGo'),retry=document.getElementById('gateRetry');
 var CK='pimpa-ok-';
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
-var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlMsg=document.getElementById('wlMsg');
+var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
 function show(m,btn,rbtn){gate.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
 function cacheGet(e){try{return localStorage.getItem(CK+e);}catch(x){return null;}}
@@ -155,6 +158,7 @@ go.onclick=function(){
     if(r&&r.error){show('No se pudo iniciar el ingreso con Google. Intentá de nuevo.',true,false);}
   });
 };
+wlPro.addEventListener('change',function(){wlProN.hidden=!wlPro.checked;});
 wl.addEventListener('submit',async function(e){
   e.preventDefault();
   if(wlHp.value){wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);return;}
@@ -171,6 +175,7 @@ wl.addEventListener('submit',async function(e){
     }else{
       wlMail.value='';
       wlPro.checked=false;
+      wlProN.hidden=true;
       wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);
     }
   }catch(x){
