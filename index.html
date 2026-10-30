@@ -11,14 +11,14 @@
     <form id="wl" class="gwl" novalidate>
       <h2>Lista de espera</h2>
       <p class="gwl-t">Pronto Pimpa va a estar habilitada para todas las familias. Va a ser una aplicación por suscripción, y a quienes se anoten ahora les vamos a ofrecer un precio de lanzamiento. Dejanos tu mail y te avisamos cuando puedas entrar.</p>
-      <label class="gwl-l" for="wlMail">Tu mail de Gmail</label>
-      <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@gmail.com">
+      <label class="gwl-l" for="wlMail">Tu mail</label>
+      <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@mail.com">
       <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
       <p id="wlProN" class="gwl-pn" hidden>Pimpa para profesionales tiene un plan propio, en función de los pacientes que tengas y de las familias que recomiendes. Te escribimos con los valores cuando salga.</p>
       <button type="submit" id="wlGo">Anotarme en la lista</button>
       <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
-      <p class="gwl-n">Por ahora solo se pueden habilitar cuentas de Gmail.</p>
+      <p class="gwl-n">Para entrar a Pimpa vas a necesitar una cuenta de Google. Si tu mail no es de Gmail, te avisamos cómo hacerlo.</p>
     </form>
     <p class="gfoot">Por ahora el acceso es solo por invitación.<br>Ante cualquier duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a><br>Al ingresar aceptás las <a href="/condiciones">condiciones del servicio</a> y la <a href="/privacidad">política de privacidad</a>.</p>
   </div>
@@ -137,7 +137,7 @@ async function check(session){
     cacheSet(email,null);
     wasDenied=true;
     await sb.auth.signOut();
-    if(/@gmail\.com$/.test(email)&&wlMail&&!wlMail.value)wlMail.value=email;
+    if(wlMail&&!wlMail.value)wlMail.value=email;
     show('La cuenta '+email+' todavía no está habilitada. Dejá tu mail en la lista de espera y te avisamos.',true,false);
   }catch(e){
     console.error(e);
@@ -163,7 +163,7 @@ wl.addEventListener('submit',async function(e){
   e.preventDefault();
   if(wlHp.value){wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);return;}
   var m=String(wlMail.value||'').trim().toLowerCase();
-  if(!/^[a-z0-9._%+-]+@gmail\.com$/.test(m)){wlSay('Escribí tu mail de Gmail, por ejemplo tunombre@gmail.com.',false);wlMail.focus();return;}
+  if(!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(m)||m.length>120){wlSay('Revisá el mail, por ejemplo tunombre@mail.com.',false);wlMail.focus();return;}
   if(!sb){wlSay('No se pudo conectar. Recargá la página e intentá de nuevo.',false);return;}
   wlGo.disabled=true;wlSay('',true);
   try{

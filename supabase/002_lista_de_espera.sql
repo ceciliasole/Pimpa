@@ -1,9 +1,9 @@
--- Pimpa: lista de espera (mails de Gmail que dejan las familias en la pantalla de ingreso).
+-- Pimpa: lista de espera (mails que dejan las familias en la pantalla de ingreso).
 -- Pegar una sola vez en Supabase > SQL Editor > New query > Run.
 
 create table if not exists public.waitlist (
   email      text primary key
-             check (email = lower(email) and length(email) <= 120 and email ~ '^[a-z0-9._%+-]+@gmail\.com$'),
+             check (email = lower(email) and length(email) <= 120 and email ~ '^[a-z0-9._%+-]+@[a-z0-9.-]+[.][a-z]{2,}$'),
   created_at timestamptz not null default now()
 );
 
