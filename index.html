@@ -1972,7 +1972,7 @@ var TX=[0,34,50,34,0,-34,-50,-34];
 var SCN={'Vocales':'s0','Consonantes premium':'s1','Sílabas':'s2','Palabras':'s3','Clásicas':'s1','Palabras con las clásicas':'s3','Poco frecuentes':'s1','Sílabas trucos':'s2','Las últimas letras':'s0','Palabras con todas las consonantes':'s3'};
 var RIB={s0:'rbB',s1:'rbG',s2:'rbO',s3:'rbV'};
 var DECOS=[['rainbow','mush','flower','butterfly'],['flower','butterfly','mush','stones'],['balloon','flower','mush','stones'],['butterfly','rainbow','balloon','flower']];
-var DECW={rainbow:104,balloon:44,butterfly:54,mush:60,flower:58,stones:74};
+var DECOW={rainbow:104,balloon:44,butterfly:54,mush:60,flower:58,stones:74};
 function seqHTML(){
   var nx=seqNext(),kid=store.mode==='familia',p=curProfile(),h=topbar('Mi camino');
   h+='<p class="hint" style="text-align:center;margin:0">'+(kid?'Tocá el círculo de Pimpa. Podés repasar los que ya hiciste.':'Modo adulto: podés entrar a cualquier paso.')+'</p><div class="trail">';
@@ -1981,7 +1981,7 @@ function seqHTML(){
     var dn=g.ix.filter(function(i){return passedId(SEQ[i].id);}).length,big=(g.sec!=='Vocales'&&g.sec!=='Consonantes premium'),sc=SCN[g.sec]||'s0';
     h+='<section class="tscene '+sc+(big?' bigsc':'')+'"><div class="tsec"><img class="trb" src="'+DEC2[RIB[sc]]+'" alt=""><span class="tst">'+esc(g.sec)+'<small>'+dn+' de '+g.ix.length+'</small></span></div>';
     [[6,'l'],[48,'r'],[78,'l']].forEach(function(c){h+='<img class="tcl '+c[1]+'" style="top:'+c[0]+'%" src="'+DEC.cloud+'" alt="">';});
-    [[12,'r'],[36,'l'],[62,'r'],[86,'l']].forEach(function(c,k){var nm=DECOS[gi%4][k];h+='<img class="tbs '+c[1]+'" style="top:'+c[0]+'%;width:'+DECW[nm]+'px" src="'+DEC2[nm]+'" alt="">';});
+    [[12,'r'],[36,'l'],[62,'r'],[86,'l']].forEach(function(c,k){var nm=DECOS[gi%4][k];h+='<img class="tbs '+c[1]+'" style="top:'+c[0]+'%;width:'+DECOW[nm]+'px" src="'+DEC2[nm]+'" alt="">';});
     g.ix.forEach(function(i,k){
       var lv=SEQ[i],done=passedId(lv.id),open=seqOpen(i),cur=(i===nx);
       var cls='tn'+(done?' done':(cur?' cur':(open?' open':' lock')))+(big?' big':''),x=TX[k%TX.length];
