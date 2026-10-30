@@ -29,3 +29,9 @@ La pantalla de ingreso tiene un campo para dejar el mail de Gmail (solo se acept
 Para habilitar a alguien que ya pagó, se agrega su mail a `allowed_emails` (el SQL de ejemplo está al final de `002_lista_de_espera.sql`).
 
 El formulario tiene un casillero opcional "Soy profesional de la psicopedagogía o la educación…". Si lo tildan, se guarda `es_profesional = true` en `waitlist` (se agrega con `supabase/003_lista_de_espera_profesionales.sql`). Si no lo tildan, el valor queda en `false`. La landing sigue pensada para familias.
+
+## Audios
+
+Las grabaciones de Jose son archivos sueltos en `audio/` (mp3 mono), no van dentro del `index.html`. El nombre lleva una huella del contenido (`pal_camion.a1b2c3d4.mp3`): al regrabar un audio sale un archivo nuevo y el navegador no usa el viejo (cache de un año). En `index.html` los diccionarios (`SAUD` sílabas, `WAUD`/`PALAUD` palabras, números, días y frases, `CAUD` sonidos, `LNAUD` nombres de letras, etc.) apuntan a esas rutas. `warmAudio()` los precarga en segundo plano.
+
+Para sumar una tanda nueva: convertir los WAV a mp3, guardarlos en `audio/` con huella y agregar la clave (el texto en minúsculas, tal como lo dice la app) al diccionario que corresponda. Si hay dos tomas de lo mismo, vale la más nueva.
