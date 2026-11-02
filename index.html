@@ -1972,18 +1972,22 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
     if(i>0)sq('Consonantes premium',{id:'sq-rc-'+c,grp:'Premium',title:'Rotación '+nm,kind:'first',rot:true,known:known,newc:c});
     sq('Consonantes premium',{id:'sq-rv-'+c,grp:'Premium',title:'Rotación '+nm+' con vocales',kind:'first',rot:true,known:VOW.concat(known),newc:c});
   });
-  PREM.forEach(function(c,i){
-    sq('Sílabas',PR(c,'Premium'));
-    sq('Sílabas',LV[c+'-sil']);
-    if(i>0)sq('Sílabas',{id:'sq-sr-'+c,grp:'Premium',title:'Rotación de sílabas '+PREM.slice(0,i+1).map(UP).join(' '),kind:'syl',sc:PREM.slice(0,i+1),newc:c});
-  });
+  /* M-047 a M-050: por consonante, en este orden: Aprendo sílabas, Leer sílabas, rotación con las anteriores (desde la segunda) y Armar sílabas. Cada paso se aprueba con 80%. */
+  var SDONE=[];
+  function silSteps(sec,grp,c,noPR){
+    if(!noPR)sq(sec,PR(c,grp));
+    sq(sec,{id:'sq-sl-'+c,grp:grp,cons:c,title:'Leer sílabas',kind:'syl',mode:'read',sc:[c]});
+    var prev=SDONE.slice();SDONE.push(c);
+    if(prev.length)sq(sec,{id:'sq-sr-'+c,grp:grp,title:'Rotación de sílabas '+SDONE.map(UP).join(' '),kind:'syl',mode:'read',sc:SDONE.slice(),newc:c});
+    sq(sec,{id:'sq-sa-'+c,grp:grp,cons:c,title:'Armar sílabas',kind:'syl',mode:'build',sc:[c]});
+  }
+  PREM.forEach(function(c){silSteps('Sílabas','Premium',c);});
   sq('Palabras',LV['pal-1']);sq('Palabras',LV['palb-1']);sq('Palabras',LV['pal-1b']);
   /* Clásicas: B N C (CA CO CU) J D */
   CLAS.forEach(function(c){
     var lv=LV[c+'-s'];
     four('Clásicas','Clásicas',c,lv,lv.known,lv.known);
-    sq('Clásicas',PR(c,'Clásicas'));
-    sq('Clásicas',LV[c+'-sil']);
+    silSteps('Clásicas','Clásicas',c);
   });
   sq('Palabras con las clásicas',LV['pal-2']);sq('Palabras con las clásicas',LV['palb-2']);sq('Palabras con las clásicas',LV['pal-2b']);
   /* Poco frecuentes: R G (GA GO GU) V CH LL Q Ñ, después los trucos, después Y Z */
@@ -1997,10 +2001,10 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
     if(c==='ñ'){
       /* Ñ: no hay dibujos definidos, así que sin Sonido inicial */
       four(sec,'Poco frecuentes','ñ',reg({id:'sq-ñ-s',grp:'Poco frecuentes',cons:'ñ',title:'Letra y sonido',kind:'first',known:kn,focus:'ñ',intro:'ñ'}),kn,kn,true);
-      sq(sec,reg({id:'sq-ñ-sil',grp:'Poco frecuentes',cons:'ñ',title:'Sílabas',kind:'syl',sc:['ñ']}));
+      silSteps(sec,'Poco frecuentes','ñ',true);
     }else{
       four(sec,'Poco frecuentes',c,LV['pf-'+c+'-s'],kn,kn);
-      if(c!=='q'){sq(sec,PR(c,'Poco frecuentes'));sq(sec,LV['pf-'+c+'-sil']);}
+      if(c!=='q')silSteps(sec,'Poco frecuentes',c);
     }
   }
   ['r','g','v','ch','ll','q','ñ'].forEach(function(c){poco(c,'Poco frecuentes');});
