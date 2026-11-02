@@ -305,7 +305,7 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .slot.f{border-style:solid;border-color:var(--ink-2);background:var(--surface)}
 .slot.good{border-color:var(--ok);background:var(--ok-bg)}
 
-.wordbig{font-size:clamp(2.6rem,11vw,4.2rem);font-weight:700;display:flex;gap:.45em;flex-wrap:wrap;justify-content:center;letter-spacing:.04em}
+.wordbig{font-size:clamp(2.6rem,11vw,4.2rem);font-weight:700;display:flex;gap:0;flex-wrap:wrap;justify-content:center;letter-spacing:.04em}
 .picopts{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .pico{position:relative;width:clamp(92px,26vw,130px);aspect-ratio:1;border-radius:18px;border:3px solid var(--line);background:var(--surface);font-size:clamp(3rem,11vw,4.4rem);cursor:pointer;display:grid;place-items:center}
 .pico.ok{border-color:var(--ok);background:var(--ok-bg)}
@@ -1254,22 +1254,25 @@ PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-sil',grp:'Premium',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
 });
 LEVELS.push({id:'mx-fre',grp:'Premium',title:'Mezcla: '+PREM.join(' ').toUpperCase(),kind:'syl',sc:PREM.slice()});
-LEVELS.push({id:'pal-1',grp:'Palabras',title:'Palabras de 2 sílabas',kind:'word',wc:PREM.slice(),ns:2});
-LEVELS.push({id:'pal-1b',grp:'Palabras',title:'Palabras de 3 sílabas',kind:'word',wc:PREM.slice(),ns:3});
+LEVELS.push({id:'pal-1',grp:'Palabras',title:'Lectura de palabras de 2 sílabas con consonantes premium',kind:'word',wc:PREM.slice(),ns:2});
+LEVELS.push({id:'palb-1',grp:'Palabras',title:'Armar palabras de 2 sílabas con consonantes premium',kind:'wbuild',wc:PREM.slice(),ns:2});
+LEVELS.push({id:'pal-1b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con consonantes premium',kind:'word',wc:PREM.slice(),ns:3});
 CLAS.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Clásicas',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM,CLAS.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Clásicas',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
 });
 LEVELS.push({id:'mx-men',grp:'Clásicas',title:'Mezcla: '+CLAS.join(' ').toUpperCase(),kind:'syl',sc:CLAS.slice()});
-LEVELS.push({id:'pal-2',grp:'Palabras',title:'Palabras de 2 sílabas con todo lo aprendido',kind:'word',wc:PREM.concat(CLAS),ns:2});
-LEVELS.push({id:'pal-2b',grp:'Palabras',title:'Palabras de 3 sílabas con todo lo aprendido',kind:'word',wc:PREM.concat(CLAS),ns:3});
+LEVELS.push({id:'pal-2',grp:'Palabras',title:'Lectura de palabras de 2 sílabas con consonantes premium y clásicas',kind:'word',wc:PREM.concat(CLAS),ns:2});
+LEVELS.push({id:'palb-2',grp:'Palabras',title:'Armar palabras de 2 sílabas con consonantes premium y clásicas',kind:'wbuild',wc:PREM.concat(CLAS),ns:2});
+LEVELS.push({id:'pal-2b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con consonantes premium y clásicas',kind:'word',wc:PREM.concat(CLAS),ns:3});
 POCO.forEach(function(c,i){
   LEVELS.push({id:'pf-'+c+'-s',grp:'Poco frecuentes',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM,CLAS,POCO.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:'pf-'+c+'-sil',grp:'Poco frecuentes',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
 });
 LEVELS.push({id:'mx-poc',grp:'Poco frecuentes',title:'Mezcla: '+POCO.join(' ').toUpperCase(),kind:'syl',sc:POCO.slice()});
-LEVELS.push({id:'pal-3',grp:'Palabras',title:'Palabras de 2 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:2});
-LEVELS.push({id:'pal-3b',grp:'Palabras',title:'Palabras de 3 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:3});
+LEVELS.push({id:'pal-3',grp:'Palabras',title:'Lectura de palabras de 2 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:2});
+LEVELS.push({id:'palb-3',grp:'Palabras',title:'Armar palabras de 2 sílabas con todas las consonantes',kind:'wbuild',wc:PREM.concat(CLAS,POCO),ns:2});
+LEVELS.push({id:'pal-3b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:3});
 LEVELS.push({id:'inv-1',grp:'Inversas y artículos',title:'Sílabas inversas: EN ES UN AL',kind:'syl',sc:['l','n','s'],vw:['a','e','u'],pool:['en','es','un','al']});
 LEVELS.push({id:'art-1',grp:'Inversas y artículos',title:'Artículos: LA LAS EL LOS UNA Y',kind:'syl',pool:['la','las','el','los','una','y'],pickOnly:true});
 LEVELS.push({id:'ma-v',grp:'Mayúscula y minúscula',title:'Vocales',kind:'case',set:VOW.slice()});
@@ -1444,6 +1447,14 @@ function buildItems(lv){
     });
   }else if(lv.kind==='nchoice'){
     items=GENN[lv.gen](lv);
+  }else if(lv.kind==='wbuild'){
+    /* M-104/106/110: Armar palabras de 2 sílabas. Dibujo + 'Armá para que diga…'; el niño elige las letras de cada sílaba */
+    var wq=WORDS.filter(function(w){return w[1].length===lv.ns&&learned(w,lv.wc);});
+    seq(wq,TOTAL).forEach(function(w){
+      var toks=[];
+      w[1].forEach(function(sy){var t=strip(sy),m=/^(ll|ch|qu)/.exec(t);if(t.length===1)toks.push(t);else if(m){toks.push(m[1]);toks.push(t.slice(m[1].length));}else{toks.push(t.charAt(0));toks.push(t.slice(1));}});
+      items.push({type:'wbuild',word:w[0],pic:w[2],toks:toks,syln:w[1].map(function(sy){return /^(ll|ch|qu)./.test(strip(sy))||strip(sy).length>1?2:1;})});
+    });
   }else if(lv.kind==='word'){
     var wp=WORDS.filter(function(w){return w[1].length===lv.ns&&learned(w,lv.wc);});
     seq(wp,TOTAL).forEach(function(w){
@@ -1594,6 +1605,7 @@ function say(text){
   text=String(text);
   var PB=' ¡Muy bien!';
   if(text==='¡Muy bien!'){if(playClip(MBAUD))return;}
+  if(text.toLowerCase()==='y'&&PALAUD.y&&typeof run!=='undefined'&&run&&run.lv&&(run.lv.id==='art-1'||run.lv.kind==='case')){if(playClip(PALAUD.y))return;}
   var pre=null,praise=false;
   if(text.slice(-PB.length-1)==='.'+PB){pre=text.slice(0,-PB.length-1);praise=true;}
   else pre=text;
@@ -1965,7 +1977,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
     sq('Sílabas',LV[c+'-sil']);
     if(i>0)sq('Sílabas',{id:'sq-sr-'+c,grp:'Premium',title:'Rotación de sílabas '+PREM.slice(0,i+1).map(UP).join(' '),kind:'syl',sc:PREM.slice(0,i+1),newc:c});
   });
-  sq('Palabras',LV['pal-1']);sq('Palabras',LV['pal-1b']);
+  sq('Palabras',LV['pal-1']);sq('Palabras',LV['palb-1']);sq('Palabras',LV['pal-1b']);
   /* Clásicas: B N C (CA CO CU) J D */
   CLAS.forEach(function(c){
     var lv=LV[c+'-s'];
@@ -1973,7 +1985,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
     sq('Clásicas',PR(c,'Clásicas'));
     sq('Clásicas',LV[c+'-sil']);
   });
-  sq('Palabras con las clásicas',LV['pal-2']);sq('Palabras con las clásicas',LV['pal-2b']);
+  sq('Palabras con las clásicas',LV['pal-2']);sq('Palabras con las clásicas',LV['palb-2']);sq('Palabras con las clásicas',LV['pal-2b']);
   /* Poco frecuentes: R G (GA GO GU) V CH LL Q Ñ, después los trucos, después Y Z */
   var BASE=VOW.concat(PREM,CLAS),ORD=['r','g','v','ch','ll','q','ñ','y','z'];
   ORD.forEach(function(c,i){
@@ -1998,7 +2010,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
     sq('Sílabas trucos',{id:'sq-tr-'+t[0],grp:'Poco frecuentes',title:t[4],kind:'syl',sc:t[1],vw:t[2],pool:t[3],ico:function(){return S(t[3][0]);}});
   });
   ['y','z'].forEach(function(c){poco(c,'Las últimas letras');});
-  sq('Palabras con todas las consonantes',LV['pal-3']);sq('Palabras con todas las consonantes',LV['pal-3b']);
+  sq('Palabras con todas las consonantes',LV['pal-3']);sq('Palabras con todas las consonantes',LV['palb-3']);sq('Palabras con todas las consonantes',LV['pal-3b']);
 })();
 function seqOpen(i){return store.mode==='educador'||i===0||passedId(SEQ[i-1].id);}
 function seqNext(){for(var i=0;i<SEQ.length;i++){if(!passedId(SEQ[i].id))return i;}return -1;}
@@ -2010,6 +2022,7 @@ function sqLab(lv){
   if(lv.cons)return lv.id.slice(-2)==='-s'||/-s$/.test(lv.id)?DH(lv.cons):D(ctok(lv.cons)+'a');
   if(lv.kind==='first'||(lv.kind==='syl'&&lv.newc))return '↻';
   if(lv.kind==='word')return '📖';
+  if(lv.kind==='wbuild')return '🔤';
   return '★';
 }
 var TX=[0,34,50,34,0,-34,-50,-34];
@@ -2091,10 +2104,10 @@ function renderCamino(){
       hcard('poc','Poco frecuentes','<span class="allc">'+fichas(POCO)+'</span>',cardStat('poc'))+'</div>';
   }else if(n.s==='g'){
     var g=n.g,extra='',sel=n.sel=n.sel||[],pre='';
-    if(g==='fre')extra+=lvBtn(LV['pal-1'])+lvBtn(LV['pal-1b']);
-    if(g==='men')extra+=lvBtn(LV['pal-2'])+lvBtn(LV['pal-2b']);
+    if(g==='fre')extra+=lvBtn(LV['pal-1'])+lvBtn(LV['palb-1'])+lvBtn(LV['pal-1b']);
+    if(g==='men')extra+=lvBtn(LV['pal-2'])+lvBtn(LV['palb-2'])+lvBtn(LV['pal-2b']);
     if(g==='voc'||g==='fre')extra+=lvBtn(LV[g==='voc'?'a-v':'a-p']);
-    if(g==='poc')extra+=lvBtn(LV['pal-3'])+lvBtn(LV['pal-3b']);
+    if(g==='poc')extra+=lvBtn(LV['pal-3'])+lvBtn(LV['palb-3'])+lvBtn(LV['pal-3b']);
     extra+=traceBtn({voc:0,fre:1,men:2,poc:3}[g]);
     if(g==='voc')pre='<button class="sw" data-pre="aeo" type="button">Abiertas · A E O</button><button class="sw" data-pre="iu" type="button">Cerradas · I U</button>';
     pre+='<button class="sw" data-pre="all" type="button">Todas</button><button class="sw" data-pre="none" type="button">Limpiar</button>';
@@ -2166,7 +2179,7 @@ function renderCamino(){
     else if(a==='cons')go({s:'cons'});
     else if(a==='sil')go({s:'sil'});
     else if(a==='sil-a'||a==='sil-l'||a==='sil-b')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
-    else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','pal-1b','pal-2','pal-2b','pal-3','pal-3b']});
+    else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
@@ -2289,7 +2302,7 @@ function openLevelObj(lv){
   renderDots();
   if(lv.intro)drawIntro();else drawItem(true);
 }
-var RTYPE={vowel:'star',first:'coin',syl:'cup',word:'star',art:'cup',case:'coin',nchoice:'star'};
+var RTYPE={vowel:'star',first:'coin',syl:'cup',word:'star',wbuild:'star',art:'cup',case:'coin',nchoice:'star'};
 function rewType(lv){return (lv&&RTYPE[lv.kind])||'star';}
 var SVG_CUP='<img src="'+DEC2.cup+'" alt="">';
 var SVG_COIN='<img src="'+DEC2.coin+'" alt="">';
@@ -2353,7 +2366,7 @@ function common(){return '<div class="fb" id="fb" role="status"></div>'+nextBtn(
 function drawItem(auto){
   var it=run.items[run.i],area=$('#item');
   renderDots();
-  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,case:vCase,choice:vChoice})[it.type](area,it,auto);
+  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
   area.insertAdjacentHTML('afterbegin',mascotHTML(it.type==='word'?'lee':'escucha'));
   colorTiles(it);fitTiles();fitBtns();
 }
@@ -2512,6 +2525,46 @@ function fitRows(arr,w,min){
   for(var i=0;i<arr.length;i+=sz)out.push(arr.slice(i,i+sz));
   return out; /* filas parejas; nunca más anchas que la pantalla */
 }
+function vWBuild(area,it,auto){
+  var cons=run.lv.wc.map(ctok),vows=VOW.slice(),n=it.toks.length;
+  it.toks.forEach(function(t){if(isV(t)){if(vows.indexOf(t)<0)vows.push(t);}else if(cons.indexOf(t)<0)cons.push(t);});
+  var slots=[],k0;for(k0=0;k0<n;k0++)slots.push(null);
+  var locked=false,ends=[],acc=0;it.syln.forEach(function(c){acc+=c;ends.push(acc-1);});
+  var W=Math.max(200,($('#item').clientWidth||320)),MX=window.innerWidth>=900?Math.max(120,Math.min(190,Math.round(window.innerHeight*0.12))):80,gap=8;
+  var rows=fitRows(cons,W,44).concat(fitRows(vows,W,52));
+  function rowHTML(r){
+    var sz=Math.max(40,Math.min(MX,Math.floor((W-(r.length-1)*gap)/r.length)));
+    return '<div class="rowfit">'+r.map(function(l){return '<button class="tile '+(isV(l)?'v':'c')+(l.length>1?' long':'')+'" type="button" data-l="'+l+'" aria-label="Letra '+esc(l)+'" style="width:'+sz+'px;font-size:'+Math.round(sz*0.5)+'px">'+DH(l)+'</button>';}).join('')+'</div>';
+  }
+  area.innerHTML='<p class="q">Armá para que diga…</p><div class="pic pop" role="img" aria-label="Dibujo de '+esc(it.word)+'">'+it.pic+'</div>'+
+    '<button class="btn ghost" id="listen" type="button">Escuchar</button>'+
+    '<div class="slots">'+slots.map(function(x,k){return '<button class="slot" type="button" data-k="'+k+'" aria-label="Casillero '+(k+1)+'"'+(ends.indexOf(k)>-1&&k<n-1?' style="margin-right:26px"':'')+'></button>';}).join('')+'</div>'+
+    rows.map(rowHTML).join('')+common();
+  function paint(){$$('#item .slot').forEach(function(s,k){s.innerHTML=slots[k]?L(slots[k]):'';s.classList.toggle('f',!!slots[k]);});}
+  $('#listen').onclick=function(){say(it.word);};
+  $$('#item .slot').forEach(function(b){b.onclick=function(){if(locked)return;slots[+b.dataset.k]=null;paint();};});
+  $$('#item .tile').forEach(function(b){
+    b.onclick=function(){
+      if(locked)return;
+      var k=slots.indexOf(null);
+      if(k<0)return;
+      slots[k]=b.dataset.l;sfx.tick();paint();
+      if(slots.indexOf(null)<0){
+        var els=$$('#item .slot');
+        if(slots.join('|')===it.toks.join('|')){
+          locked=true;els.forEach(function(e){e.classList.add('good');e.disabled=true;});
+          $$('#item .tile').forEach(function(x){x.disabled=true;});
+          fbSet('✓','good');setMascot(okPose());sayOk(it.word,it);settle(it);
+        }else{
+          it.bad=true;locked=true;els.forEach(shakeEl);sfx.no();fbSet('Casi. Mirá el dibujo y probá otra vez','try');setMascot('casi');sayErr(function(){say(it.word);});
+          setTimeout(function(){for(var j=0;j<n;j++)slots[j]=null;locked=false;paint();setMascot('escucha');},900);
+        }
+      }
+    };
+  });
+  wireNext();
+  if(auto)sayAuto(it.word);
+}
 function vBuild(area,it,auto){
   var cons=run.lv.sc.map(ctok),vows=[];
   run.lv.sc.forEach(function(c){vowelsFor(c).forEach(function(v){if(vows.indexOf(v)<0)vows.push(v);});});
@@ -2519,8 +2572,9 @@ function vBuild(area,it,auto){
   vows.sort(function(a,b){return VOW.indexOf(a)-VOW.indexOf(b);});
   var slots=[null,null],locked=false;
   var W=Math.max(200,($('#item').clientWidth||320)),MX=window.innerWidth>=900?Math.max(150,Math.min(230,Math.round(window.innerHeight*0.14))):90,gap=8;
-  var all=cons.concat(vows),rows=fitRows(all,W,52);
-  if(rows.length>1)rows=fitRows(cons,W,44).concat(fitRows(vows,W,52)); /* si no entran en una fila, las consonantes arriba y las vocales abajo, nunca una vocal suelta */
+  var inv=run.lv.id==='inv-1'; /* M-074: sílabas inversas, primero las vocales y después las consonantes */
+  var all=inv?vows.concat(cons):cons.concat(vows),rows=fitRows(all,W,52);
+  if(rows.length>1)rows=inv?fitRows(vows,W,52).concat(fitRows(cons,W,44)):fitRows(cons,W,44).concat(fitRows(vows,W,52)); /* si no entran en una fila, las consonantes arriba y las vocales abajo, nunca una vocal suelta */
   function rowHTML(r){
     var sz=Math.max(40,Math.min(MX,Math.floor((W-(r.length-1)*gap)/r.length)));
     return '<div class="rowfit">'+r.map(function(l){return '<button class="tile '+(isV(l)?'v':'c')+(l.length>1?' long':'')+'" type="button" data-l="'+l+'" aria-label="Letra '+esc(l)+'" style="width:'+sz+'px;font-size:'+Math.round(sz*0.5)+'px">'+DH(l)+'</button>';}).join('')+'</div>';
