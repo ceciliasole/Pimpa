@@ -1296,6 +1296,10 @@ LEVELS.push({id:'emo-1',grp:'Emociones',title:'Reconociendo emociones',kind:'emo
 /* Ejercicios 2 y 3 propuestos por Cecilia (2 nov), a validar con Jose */
 LEVELS.push({id:'emo-2',grp:'Emociones',title:'Mirá la cara y elegí la palabra',kind:'emow',free:true});
 LEVELS.push({id:'emo-3',grp:'Emociones',title:'Uní las caras que se sienten igual',kind:'emom',free:true});
+/* Ejercicios 4 a 6 inventados por nosotras (2 nov), a validar con Jose. No usan dibujos nuevos ni audios nuevos */
+LEVELS.push({id:'emo-4',grp:'Emociones',title:'Escuchá y tocá la cara',kind:'emol',free:true});
+LEVELS.push({id:'emo-5',grp:'Emociones',title:'¿Cuál se siente distinta?',kind:'emod',free:true});
+LEVELS.push({id:'emo-6',grp:'Emociones',title:'¿La palabra va con la cara?',kind:'emos',free:true});
 PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Premium',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Premium',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
@@ -1454,6 +1458,26 @@ function buildItems(lv){
     shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
       var gi=t.g==='f'?1:0,ws=shuffle(Object.keys(EMO_W).filter(function(e){return e!==t.emo;})).slice(0,2).map(function(e){return EMO_W[e][gi];});
       items.push({type:'emow',emo:t.emo,word:EMO_W[t.emo][gi],ans:t.f,opts:shuffle([EMO_W[t.emo][gi]].concat(ws))});
+    });
+  }else if(lv.kind==='emol'){
+    /* Solo se escucha la palabra; las 2 fotos de distractor son del mismo género */
+    shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
+      var ds=shuffle(EMOP.filter(function(x){return x.g===t.g&&x.emo!==t.emo;})),d=[];
+      ds.forEach(function(x){if(d.length<2&&!d.some(function(y){return y.emo===x.emo;}))d.push(x);});
+      items.push({type:'emol',emo:t.emo,word:EMO_W[t.emo][t.g==='f'?1:0],ans:t.f,opts:shuffle([t].concat(d))});
+    });
+  }else if(lv.kind==='emod'){
+    /* Tres fotos: dos se sienten igual y una distinta; hay que tocar la distinta */
+    shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
+      var same=shuffle(EMOP.filter(function(x){return x.emo===t.emo&&x.f!==t.f;}))[0];
+      var odd=shuffle(EMOP.filter(function(x){return x.emo!==t.emo;}))[0];
+      items.push({type:'emod',ans:odd.f,opts:shuffle([t,same,odd])});
+    });
+  }else if(lv.kind==='emos'){
+    /* Foto + palabra escrita: ¿van juntas? la mitad sí y la mitad no */
+    shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t,k){
+      var gi=t.g==='f'?1:0,yes=(k%2===0),oe=shuffle(Object.keys(EMO_W).filter(function(e){return e!==t.emo;}))[0];
+      items.push({type:'emos',f:t.f,word:EMO_W[yes?t.emo:oe][gi],yes:yes});
     });
   }else if(lv.kind==='emom'){
     shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
@@ -2264,7 +2288,7 @@ function renderCamino(){
     else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
-    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-2','emo-3']});
+    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-2','emo-3','emo-4','emo-5','emo-6']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
     else if(a==='cal')go({s:'list',title:'Calendario',ids:cardIds('cal')});
@@ -2450,7 +2474,7 @@ function common(){return '<div class="fb" id="fb" role="status"></div>'+nextBtn(
 function drawItem(auto){
   var it=run.items[run.i],area=$('#item');
   renderDots();
-  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,emow:vEmoW,emom:vEmoM,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
+  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,emow:vEmoW,emom:vEmoM,emol:vEmoL,emod:vEmoD,emos:vEmoS,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
   area.insertAdjacentHTML('afterbegin',mascotHTML(it.type==='word'?'lee':'escucha'));
   colorTiles(it);fitTiles();fitBtns();
 }
@@ -2613,6 +2637,24 @@ function vEmoW(area,it,auto){
   area.innerHTML='<p class="q">¿Cómo se siente?</p><div class="emosrc pop"><img src="assets/emo/'+it.ans+'.webp" alt="" draggable="false"></div>'+
     '<div class="row emowd">'+it.opts.map(function(w){return '<button class="syl emowb" type="button" data-ok="'+(w===it.word?1:0)+'" aria-label="Palabra">'+Array.from(w).map(function(ch){return LC(ch,true);}).join('')+'</button>';}).join('')+'</div>'+common();
   wirePick(it,it.word,true);wireNext();
+}
+function vEmoL(area,it,auto){
+  area.innerHTML='<p class="q">Escuchá y tocá la cara</p><button class="btn ghost" id="listen" type="button">Escuchar</button>'+
+    '<div class="picopts">'+it.opts.map(function(o,k){return '<button class="pico emob" type="button" data-ok="'+(o.f===it.ans?1:0)+'" aria-label="Foto '+(k+1)+'"><img src="assets/emo/'+o.f+'.webp" alt="" draggable="false"></button>';}).join('')+'</div>'+common();
+  $('#listen').onclick=function(){sayWord(it.word);};
+  wirePick(it,it.word,true);wireNext();
+  if(auto)sayAuto(it.word,true);
+}
+function vEmoD(area,it,auto){
+  area.innerHTML='<p class="q">¿Cuál se siente distinta?</p>'+
+    '<div class="picopts">'+it.opts.map(function(o,k){return '<button class="pico emob" type="button" data-ok="'+(o.f===it.ans?1:0)+'" aria-label="Foto '+(k+1)+'"><img src="assets/emo/'+o.f+'.webp" alt="" draggable="false"></button>';}).join('')+'</div>'+common();
+  wirePick(it,null);wireNext();
+}
+function vEmoS(area,it,auto){
+  var w=Array.from(it.word).map(function(ch){return LC(ch,true);}).join('');
+  area.innerHTML='<p class="q">¿La palabra va con la cara?</p><div class="emosrc pop"><img src="assets/emo/'+it.f+'.webp" alt="" draggable="false"></div><div class="wordbig emow">'+w+'</div>'+
+    '<div class="row emowd"><button class="syl emowb" type="button" data-ok="'+(it.yes?1:0)+'" aria-label="Sí">SÍ</button><button class="syl emowb" type="button" data-ok="'+(it.yes?0:1)+'" aria-label="No">NO</button></div>'+common();
+  wirePick(it,null);wireNext();
 }
 function vEmoM(area,it,auto){
   area.innerHTML='<p class="q">¿Quién se siente igual?</p><div class="emosrc pop"><img src="assets/emo/'+it.src+'.webp" alt="" draggable="false"></div>'+
