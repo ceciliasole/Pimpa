@@ -1577,10 +1577,16 @@ var PALAUD={"balde": "audio/pal_balde.deda4e3a.mp3", "ballena": "audio/pal_balle
 var LNAUD={"m": "audio/let_m.a3637efd.mp3", "p": "audio/let_p.79401e2a.mp3", "s": "audio/let_s.f4e7b899.mp3", "t": "audio/let_t.c96ea22b.mp3", "l": "audio/let_l.db3bd5e6.mp3", "f": "audio/let_f.dcb207b1.mp3", "c": "audio/let_c.3a19a054.mp3", "n": "audio/let_n.8389f3b5.mp3", "d": "audio/let_d.1bc42fd3.mp3", "b": "audio/let_b.d4c20aa5.mp3", "j": "audio/let_j.5f0b96dd.mp3", "ch": "audio/let_ch.81aa58e1.mp3", "g": "audio/let_g.6bed9129.mp3", "ll": "audio/let_ll.62f3224e.mp3", "q": "audio/let_q.54be21eb.mp3", "r": "audio/let_r.96940f00.mp3", "v": "audio/let_v.020f47b3.mp3", "y": "audio/let_y.9f1d7908.mp3", "z": "audio/let_z.9fa7497e.mp3", "ñ": "audio/let_n.862acbf6.mp3"};
 var RSUAVE='audio/rsuave.c418f0a6.mp3';
 /* Grabaciones de Cecilia (1 nov 2026) para armar las preguntas de los días y de los números */
+var FRFULL={};
 var FRAUD={si_hoy_es:'audio/fra_si_hoy_es.1c0ceee1.mp3',que_dia:'audio/fra_que_dia.4078a788.mp3',fue_ayer:'audio/fra_fue_ayer.a1cd6252.mp3',es_manana:'audio/fra_es_manana.8ead2ccc.mp3',numero_despues:'audio/fra_numero_despues.e8195a78.mp3'};
 /* Devuelve la lista de audios que arman la frase, o null si no es una de esas preguntas (o si falta algún audio) */
 function seqClips(text){
   var k=String(text).trim().toLowerCase(),m,c=null;
+  /* Frases enteras grabadas por Josefina (2 nov): si existen, suenan de corrido y se usan antes que las piezas sueltas. Se llena al cargar sus audios (fra_dia_ayer, fra_dia_manana, fra_si_hoy_<día>_ayer|manana). */
+  var fm=/^¿qué día (fue ayer|es mañana)\?$/.exec(k),fk=null;
+  if(fm)fk='dia_'+(fm[1]==='fue ayer'?'ayer':'manana');
+  else if((fm=/^si hoy es ([^.]+)\. ¿qué día (fue ayer|es mañana)\?$/.exec(k)))fk='si_hoy_'+fm[1].normalize('NFD').replace(/[\u0300-\u036f]/g,'')+'_'+(fm[2]==='fue ayer'?'ayer':'manana');
+  if(fk&&FRFULL[fk])return [FRFULL[fk]];
   if(k==='¿qué número viene después?')c=[FRAUD.numero_despues];
   else if((m=/^¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.que_dia,m[1]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
   else if((m=/^si hoy es ([^.]+)\. ¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.si_hoy_es,recClip(m[1]),FRAUD.que_dia,m[2]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
