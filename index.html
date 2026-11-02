@@ -315,6 +315,9 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 
 .boca{display:block;max-width:100%;height:auto;user-select:none;-webkit-user-drag:none}
 .bocabig{width:clamp(130px,38vw,190px)}
+.pico.emob{padding:0;overflow:hidden;width:clamp(110px,28vw,220px);aspect-ratio:1/1;background:#FFF6E5;border:4px solid #E8DCBF}
+.pico.emob img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block;pointer-events:none}
+.pico.emob.ok{border-color:var(--ok)}
 .pico.bocab{padding:4px;width:clamp(100px,28vw,150px);aspect-ratio:auto}
 .pico.bocab .boca{width:100%}
 .bigletter{font-size:clamp(5rem,26vw,9rem);font-weight:700;line-height:1}
@@ -1278,6 +1281,15 @@ LEVELS.push({id:'v-r',grp:'Vocales',title:'Reconocer vocales',kind:'vowel'});
 LEVELS.push({id:'v-s',grp:'Vocales',title:'Sonido inicial: vocales',kind:'first',known:VOW.slice(),focus:null});
 LEVELS.push({id:'a-v',grp:'Articulemas',title:'Articulemas: vocales',kind:'art',set:VOW.slice()});
 LEVELS.push({id:'a-p',grp:'Articulemas',title:'Articulemas: M P T L F S',kind:'art',set:PREM.slice()});
+/* Reconociendo emociones (M-040, M-051 a M-056): la voz dice la emoción y el niño toca la cara. 3 fotos, todas con el mismo fondo neutro. Sin regla del 8 de 10: solo suma estrellitas.
+   Faltan 2 fotos que Cecilia está reemplazando (nene de CANSADO frotándose el ojo y nene de ASUSTADO de abajo a la derecha). */
+var EMO_W={contento:['contento','contenta'],triste:['triste','triste'],enojado:['enojado','enojada'],cansado:['cansado','cansada'],asustado:['asustado','asustada']};
+var EMOP=[['contento','m','contento-m-1'],['contento','f','contento-f-1'],['contento','m','contento-m-2'],['contento','f','contento-f-2'],
+ ['triste','m','triste-m-1'],['triste','f','triste-f-1'],['triste','m','triste-m-2'],['triste','f','triste-f-2'],
+ ['enojado','m','enojado-m-1'],['enojado','f','enojado-f-1'],['enojado','m','enojado-m-2'],['enojado','f','enojado-f-2'],
+ ['cansado','m','cansado-m-1'],['cansado','f','cansado-f-1'],['cansado','f','cansado-f-2'],
+ ['asustado','f','asustado-f-1'],['asustado','m','asustado-m-1'],['asustado','f','asustado-f-2']].map(function(e){return {emo:e[0],g:e[1],f:e[2]};});
+LEVELS.push({id:'emo-1',grp:'Emociones',title:'Reconociendo emociones',kind:'emo',free:true});
 PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Premium',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Premium',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
@@ -1424,6 +1436,13 @@ function buildItems(lv){
         items.push({type:'vowel',ans:v,opts:shuffle([v].concat(sample(VOW.filter(function(x){return x!==v;}),2)))});
       });
     }
+  }else if(lv.kind==='emo'){
+    /* Las 2 fotos que se tocan de distractor son del mismo género que la correcta, así la palabra (contento/contenta) no da pista */
+    shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
+      var ds=shuffle(EMOP.filter(function(x){return x.g===t.g&&x.emo!==t.emo;}));
+      var d=[];ds.forEach(function(x){if(d.length<2&&!d.some(function(y){return y.emo===x.emo;}))d.push(x);});
+      items.push({type:'emo',emo:t.emo,g:t.g,word:EMO_W[t.emo][t.g==='f'?1:0],ans:t.f,opts:shuffle([t].concat(d))});
+    });
   }else if(lv.kind==='art'){
     seq(lv.set,TOTAL).forEach(function(l,k){
       var opts=shuffle([l].concat(sample(lv.set.filter(function(x){return x!==l;}),2)));
@@ -1760,11 +1779,11 @@ function cpre(id){var c=codeOf(id);return c?'['+c+'] ':'';}
 var GNAME={voc:'Vocales',fre:'Premium',men:'Clásicas',poc:'Poco frecuentes'};
 var GLET={voc:VOW,fre:PREM,men:CLAS,poc:POCO};
 GLET.sil=PREM.concat(CLAS,POCO,['ñ']);GNAME.sil='Sílabas';
-var CARDN={voc:'Vocales',fre:'Premium',men:'Clásicas',poc:'Poco frecuentes',cons:'Consonantes',pal:'Palabras',art:'Articulemas',tra:'Trazo',inv:'Inversas y artículos',may:'Mayúscula y minúscula',num:'Números',cal:'Calendario'};
+var CARDN={emo:'Emociones',voc:'Vocales',fre:'Premium',men:'Clásicas',poc:'Poco frecuentes',cons:'Consonantes',pal:'Palabras',art:'Articulemas',tra:'Trazo',inv:'Inversas y artículos',may:'Mayúscula y minúscula',num:'Números',cal:'Calendario'};
 function recOf(id,p){p=p||curProfile();return (p.progress&&p.progress[id])||(p.trace&&p.trace[id])||null;}
 function cardIds(k){
   if(k==='tra')return TLEVELS.map(function(t){return t.id;});
-  var g={voc:['Vocales'],fre:['Premium'],men:['Clásicas'],poc:['Poco frecuentes'],cons:['Premium','Clásicas','Poco frecuentes'],pal:['Palabras'],art:['Articulemas'],inv:['Inversas y artículos'],may:['Mayúscula y minúscula'],num:['Números'],cal:['Calendario']}[k];
+  var g={voc:['Vocales'],fre:['Premium'],men:['Clásicas'],poc:['Poco frecuentes'],cons:['Premium','Clásicas','Poco frecuentes'],pal:['Palabras'],art:['Articulemas'],emo:['Emociones'],inv:['Inversas y artículos'],may:['Mayúscula y minúscula'],num:['Números'],cal:['Calendario']}[k];
   return ALLLV().filter(function(l){return g.indexOf(l.grp)>-1;}).map(function(l){return l.id;}); } function statOf(ids,p){
   var d=0,t=0;
   ids.forEach(function(id){var r=recOf(id,p);if(r&&r.passed)d++;if(r&&r.attempts)t++;});
@@ -1778,7 +1797,7 @@ function cardStat(k,p){
   return s;
 }
 function mixTxt(st){return st&&st.mix?' · '+st.mix+(st.mix===1?' mezcla superada':' mezclas superadas'):'';}
-function allIds(){return cardIds('voc').concat(cardIds('cons'),cardIds('pal'),cardIds('art'),cardIds('tra'),cardIds('inv'),cardIds('may'),cardIds('num'),cardIds('cal'));}
+function allIds(){return cardIds('voc').concat(cardIds('cons'),cardIds('pal'),cardIds('art'),cardIds('emo'),cardIds('tra'),cardIds('inv'),cardIds('may'),cardIds('num'),cardIds('cal'));}
 function allStat(p){return statOf(allIds(),p);}
 function pbar(st){var w=st.total?Math.round(st.done*100/st.total):0;return '<div class="pbar" role="img" aria-label="'+st.done+' de '+st.total+'"><i style="width:'+w+'%"></i></div>';}
 
@@ -2127,6 +2146,7 @@ function renderCamino(){
       hcard('sil','Sílabas','<span class="c">M</span><span class="v">A</span> <span class="c">P</span><span class="v">E</span>',null,'Aprendo, leo y armo sílabas')+
       hcard('pal','Palabras','<img class="cico" src="'+ICO.ilibro+'" alt="" draggable="false">',cardStat('pal')))+
       hcard('art','Articulemas',['m','a','s'].map(function(l){return '<img class="bgl" src="'+BOCAC[l]+'" alt="" draggable="false">';}).join(''),cardStat('art'),null,'La posición de la boca para decir cada sonido')+
+      hcard('emo','Reconociendo emociones',['contento-f-1','triste-m-1','enojado-f-1'].map(function(f){return '<img class="bgl" src="assets/emo/'+f+'.webp" alt="" draggable="false">';}).join(''),cardStat('emo'),null,'Elegí la cara de cada emoción')+
       hcard('tra','Trazo','<img class="cico" src="'+ICO.ilapiz+'" alt="" draggable="false">',cardStat('tra'))+
       hcard('inv','Inversas y artículos','<img class="cico" src="'+ICO.ilael+'" alt="" draggable="false">',cardStat('inv'))+
       hcard('may','Mayúscula y minúscula','<img class="cico" src="'+ICO.iAa+'" alt="" draggable="false">',cardStat('may'))+
@@ -2220,6 +2240,7 @@ function renderCamino(){
     else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
+    else if(a==='emo')go({s:'list',title:'Reconociendo emociones',ids:['emo-1']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
     else if(a==='cal')go({s:'list',title:'Calendario',ids:cardIds('cal')});
@@ -2267,7 +2288,7 @@ function summaryText(){
   var p=curProfile(),st=allStat(p),lines=[];
   lines.push('Progreso de '+p.alias+' ('+new Date().toLocaleDateString('es-AR')+')');
   lines.push('General: '+st.done+' de '+st.total+' ejercicios superados.');
-  ['voc','fre','men','poc','pal','art','tra','inv','may','num','cal'].forEach(function(k){var c=cardStat(k);lines.push('- '+CARDN[k]+': '+c.done+' de '+c.total);});
+  ['voc','fre','men','poc','pal','art','emo','tra','inv','may','num','cal'].forEach(function(k){var c=cardStat(k);lines.push('- '+CARDN[k]+': '+c.done+' de '+c.total);});
   lines.push('');
   ALLLV().forEach(function(lv){ var r=p.progress[lv.id]; if(r)lines.push('- '+cpre(lv.id)+lv.grp+' · '+plainTitle(lv)+': mejor resultado '+r.best*10+'%, '+r.attempts+(r.attempts===1?' intento':' intentos')+(r.passed?' (superado)':' (en práctica)'));
   });
@@ -2305,7 +2326,7 @@ function renderProgreso(){
   rows+='<tr class="gr"><td colspan="4">Trazo</td></tr>'+TLEVELS.map(function(tl){return prow(esc(tl.title)+codeTag(tl.id),traceRec(tl.id),true);}).join('');
   var ex=extraIds(p);
   if(ex.length)rows+='<tr class="gr"><td colspan="4">Mezclas armadas</td></tr>'+ex.map(function(id){var r=p.progress[id];return prow(esc(r.grp+' · '+r.title),r);}).join('');
-  var cards=['voc','fre','men','poc','pal','art','tra','inv','may','num','cal'].map(function(k){var c=cardStat(k);
+  var cards=['voc','fre','men','poc','pal','art','emo','tra','inv','may','num','cal'].map(function(k){var c=cardStat(k);
     return '<div class="pc"><div class="gtop"><b>'+CARDN[k]+'</b><span>'+c.done+' de '+c.total+mixTxt(c)+'</span></div>'+pbar(c)+'</div>';}).join('');
   stage.innerHTML=
     '<div class="bar"><h2 class="h2">Progreso de '+esc(p.alias)+'</h2></div>'+
@@ -2405,7 +2426,7 @@ function common(){return '<div class="fb" id="fb" role="status"></div>'+nextBtn(
 function drawItem(auto){
   var it=run.items[run.i],area=$('#item');
   renderDots();
-  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
+  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
   area.insertAdjacentHTML('afterbegin',mascotHTML(it.type==='word'?'lee':'escucha'));
   colorTiles(it);fitTiles();fitBtns();
 }
@@ -2544,6 +2565,14 @@ function vArt(area,it,auto){
   if($('#listen'))$('#listen').onclick=function(){say(it.ans);};
   wirePick(it,snd);wireNext();
   if(auto&&snd)sayAuto(it.ans); /* suena solo siempre, tanto con la letra como con la boca */
+}
+function vEmo(area,it,auto){
+  var w=Array.from(it.word).map(function(ch){return LC(ch,true);}).join('');
+  area.innerHTML='<p class="q">Tocá la cara</p><div class="wordbig emow">'+w+'</div><button class="btn ghost" id="listen" type="button">Escuchar</button>'+
+    '<div class="picopts">'+it.opts.map(function(o,k){return '<button class="pico emob" type="button" data-ok="'+(o.f===it.ans?1:0)+'" aria-label="Foto '+(k+1)+'"><img src="assets/emo/'+o.f+'.webp" alt="" draggable="false"></button>';}).join('')+'</div>'+common();
+  $('#listen').onclick=function(){sayWord(it.word);};
+  wirePick(it,it.word,true);wireNext();
+  if(auto)sayAuto(it.word,true);
 }
 function vFirst(area,it,auto){
   area.innerHTML='<p class="q">¿Con qué sonido empieza …?</p><div class="pic pop" role="img" aria-label="Dibujo de '+esc(it.word)+'">'+it.pic+'</div>'+
@@ -2940,7 +2969,7 @@ function finishTrace(){
 
 /* ---------- Final de cada ronda ---------- */
 function finish(){
-  var score=run.hits,pass=score>=PASS,p=curProfile();
+  var score=run.hits,pass=score>=PASS||!!run.lv.free,p=curProfile();
   var rec=p.progress[run.lv.id]||{best:0,attempts:0,passed:false,last:null};
   rec.attempts++;rec.best=Math.max(rec.best,score);rec.passed=rec.passed||pass;rec.last=new Date().toISOString();
   rec.title=plainTitle(run.lv);rec.grp=run.lv.grp;p.progress[run.lv.id]=rec;
