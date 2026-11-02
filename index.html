@@ -281,6 +281,8 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .soon{display:flex;flex-wrap:wrap;gap:8px}
 .soon span{padding:6px 12px;border:1.5px dashed var(--line);border-radius:999px;font-size:.9rem;color:var(--ink-2)}
 
+.wimg{width:1em;height:1em;object-fit:contain;display:block;margin:auto;pointer-events:none;user-select:none}
+.pico .wimg{width:1.3em;height:1.3em}
 .pic{font-size:clamp(5.5rem,22vw,8.5rem);line-height:1;width:min(100%,250px);aspect-ratio:1;display:grid;place-items:center;background:var(--surface-2);border-radius:24px}
 .row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
 .btn{min-height:56px;padding:0 26px;border-radius:14px;border:2px solid var(--cons);background:var(--cons);color:var(--on-cons);font-size:1.1rem;font-weight:600;cursor:pointer}
@@ -1190,6 +1192,11 @@ var WORDS=[
  ['yate',['ya','te'],'⛵'],['pera',['pe','ra'],'🍐'],['yema',['ye','ma'],'🥚'],
  ['zapato',['za','pa','to'],'👟'],['camisa',['ca','mi','sa'],'👕']
 ];
+/* Dibujos nuevos (láminas de Cecilia/Jose, 2 nov): reemplazan al emoji donde hay dibujo. Nene, nena y popo se dejan con el emoji por ahora. */
+var WIMG={bote:'bote',pino:'pino',sapo:'sapo',sapito:'sapo',rana:'sapo',lupa:'lupa',queso:'queso',casa:'casa',beso:'beso',pelota:'pelota',lana:'lana',lobo:'lobo',mono:'mono',nube:'nube',coco:'coco',mano:'mano',dado:'dado',boca:'boca',cama:'cama',caja:'caja',taza:'taza',luna:'luna','bebé':'bebe',dedo:'dedo',gato:'gato',llama:'llama',llave:'llave',sopa:'sopa',pila:'pila',lata:'lata','sofá':'sofa',pato:'pato',bota:'bota',taco:'taco',foca:'foca',bicicleta:'bicicleta',foto:'foto',papa:'papa',mapa:'mapa',mate:'mate',moto:'moto',tele:'tele'};
+function wimgTag(f){return '<img class="wimg" src="assets/w/'+f+'.webp" alt="" draggable="false">';}
+Object.keys(FIRST).forEach(function(k){FIRST[k].forEach(function(e){if(WIMG[e[0]])e[1]=wimgTag(WIMG[e[0]]);});});
+WORDS.forEach(function(e){if(WIMG[e[0]])e[2]=wimgTag(WIMG[e[0]]);});
 function learned(w,cons){
   return w[1].every(function(s){
     var t=strip(s);
