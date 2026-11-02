@@ -684,7 +684,8 @@ body.playing .row:has(>.tile[data-ok]:nth-child(7)){grid-template-columns:repeat
 #item .tile{line-height:1}
 body.playing .pic.small{width:clamp(66px,min(26vw,13dvh),140px);font-size:clamp(2.4rem,min(14vw,7dvh),5.5rem)}
 body.playing .lleft{gap:4px}
-body.playing .qopt .qty span{font-size:clamp(.8rem,2.5dvh,1.15rem);line-height:1}body.playing .qopt .qty{max-width:100%}
+body.playing .qopt .qty span{font-size:clamp(.8rem,2.5dvh,1.15rem);line-height:1}
+body.isfs.playing #item{zoom:.82}body.playing .qopt .qty{max-width:100%}
 /* v16 (mejora Jose): pantalla grande / completa, todo al máximo que entra. Los tamaños salen del alto de la pantalla (dvh) para que nada se corte. Solo tamaño, no contenido. */
 @media (min-width:900px) and (min-height:620px){
   body.playing .app{max-width:min(100%,1600px)}
@@ -1334,14 +1335,13 @@ var GENN={
   numrec:function(lv){return seq(lv.set,TOTAL).map(function(n){return {type:'choice',q:'Tocá el número que escuchás',say:numWord(n),opts:optsOf(lv.set,n,numOpt)};});},
   cant:function(lv){return seq(lv.set,TOTAL).map(function(n,k){
     var e=QTYE[Math.floor(Math.random()*QTYE.length)];
-    if(k%2===0)return {type:'choice',q:'¿Cuántos hay?',show:qtyHTML(n,e),opts:optsOf(lv.set,n,numOpt)};
-    return {type:'choice',q:'Tocá el grupo que tiene esa cantidad',show:'<div class="bigletter c">'+n+'</div>',say:numWord(n),opts:optsOf(lv.set,n,function(v){return {h:qtyHTML(v,e),cls:'qopt'};})};
+    return {type:'choice',q:'¿Cuántos hay?',show:qtyHTML(n,e),opts:optsOf(lv.set,n,numOpt)};
   });},
   falta:function(lv){return seq(lv.set,TOTAL).map(function(){
     var w=Math.min(5,lv.max),st=1+Math.floor(Math.random()*(lv.max-w+1)),idx=1+Math.floor(Math.random()*(w-2)),arr=[];
     for(var i=0;i<w;i++)arr.push(st+i);
     var ans=arr[idx];arr[idx]='?';
-    return {type:'choice',q:'¿Qué número falta?',show:seqRow(arr),opts:optsOf(rng(1,lv.max),ans,numOpt)};
+    return {type:'choice',q:'¿Qué número falta?',show:seqRow(arr),fill:ans,opts:optsOf(rng(1,lv.max),ans,numOpt)};
   });},
   sig:function(lv){return seq(lv.set,TOTAL).map(function(n){
     var pool=[n-1,n+2,n+3,n-2].filter(function(x){return x>=1&&x<=20;});
@@ -2479,6 +2479,9 @@ function vChoice(area,it,auto){
     '<div class="row copts">'+it.opts.map(function(o){return '<button class="'+o.cls+'" type="button" data-ok="'+(o.ok?1:0)+'" aria-label="Opción">'+o.h+'</button>';}).join('')+'</div>'+common();
   if(it.say)$('#listen').onclick=function(){say(it.say);};
   wirePick(it,it.say||null);wireNext();
+  if(it.fill!=null){ /* M-125/M-126: el número aparece en el lugar vacío solo si elige la correcta */
+    $$('#item [data-ok="1"]').forEach(function(b){var o=b.onclick;b.onclick=function(){var q=$('#item .tile.q');if(q){q.textContent=it.fill;q.classList.remove('q');q.classList.add('c');}o.apply(this,arguments);};});
+  }
   if(auto&&it.say)sayAuto(it.say);
 }
 function vArt(area,it,auto){
