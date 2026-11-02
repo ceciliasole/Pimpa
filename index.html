@@ -700,8 +700,8 @@ body.isfs.playing #item{zoom:.82}body.playing .qopt .qty{max-width:100%}
   body.playing .stage{padding:clamp(14px,2.4dvh,34px) clamp(14px,3vw,48px)}
   body.playing .q{font-size:clamp(1.6rem,4.6dvh,3rem)}
   body.playing .fb{font-size:clamp(1.3rem,3.4dvh,2rem);min-height:clamp(34px,6dvh,64px)}
-  body.playing .tile{width:clamp(110px,min(18vw,19dvh),260px)}
-  body.playing .bigletter{font-size:clamp(5rem,22dvh,16rem)}
+  body.playing .tile{width:clamp(96px,min(15vw,16dvh),210px)}
+  body.playing .bigletter{font-size:clamp(4.4rem,18dvh,13rem)}
   body.playing .bigletter.long{font-size:clamp(4rem,18dvh,11rem)}
   body.playing .pic{width:min(100%,420px,26dvh);font-size:clamp(5rem,min(22vw,23dvh),14rem)}
   body.playing .pic.small{width:clamp(110px,min(20vw,19dvh),240px);font-size:clamp(3.4rem,min(14vw,10dvh),8rem)}
@@ -734,12 +734,12 @@ body.isfs.playing #item{zoom:.82}body.playing .qopt .qty{max-width:100%}
 /* v18 (mejora Jose): en pantalla grande se ocultan todas las consignas escritas (quedan para lectores de pantalla), salvo donde llevan información (letra a buscar en la escena, días y secuencias), y lo liberado se usa para agrandar lo que el niño toca */
 @media (min-width:900px) and (min-height:620px){
   body.playing #item:not(:has(.scene,.wkrow,.seqrow)) .q{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;padding:0}
-  body.playing .tile{width:clamp(110px,min(16vw,23dvh),300px)}
-  body.playing .bigletter{font-size:clamp(5rem,28dvh,20rem)}
-  body.playing .bigletter.long{font-size:clamp(4rem,22dvh,13rem)}
+  body.playing .tile{width:clamp(96px,min(13vw,18dvh),230px)}
+  body.playing .bigletter{font-size:clamp(4.4rem,22dvh,16rem)}
+  body.playing .bigletter.long{font-size:clamp(3.6rem,18dvh,11rem)}
   body.playing .pic{width:min(100%,520px,32dvh);font-size:clamp(5rem,min(22vw,28dvh),16rem)}
   body.playing .bocabig{width:clamp(120px,min(34vw,32dvh),420px)}
-  body.playing .row:has(>[data-ok]:nth-child(3):last-child)>.syl{min-height:clamp(120px,34dvh,300px);font-size:clamp(3rem,16dvh,9rem)}
+  body.playing .row:has(>[data-ok]:nth-child(3):last-child)>.syl{min-height:clamp(110px,28dvh,250px);font-size:clamp(2.8rem,13dvh,7.5rem)}
   body.playing .row:has(>[data-ok]:nth-child(4))>.syl{min-height:clamp(100px,19dvh,200px);font-size:clamp(2.4rem,9dvh,5rem)}
   body.playing .cshow .hand{height:clamp(150px,28dvh,320px)}
   body.playing .qopt .hand{height:clamp(100px,17dvh,200px)}
@@ -1201,7 +1201,7 @@ var WORDS=[
  ['ballena',['ba','lle','na'],'🐳'],['caballo',['ca','ba','llo'],'🐴'],['chaleco',['cha','le','co'],'🦺'],['cuchara',['cu','cha','ra'],'🥄'],['gallina',['ga','lli','na'],'🐔'],['gorila',['go','ri','la'],'🦍'],['gusano',['gu','sa','no'],'🪱'],['jirafa',['ji','ra','fa'],'🦒'],['jugo',['ju','go'],'🧃'],['leche',['le','che'],'🥛'],['lechuga',['le','chu','ga'],'🥬'],['llama',['lla','ma'],'🦙'],['llave',['lla','ve'],'🔑'],['loro',['lo','ro'],'🦜'],['noche',['no','che'],'🌃'],['paloma',['pa','lo','ma'],'🕊️'],['payaso',['pa','ya','so'],'🤡'],['rana',['ra','na'],'🐸'],['regalo',['re','ga','lo'],'🎁'],['silla',['si','lla'],'🪑'],['taza',['ta','za'],'☕'],['tijera',['ti','je','ra'],'✂️'],['toro',['to','ro'],'🐂'],['yoyó',['yo','yo'],'🪀'],['zapallo',['za','pa','llo'],'🎃']
 ];
 /* Dibujos nuevos (láminas de Cecilia/Jose, 2 nov): reemplazan al emoji donde hay dibujo. Nene, nena y popo se dejan con el emoji por ahora. */
-var WIMG={bote:'bote',pino:'pino',sapo:'sapo',sapito:'sapo',rana:'sapo',lupa:'lupa',queso:'queso',casa:'casa',beso:'beso',pelota:'pelota',lana:'lana',lobo:'lobo',mono:'mono',nube:'nube',coco:'coco',mano:'mano',dado:'dado',boca:'boca',cama:'cama',caja:'caja',taza:'taza',luna:'luna','bebé':'bebe',dedo:'dedo',gato:'gato',llama:'llama',llave:'llave',sopa:'sopa',pila:'pila',lata:'lata','sofá':'sofa',pato:'pato',bota:'bota',taco:'taco',foca:'foca',bicicleta:'bicicleta',foto:'foto',papa:'papa',mapa:'mapa',mate:'mate',moto:'moto',tele:'tele',tomate:'tomate',patito:'patito',maleta:'maleta',banana:'banana',moneda:'moneda',camino:'camino',conejo:'conejo',vaca:'vaca',rosa:'rosa',vela:'vela',yate:'yate',barco:'yate',pera:'pera',yema:'yema',zapato:'zapato',camisa:'camisa',tigre:'tigre',libro:'libro',leche:'leche',silla:'silla',serpiente:'serpiente',fuego:'fuego',gallina:'pollo',caballo:'caballo',abeja:'abeja','avión':'avion',auto:'auto',anillo:'anillo','árbol':'arbol','araña':'arana',elefante:'elefante',estrella:'estrella',escoba:'escoba',espejo:'espejo',edificio:'edificio','imán':'iman',iglesia:'iglesia',iguana:'iguana',oso:'oso',ojo:'ojo',oveja:'oveja',oreja:'oreja',uva:'uva',manzana:'manzana',mariposa:'mariposa',mosca:'mosca',pez:'pez',pan:'pan',perro:'perro','piña':'pina',pizza:'pizza','pingüino':'pinguino',puerta:'puerta',paloma:'paloma',tren:'tren',tortuga:'tortuga',tijera:'tijera',torta:'torta','teléfono':'telefono',taxi:'taxi',toro:'toro',tambor:'tambor','león':'leon','lápiz':'lapiz',loro:'loro',lengua:'lengua','limón':'limon',lechuga:'lechuga','sandía':'sandia',sombrero:'sombrero',sal:'sal',sobre:'sobre',flor:'flor',fresa:'fresa',frutilla:'fresa',fideos:'fideos',flan:'flan',balde:'balde',ballena:'ballena',nariz:'nariz',naranja:'naranja',cuchara:'cuchara','corazón':'corazon',cohete:'cohete','camión':'camion',jirafa:'jirafa',jugo:'jugo','jabón':'jabon','delfín':'delfin',dientes:'dientes','ratón':'raton',regalo:'regalo',reloj:'reloj',gorra:'gorra',globo:'globo',gusano:'gusano',gorila:'gorila',vestido:'vestido','violín':'violin',ventana:'ventana',chocolate:'chocolate',choclo:'choclo',chancho:'chancho',chaleco:'chaleco',quiosco:'quiosco','yoyó':'yoyo',yogur:'yogur',zorro:'zorro',zanahoria:'zanahoria',zapallo:'zapallo',nene:'nene',nena:'nena',payaso:'payaso',rey:'rey',unicornio:'unicornio','dragón':'dragon',fantasma:'fantasma',dinosaurio:'dinosaurio',robot:'robot',sol:'sol',mar:'mar',noche:'noche',lluvia:'lluvia',nieve:'nieve',fiesta:'fiesta',isla:'isla','volcán':'volcan'};
+var WIMG={bote:'bote',pino:'pino',sapo:'sapo',sapito:'sapo',rana:'sapo',lupa:'lupa',queso:'queso',casa:'casa',beso:'beso',pelota:'pelota',lana:'lana',lobo:'lobo',mono:'mono',nube:'nube',coco:'coco',mano:'mano',dado:'dado',boca:'boca',cama:'cama',caja:'caja',taza:'taza',luna:'luna','bebé':'bebe',dedo:'dedo',gato:'gato',llama:'llama',llave:'llave',sopa:'sopa',pila:'pila',lata:'lata','sofá':'sofa',pato:'pato',bota:'bota',taco:'taco',foca:'foca',bicicleta:'bicicleta',foto:'foto',papa:'papa',mapa:'mapa',mate:'mate',moto:'moto',tele:'tele',tomate:'tomate',patito:'patito',maleta:'maleta',banana:'banana',moneda:'moneda',camino:'camino',conejo:'conejo',vaca:'vaca',rosa:'rosa',vela:'vela',yate:'yate',barco:'yate',pera:'pera',yema:'yema',zapato:'zapato',camisa:'camisa',tigre:'tigre',libro:'libro',leche:'leche',silla:'silla',serpiente:'serpiente',fuego:'fuego',gallina:'pollo',caballo:'caballo',abeja:'abeja','avión':'avion',auto:'auto',anillo:'anillo','árbol':'arbol','araña':'arana',elefante:'elefante',estrella:'estrella',escoba:'escoba',espejo:'espejo',edificio:'edificio','imán':'iman',iglesia:'iglesia',iguana:'iguana',oso:'oso',ojo:'ojo',oveja:'oveja',oreja:'oreja',uva:'uva',manzana:'manzana',mariposa:'mariposa',mosca:'mosca',pez:'pez',pan:'pan',perro:'perro','piña':'pina',pizza:'pizza','pingüino':'pinguino',puerta:'puerta',paloma:'paloma',tren:'tren',tortuga:'tortuga',tijera:'tijera',torta:'torta','teléfono':'telefono',taxi:'taxi',toro:'toro',tambor:'tambor','león':'leon','lápiz':'lapiz',loro:'loro',lengua:'lengua','limón':'limon',lechuga:'lechuga','sandía':'sandia',sombrero:'sombrero',sal:'sal',sobre:'sobre',flor:'flor',fresa:'fresa',frutilla:'fresa',fideos:'fideos',flan:'flan',balde:'balde',ballena:'ballena',nariz:'nariz',naranja:'naranja',cuchara:'cuchara','corazón':'corazon',cohete:'cohete','camión':'camion',jirafa:'jirafa',jugo:'jugo','jabón':'jabon','delfín':'delfin',dientes:'dientes','ratón':'raton',regalo:'regalo',reloj:'reloj',gorra:'gorra',globo:'globo',gusano:'gusano',gorila:'gorila',vestido:'vestido','violín':'violin',ventana:'ventana',chocolate:'chocolate',choclo:'choclo',chancho:'chancho',chaleco:'chaleco',quiosco:'quiosco','yoyó':'yoyo',yogur:'yogur',zorro:'zorro',zanahoria:'zanahoria',zapallo:'zapallo',nene:'nene',nena:'nena',payaso:'payaso',rey:'rey',unicornio:'unicornio','dragón':'dragon',fantasma:'fantasma',dinosaurio:'dinosaurio',robot:'robot',sol:'sol',mar:'mar',noche:'noche',lluvia:'lluvia',nieve:'nieve',fiesta:'fiesta',isla:'isla','volcán':'volcan',miel:'miel',mula:'mula'};
 function wimgTag(f){return '<img class="wimg" src="assets/w/'+f+'.webp" alt="" draggable="false">';}
 Object.keys(FIRST).forEach(function(k){FIRST[k].forEach(function(e){if(WIMG[e[0]])e[1]=wimgTag(WIMG[e[0]]);});});
 WORDS.forEach(function(e){if(WIMG[e[0]])e[2]=wimgTag(WIMG[e[0]]);});
@@ -1294,14 +1294,11 @@ var EMOP=[['contento','m','contento-m-1'],['contento','f','contento-f-1'],['cont
  ['enojado','m','enojado-m-1'],['enojado','f','enojado-f-1'],['enojado','m','enojado-m-2'],['enojado','f','enojado-f-2'],
  ['cansado','m','cansado-m-1'],['cansado','f','cansado-f-1'],['cansado','m','cansado-m-2'],['cansado','f','cansado-f-2'],
  ['asustado','f','asustado-f-1'],['asustado','m','asustado-m-1'],['asustado','m','asustado-m-2'],['asustado','f','asustado-f-2']].map(function(e){return {emo:e[0],g:e[1],f:e[2]};});
-LEVELS.push({id:'emo-1',grp:'Emociones',title:'Reconociendo emociones',kind:'emo',free:true});
-/* Ejercicios 2 y 3 propuestos por Cecilia (2 nov), a validar con Jose */
-LEVELS.push({id:'emo-2',grp:'Emociones',title:'Mirá la cara y elegí la palabra',kind:'emow',free:true});
+/* Emociones (2 nov, ajustes de Jo): como los chicos casi no leen, todo es oral. 1 Reconociendo emociones (se escucha la palabra y se toca la cara), 3 Uní las caras, 5 ¿Cuál se siente distinta?, 6 ¿Está contento? (pregunta oral). Se sacaron el de la palabra escrita en cartel (emo) y el de elegir la palabra (emow). */
+LEVELS.push({id:'emo-1',grp:'Emociones',title:'Reconociendo emociones',kind:'emol',free:true});
 LEVELS.push({id:'emo-3',grp:'Emociones',title:'Uní las caras que se sienten igual',kind:'emom',free:true});
-/* Ejercicios 4 a 6 inventados por nosotras (2 nov), a validar con Jose. No usan dibujos nuevos ni audios nuevos */
-LEVELS.push({id:'emo-4',grp:'Emociones',title:'Escuchá y tocá la cara',kind:'emol',free:true});
 LEVELS.push({id:'emo-5',grp:'Emociones',title:'¿Cuál se siente distinta?',kind:'emod',free:true});
-LEVELS.push({id:'emo-6',grp:'Emociones',title:'¿La palabra va con la cara?',kind:'emos',free:true});
+LEVELS.push({id:'emo-6',grp:'Emociones',title:'¿Está contento?',kind:'emos',free:true});
 PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Premium',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Premium',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
@@ -1476,10 +1473,10 @@ function buildItems(lv){
       items.push({type:'emod',ans:odd.f,opts:shuffle([t,same,odd])});
     });
   }else if(lv.kind==='emos'){
-    /* Foto + palabra escrita: ¿van juntas? la mitad sí y la mitad no */
+    /* Pregunta oral '¿Está contento?' sobre una foto; la mitad sí y la mitad no */
     shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t,k){
       var gi=t.g==='f'?1:0,yes=(k%2===0),oe=shuffle(Object.keys(EMO_W).filter(function(e){return e!==t.emo;}))[0];
-      items.push({type:'emos',f:t.f,word:EMO_W[yes?t.emo:oe][gi],yes:yes});
+      items.push({type:'emos',f:t.f,q:'¿Está '+EMO_W[yes?t.emo:oe][gi]+'?',yes:yes});
     });
   }else if(lv.kind==='emom'){
     shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
@@ -1537,6 +1534,15 @@ function buildItems(lv){
     var SHN=['caja','carta','puerta','ventana','boya','pez'],sp=sylPool(lv.sc);
     seq(sp,TOTAL).forEach(function(sy,q){
       items.push({type:'vshape',ans:sy,opts:shuffle([sy].concat(sample(sp.filter(function(x){return x!==sy;}),4))),shape:SHN[q%SHN.length],cols:shuffle(SHCOL)});
+    });
+  }else if(lv.kind==='asoc'){
+    var AT=asocTable(),asp=sylPool(lv.sc).filter(function(sy){return !!AT[sy];});
+    seq(asp,TOTAL).forEach(function(sy){
+      var ans=sample(AT[sy],1)[0],used={},d=[],oth=[];
+      used[ans.img]=1;
+      Object.keys(AT).forEach(function(k){if(k!==sy)AT[k].forEach(function(x){oth.push(x);});});
+      shuffle(oth.filter(function(x){return x.c===ans.c;})).concat(shuffle(oth.filter(function(x){return x.c!==ans.c;}))).forEach(function(x){if(d.length<2&&!used[x.img]){d.push(x);used[x.img]=1;}});
+      items.push({type:'asoc',ans:sy,word:ans.w,opts:shuffle([ans].concat(d))});
     });
   }else if(lv.kind==='case'){
     seq(lv.set,TOTAL).forEach(function(l,k){
@@ -1857,10 +1863,28 @@ var IC_NEXT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l
 var seqIds=[];
 function nextLevelOf(lv){var i=seqIds.indexOf(lv.id);return(i>-1&&i<seqIds.length-1)?LV[seqIds[i+1]]:null;}
 /* M-092 / M-133: en modo adulto "Siguiente" siempre está habilitado y sigue con lo que viene. Si el nivel se armó solo (ej. Leer sílabas con la T) no tiene lista de niveles: se pasa a la letra que sigue en el abecedario de la app. */
-function silLevel(mode,set){var key=set.join('_'),nm=set.map(function(c){return c.toUpperCase();}).join(' ');return reg({id:'sil-'+mode+'-'+key,grp:'Sílabas',title:SILT[mode]+': '+nm,kind:mode==='f'?'sfig':'syl',mode:mode==='l'?'read':'build',sc:set.slice()});}
+/* M-101 / M-113: 'Asociar sílabas'. Aparece una sílaba (MA) y el niño toca, entre 3 dibujos sin palabra escrita, el que empieza con ella (masa, mesa, moto). Usa las palabras que ya tienen foto. */
+var ASOC_NO={sapito:1,'piña':1,rana:1};
+var _ASOC=null;
+function asocTable(){
+  if(_ASOC)return _ASOC;
+  var t={};
+  Object.keys(WIMG).forEach(function(w){
+    if(ASOC_NO[w])return;
+    var p=strip(w.toLowerCase()),m=/^(ll|ch|qu|gu|[bcdfgjlmnpqrstvyz])([aeiou])(.*)$/.exec(p);
+    if(!m)return;
+    var rest=m[3];
+    if(rest!==''&&!/^[aeiou]/.test(rest)&&!/^(ll|ch|rr|[bcdfgjlmnpqrstvyz])[aeiou]/.test(rest))return; /* la primera sílaba tiene que ser CV (no mar, pan, sol) */
+    var k=m[1]+m[2];
+    (t[k]=t[k]||[]).push({w:w,img:WIMG[w],c:(m[1]==='qu'?'q':m[1])});
+  });
+  return (_ASOC=t);
+}
+function hasAsoc(c){var T=asocTable();return sylPool([c]).some(function(sy){return !!T[sy];});}
+function silLevel(mode,set){var key=set.join('_'),nm=set.map(function(c){return c.toUpperCase();}).join(' ');return reg({id:'sil-'+mode+'-'+key,grp:'Sílabas',title:SILT[mode]+': '+nm,kind:mode==='f'?'sfig':(mode==='s'?'asoc':'syl'),mode:mode==='l'?'read':'build',sc:set.slice()});}
 function followOf(lv){
   var nx=nextLevelOf(lv);if(nx)return nx;
-  var m=/^sil-([lbf])-/.exec(lv.id||'');
+  var m=/^sil-([lbsf])-/.exec(lv.id||'');
   if(m&&lv.sc&&lv.sc.length){
     var order=PREM.concat(CLAS,POCO),i=order.indexOf(lv.sc[lv.sc.length-1]);
     if(i>-1&&i<order.length-1){seqIds=[];return silLevel(m[1],[order[i+1]]);}
@@ -1918,7 +1942,7 @@ function vowelLevels(set){
     {id:'vf-'+key,grp:'Vocales',title:'Sonido inicial: '+nm,kind:'first',known:set.slice(),focus:null}
   ];
 }
-var SILT={a:'Aprendo sílabas',l:'Leer sílabas',b:'Armar sílabas',f:'Sílabas en figuras'};
+var SILT={a:'Aprendo sílabas',l:'Leer sílabas',b:'Armar sílabas',s:'Asociar sílabas',f:'Sílabas en figuras'};
 function grpOfC(c){return PREM.indexOf(c)>-1?'Premium':(CLAS.indexOf(c)>-1?'Clásicas':'Poco frecuentes');}
 function lessonOf(c){return LV['sq-pr-'+c]||reg({id:'sq-pr-'+c,grp:grpOfC(c),cons:c,title:'Cómo se forman las sílabas',kind:'lesson',presentOnly:true});}
 /* Sección Sílabas (M-041/M-042): Aprendo = pantalla de flechas, Leer = escuchar y tocar la sílaba, Armar = armar con consonante y vocal */
@@ -1948,6 +1972,7 @@ function askConflicts(set,done){
 }
 function startSil(mode,set){
   if(mode==='a')set=set.filter(function(c){return c!=='ñ';}); /* Ñ no tiene dibujo definido para la lección */
+  if(mode==='s')set=set.filter(hasAsoc);
   if(!set.length)return;
   if(mode==='a'){
     if(set.length===1){seqIds=[];openLevelObj(lessonOf(set[0]));}
@@ -2083,6 +2108,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
     var prev=SDONE.slice();SDONE.push(c);
     if(prev.length)sq(sec,{id:'sq-sr-'+c,grp:grp,title:'Rotación de sílabas '+SDONE.map(UP).join(' '),kind:'syl',mode:'read',sc:SDONE.slice(),newc:c});
     sq(sec,{id:'sq-sa-'+c,grp:grp,cons:c,title:'Armar sílabas',kind:'syl',mode:'build',sc:[c]});
+    if(hasAsoc(c))sq(sec,{id:'sq-ss-'+c,grp:grp,cons:c,title:'Asociar sílabas',kind:'asoc',sc:[c]});
   }
   PREM.forEach(function(c){silSteps('Sílabas','Premium',c);});
   sq('Palabras',LV['pal-1']);sq('Palabras',LV['palb-1']);sq('Palabras',LV['pal-1b']);
@@ -2250,10 +2276,11 @@ function renderCamino(){
       hcard('sil-a','Aprendo sílabas','',null,'')+
       hcard('sil-l','Leer sílabas','',null,'')+
       hcard('sil-b','Armar sílabas','',null,'')+
+      hcard('sil-s','Asociar sílabas','',null,'')+
       hcard('sil-f','Sílabas en figuras','',null,'')+'</div>';
   }else if(n.s==='silpick'){
     var ssel=n.sel=n.sel||[];
-    h=topbar(SILT[n.mode])+'<p class="hint" style="text-align:center;margin:0">Elegí una consonante, o varias.</p><div class="chips">'+chipsOf('sil').filter(function(c){return !(n.mode==='a'&&c==='ñ');}).map(function(c){
+    h=topbar(SILT[n.mode])+'<p class="hint" style="text-align:center;margin:0">Elegí una consonante, o varias.</p><div class="chips">'+chipsOf('sil').filter(function(c){return !(n.mode==='a'&&c==='ñ')&&!(n.mode==='s'&&!hasAsoc(c));}).map(function(c){
       return '<button class="chip '+(c.length>1?'long':'')+'" style="color:'+LCOL(c)+'" data-c="'+c+'" type="button" aria-pressed="'+(ssel.indexOf(c)>-1)+'">'+DH(c)+'</button>';
     }).join('')+'</div><div class="row"><button class="sw" data-pre="all" type="button">Todas</button><button class="sw" data-pre="none" type="button">Limpiar</button></div>'+
       '<button class="btn" id="go" type="button"'+(ssel.length<1?' disabled':'')+'>Empezar</button>';
@@ -2287,10 +2314,10 @@ function renderCamino(){
     else if(a==='pim')go({s:'pim'});
     else if(a==='cons')go({s:'cons'});
     else if(a==='sil')go({s:'sil'});
-    else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
+    else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-s'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
-    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-2','emo-3','emo-4','emo-5','emo-6']});
+    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-3','emo-5','emo-6']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
     else if(a==='cal')go({s:'list',title:'Calendario',ids:cardIds('cal')});
@@ -2412,7 +2439,7 @@ function openLevelObj(lv){
   renderDots();
   if(lv.intro)drawIntro();else drawItem(true);
 }
-var RTYPE={sfig:'star',vowel:'star',first:'coin',syl:'cup',word:'star',wbuild:'star',art:'cup',case:'coin',nchoice:'star'};
+var RTYPE={asoc:'cup',sfig:'star',vowel:'star',first:'coin',syl:'cup',word:'star',wbuild:'star',art:'cup',case:'coin',nchoice:'star'};
 function rewType(lv){return (lv&&RTYPE[lv.kind])||'star';}
 var SVG_CUP='<img src="'+DEC2.cup+'" alt="">';
 var SVG_COIN='<img src="'+DEC2.coin+'" alt="">';
@@ -2476,7 +2503,7 @@ function common(){return '<div class="fb" id="fb" role="status"></div>'+nextBtn(
 function drawItem(auto){
   var it=run.items[run.i],area=$('#item');
   renderDots();
-  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,emow:vEmoW,emom:vEmoM,emol:vEmoL,emod:vEmoD,emos:vEmoS,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
+  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,emow:vEmoW,emom:vEmoM,emol:vEmoL,emod:vEmoD,emos:vEmoS,asoc:vAsoc,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
   area.insertAdjacentHTML('afterbegin',mascotHTML(it.type==='word'?'lee':'escucha'));
   colorTiles(it);fitTiles();fitBtns();
 }
@@ -2653,10 +2680,11 @@ function vEmoD(area,it,auto){
   wirePick(it,null);wireNext();
 }
 function vEmoS(area,it,auto){
-  var w=Array.from(it.word).map(function(ch){return LC(ch,true);}).join('');
-  area.innerHTML='<p class="q">¿La palabra va con la cara?</p><div class="emosrc pop"><img src="assets/emo/'+it.f+'.webp" alt="" draggable="false"></div><div class="wordbig emow">'+w+'</div>'+
-    '<div class="row emowd"><button class="syl emowb" type="button" data-ok="'+(it.yes?1:0)+'" aria-label="Sí">SÍ</button><button class="syl emowb" type="button" data-ok="'+(it.yes?0:1)+'" aria-label="No">NO</button></div>'+common();
-  wirePick(it,null);wireNext();
+  area.innerHTML='<p class="q">'+esc(it.q)+'</p><div class="emosrc pop"><img src="assets/emo/'+it.f+'.webp" alt="" draggable="false"></div><button class="btn ghost" id="listen" type="button">Escuchar</button>'+
+    '<div class="row emowd"><button class="syl emowb" type="button" data-ok="'+(it.yes?1:0)+'" aria-label="Sí">✓ SÍ</button><button class="syl emowb" type="button" data-ok="'+(it.yes?0:1)+'" aria-label="No">✗ NO</button></div>'+common();
+  $('#listen').onclick=function(){say(it.q);};
+  wirePick(it,it.q);wireNext();
+  if(auto)sayAuto(it.q);
 }
 function vEmoM(area,it,auto){
   area.innerHTML='<p class="q">¿Quién se siente igual?</p><div class="emosrc pop"><img src="assets/emo/'+it.src+'.webp" alt="" draggable="false"></div>'+
@@ -2674,6 +2702,13 @@ function vFirst(area,it,auto){
 function vSyl(area,it,auto){
   area.innerHTML='<p class="q">¿Dónde dice …?</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row">'+
     it.opts.map(function(s){return '<button class="syl" type="button" data-ok="'+(s===it.ans?1:0)+'" aria-label="Sílaba">'+S(s)+'</button>';}).join('')+'</div>'+common();
+  $('#listen').onclick=function(){say(it.ans);};
+  wirePick(it,it.ans);wireNext();
+  if(auto)sayAuto(it.ans);
+}
+function vAsoc(area,it,auto){
+  area.innerHTML='<p class="q">¿Cuál empieza con …?</p><div class="wordbig"><span>'+S(it.ans)+'</span></div><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="picopts">'+
+    it.opts.map(function(o,k){return '<button class="pico" type="button" data-ok="'+(o.w===it.word?1:0)+'" aria-label="Dibujo '+(k+1)+'">'+wimgTag(o.img)+'</button>';}).join('')+'</div>'+common();
   $('#listen').onclick=function(){say(it.ans);};
   wirePick(it,it.ans);wireNext();
   if(auto)sayAuto(it.ans);
