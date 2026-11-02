@@ -611,7 +611,7 @@ img.pstar.on{filter:none;animation:pop .5s both}
 .sarr{font-size:1.8rem;color:var(--ink-2)}
 .qty{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:280px}
 .qty span{font-size:2rem;line-height:1.1}
-.dado{display:block;width:clamp(96px,26vw,150px);height:auto;color:var(--cons)}
+.dado{display:block;width:clamp(96px,26vw,150px);height:auto;color:#1a1a1a}
 .qopt .dado{width:clamp(52px,12dvh,84px)}
 .qopt{min-width:96px;min-height:84px;padding:8px 10px;border-radius:18px;border:3px solid var(--line);background:var(--surface);cursor:pointer;max-width:46%}
 .qopt .qty span{font-size:1.15rem}
@@ -1357,13 +1357,14 @@ var DIAS=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
 var DIAS3=['lun','mar','mié','jue','vie','sáb','dom'];
 var QTYE=['🍎','⭐','🐟','🎈','🍓','🐥'];
 function numOpt(n){return {h:String(n),cls:'tile c'+(String(n).length>1?' long':'')};}
-function dayOpt(i){return {h:'<span class="dw">'+DH(DIAS[i])+'</span>',cls:'syl dopt'};}
+function dayOpt(i){return {h:'<span class="dw" style="color:'+DCOL(i)+'">'+DH(DIAS[i])+'</span>',cls:'syl dopt'};}
+function dateH(x){var p=x.lastIndexOf(' '),nm=x.slice(0,p),nu=x.slice(p+1),i=DIAS.indexOf(nm);return '<span class="dw"><span style="color:'+DCOL(i)+'">'+DH(nm)+'</span> <span style="color:'+DCOL(i+3)+'">'+esc(nu)+'</span></span>';}
 function optsOf(set,ans,mk){return shuffle([ans].concat(sample(set.filter(function(x){return x!==ans;}),2))).map(function(v){var o=mk(v);o.ok=(v===ans);return o;});}
 function qtyHTML(n,e){var h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return '<div class="qty">'+h+'</div>';}
 function seqRow(arr){return '<div class="seqrow">'+arr.map(function(x){return x==='?'?'<span class="tile q">?</span>':(x==='>'?'<span class="sarr">➜</span>':'<span class="tile c'+(String(x).length>1?' long':'')+'">'+x+'</span>');}).join('')+'</div>';}
 function weekHTML(t,dates){
   return '<div class="wkrow">'+DIAS3.map(function(d,i){
-    return '<div class="wd'+(i===t?' hoy':'')+'"><span class="wn">'+DH(d)+'</span>'+(dates?'<span class="wnum">'+dates[i]+'</span>':'')+(i===t?'<span class="wh">hoy</span>':'')+'</div>';
+    return '<div class="wd'+(i===t?' hoy':'')+'"><span class="wn" style="color:'+DCOL(i)+'">'+DH(d)+'</span>'+(dates?'<span class="wnum" style="color:'+DCOL(i+3)+'">'+dates[i]+'</span>':'')+(i===t?'<span class="wh">hoy</span>':'')+'</div>';
   }).join('')+'</div>';
 }
 var DADO={1:[[50,50]],2:[[30,30],[70,70]],3:[[28,28],[50,50],[72,72]],4:[[30,30],[70,30],[30,70],[70,70]],5:[[30,30],[70,30],[50,50],[30,70],[70,70]],6:[[32,24],[32,50],[32,76],[68,24],[68,50],[68,76]]};
@@ -1411,7 +1412,7 @@ var GENN={
     var w2=DIAS[(j+(Math.random()<.5?1:6))%7]+' '+dates[j];
     var o=[ans,w1,w2].filter(function(x,i,a){return a.indexOf(x)===i;});
     while(o.length<3)o.push(DIAS[(j+2+o.length)%7]+' '+dates[j]);
-    return {type:'choice',q:q,show:weekHTML(t,dates),say:q,opts:shuffle(o).map(function(x){return {h:DH(x),cls:'syl dopt',ok:x===ans};})};
+    return {type:'choice',q:q,show:weekHTML(t,dates),say:q,opts:shuffle(o).map(function(x){return {h:dateH(x),cls:'syl dopt',ok:x===ans};})};
   });}
 };
 function buildItems(lv){
@@ -1715,7 +1716,7 @@ function sayAuto(t,slow){
   }else go();
 }
 /* M-064/M-065/M-066: lo que no tiene audio grabado por Jose no suena (nunca la voz del dispositivo, que leía "undefine" o hablaba en otro idioma). Los textos sin audio quedan anotados en window.__faltaAudio para saber qué falta grabar. Poner true para volver a la voz de respaldo. */
-var VOZ_SINTETICA=false;
+var VOZ_SINTETICA=true;
 function speakTTS(text,after,rate){
   try{
     var sq=seqClips(text);if(sq&&playSeq(sq,after||null))return;
@@ -2458,10 +2459,18 @@ function drawItem(auto){
 var TCOL=['#D8483D','#2076BD','#2E8A66','#8F2643','#E07B00','#5D3497'];
 function LCOL(c){var i=LORD.indexOf(c);return i<0?'#17305C':TCOL[i%TCOL.length];}
 function colorTiles(it){
-  if(it.type!=='vowel'&&it.type!=='letter'&&it.type!=='first')return;
+  /* M-070, M-075, M-077, M-079–M-084: letras y números también van de colores distintos entre sí (los mismos 6 de las letras) */
+  if(['vowel','letter','first','art','case','choice'].indexOf(it.type)<0)return;
   var cs=shuffle(TCOL.slice());
   $$('#item .row .tile[data-ok]',stage).forEach(function(t,i){t.style.background=cs[i%cs.length];t.style.color='#fff';});
+  if(it.type==='choice'){
+    var ss=shuffle(TCOL.slice());
+    $$('#item .seqrow .tile:not(.q)',stage).forEach(function(t,i){t.style.background=ss[i%ss.length];t.style.color='#fff';});
+  }
 }
+/* M-087…M-091: cada día de la semana tiene siempre su color (lunes…domingo, 7 distintos) */
+var DAYC=['#D8483D','#2076BD','#2E8A66','#8F2643','#E07B00','#5D3497','#0F7F8C'];
+function DCOL(i){return DAYC[((i%7)+7)%7];}
 function fitTiles(){
   $$('#item .tile',stage).forEach(function(t){
     if(t.classList.contains('mini')||t.classList.contains('q')||t.classList.contains('lcons')||t.closest('.rowfit'))return; /* .lcons (la M de la lección) mide por su letra: con width:auto este cálculo la achicaba en cada repaso */
@@ -2481,6 +2490,9 @@ function fitBtns(){
     while(b.scrollWidth>b.clientWidth+1&&n<20){fs*=0.93;b.style.fontSize=fs+'px';b.style.letterSpacing='0';n++;}
     if(mk)b.classList.add('ok-mark');
   });
+  /* M-087: todos los días con el mismo tamaño de letra (el del más chico que entra) */
+  var ds=$$('#item .dopt',stage);
+  if(ds.length>1){var m=Math.min.apply(null,ds.map(function(b){return parseFloat(b.style.fontSize||getComputedStyle(b).fontSize);}));ds.forEach(function(b){b.style.fontSize=m+'px';});}
 }
 window.addEventListener('resize',function(){fitTiles();fitBtns();});
 function vVowel(area,it,auto){
@@ -2570,7 +2582,7 @@ function vChoice(area,it,auto){
   if(it.say)$('#listen').onclick=function(){say(it.say);};
   wirePick(it,it.say||null);wireNext();
   if(it.fill!=null){ /* M-125/M-126: el número aparece en el lugar vacío solo si elige la correcta */
-    $$('#item [data-ok="1"]').forEach(function(b){var o=b.onclick;b.onclick=function(){var q=$('#item .tile.q');if(q){q.textContent=it.fill;q.classList.remove('q');q.classList.add('c');}o.apply(this,arguments);};});
+    $$('#item [data-ok="1"]').forEach(function(b){var o=b.onclick;b.onclick=function(){var q=$('#item .tile.q');if(q){q.textContent=it.fill;q.classList.remove('q');q.classList.add('c');q.style.background=b.style.background;q.style.color='#fff';q.style.border='0';}o.apply(this,arguments);};});
   }
   if(auto&&it.say)sayAuto(it.say);
 }
