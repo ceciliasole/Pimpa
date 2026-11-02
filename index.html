@@ -1341,7 +1341,7 @@ var GENN={
   sig:function(lv){return seq(lv.set,TOTAL).map(function(n){
     var pool=[n-1,n+2,n+3,n-2].filter(function(x){return x>=1&&x<=20;});
     var ans=n+1,o=shuffle([ans].concat(sample(pool,2))).map(function(v){var x=numOpt(v);x.ok=(v===ans);return x;});
-    return {type:'choice',q:'¿Qué número viene después?',show:seqRow([n,'>','?']),say:numWord(n),opts:o};
+    return {type:'choice',q:'¿Qué número viene después?',show:seqRow([n,'>','?']),say:'¿Qué número viene después?',opts:o};
   });},
   dayrec:function(lv){return seq(lv.set,TOTAL).map(function(i){return {type:'choice',q:'Tocá el día que escuchás',say:DIAS[i],opts:optsOf(lv.set,i,dayOpt)};});},
   dayord:function(lv){return seq(lv.set,TOTAL).map(function(i,k){
@@ -1350,7 +1350,7 @@ var GENN={
   });},
   dayhoy:function(lv){return seq(lv.set,TOTAL).map(function(t,k){
     var ayer=(k%2===0),ans=ayer?t-1:t+1,q=ayer?'¿Qué día fue ayer?':'¿Qué día es mañana?';
-    return {type:'choice',q:q,show:weekHTML(t),say:'Hoy es '+DIAS[t]+'. '+q,opts:optsOf([0,1,2,3,4,5,6],ans,dayOpt)};
+    return {type:'choice',q:q,show:weekHTML(t),say:'Si hoy es '+DIAS[t]+'. '+q,opts:optsOf([0,1,2,3,4,5,6],ans,dayOpt)};
   });},
   dayfecha:function(lv){return seq(lv.set,TOTAL).map(function(t,k){
     var d0=1+Math.floor(Math.random()*21),dates=[];for(var i=0;i<7;i++)dates.push(d0+i);
@@ -1360,7 +1360,7 @@ var GENN={
     var w2=DIAS[(j+(Math.random()<.5?1:6))%7]+' '+dates[j];
     var o=[ans,w1,w2].filter(function(x,i,a){return a.indexOf(x)===i;});
     while(o.length<3)o.push(DIAS[(j+2+o.length)%7]+' '+dates[j]);
-    return {type:'choice',q:q,show:weekHTML(t,dates),say:'Hoy es '+DIAS[t]+' '+dates[t]+'. '+q,opts:shuffle(o).map(function(x){return {h:DH(x),cls:'syl dopt',ok:x===ans};})};
+    return {type:'choice',q:q,show:weekHTML(t,dates),say:q,opts:shuffle(o).map(function(x){return {h:DH(x),cls:'syl dopt',ok:x===ans};})};
   });}
 };
 function buildItems(lv){
@@ -1503,6 +1503,23 @@ var PALAUD={"balde": "audio/pal_balde.deda4e3a.mp3", "ballena": "audio/pal_balle
 /* Grabaciones de Jose que todavía no suenan en ningún ejercicio (falta definir con ella dónde van): LNAUD = nombre de cada letra; RSUAVE = R suave. */
 var LNAUD={"m": "audio/let_m.a3637efd.mp3", "p": "audio/let_p.79401e2a.mp3", "s": "audio/let_s.f4e7b899.mp3", "t": "audio/let_t.c96ea22b.mp3", "l": "audio/let_l.db3bd5e6.mp3", "f": "audio/let_f.dcb207b1.mp3", "c": "audio/let_c.3a19a054.mp3", "n": "audio/let_n.8389f3b5.mp3", "d": "audio/let_d.1bc42fd3.mp3", "b": "audio/let_b.d4c20aa5.mp3", "j": "audio/let_j.5f0b96dd.mp3", "ch": "audio/let_ch.81aa58e1.mp3", "g": "audio/let_g.6bed9129.mp3", "ll": "audio/let_ll.62f3224e.mp3", "q": "audio/let_q.54be21eb.mp3", "r": "audio/let_r.96940f00.mp3", "v": "audio/let_v.020f47b3.mp3", "y": "audio/let_y.9f1d7908.mp3", "z": "audio/let_z.9fa7497e.mp3", "ñ": "audio/let_n.862acbf6.mp3"};
 var RSUAVE='audio/rsuave.c418f0a6.mp3';
+/* Grabaciones de Cecilia (1 nov 2026) para armar las preguntas de los días y de los números */
+var FRAUD={si_hoy_es:'audio/fra_si_hoy_es.1c0ceee1.mp3',que_dia:'audio/fra_que_dia.4078a788.mp3',fue_ayer:'audio/fra_fue_ayer.a1cd6252.mp3',es_manana:'audio/fra_es_manana.8ead2ccc.mp3',numero_despues:'audio/fra_numero_despues.e8195a78.mp3'};
+/* Devuelve la lista de audios que arman la frase, o null si no es una de esas preguntas (o si falta algún audio) */
+function seqClips(text){
+  var k=String(text).trim().toLowerCase(),m,c=null;
+  if(k==='¿qué número viene después?')c=[FRAUD.numero_despues];
+  else if((m=/^¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.que_dia,m[1]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
+  else if((m=/^si hoy es ([^.]+)\. ¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.si_hoy_es,recClip(m[1]),FRAUD.que_dia,m[2]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
+  if(!c)return null;
+  for(var i=0;i<c.length;i++)if(!c[i])return null;
+  return c;
+}
+function playSeq(c,after){
+  var i=0;
+  function next(){if(i>=c.length){if(after)after();return;}var src=c[i++];if(!playClip(src,next))next();}
+  next();return true;
+}
 function recClip(t){var k=String(t).trim().toLowerCase();return PALAUD[k]||SAUD[k]||WAUD[k]||null;}
 function letterClip(l){l=String(l).toLowerCase();return VAUD[l]||CAUD[l]||null;}
 function sayErr(after){
@@ -1517,7 +1534,7 @@ var SUAUD='audio/super.f1192e58.mp3'; /* "Súper!" (elo_08 de Jose) */
 function warmAudio(){
   try{
     if(navigator.connection&&navigator.connection.saveData)return;
-    var first=[MBAUD,GEAUD,SUAUD,PLIM,RSUAVE].concat(ERAUD),rest=[];
+    var first=[MBAUD,GEAUD,SUAUD,PLIM,RSUAVE].concat(ERAUD),rest=[];for(var fk in FRAUD)first.push(FRAUD[fk]);
     [VAUD,CAUD,PRAUD].forEach(function(d){for(var k in d)first.push(d[k]);});
     [LNAUD,SAUD,PALAUD,WAUD].forEach(function(d){for(var k in d)rest.push(d[k]);});
     var q=first.concat(rest),n=0;
@@ -1604,6 +1621,7 @@ function sayAuto(t,slow){
 var VOZ_SINTETICA=false;
 function speakTTS(text,after,rate){
   try{
+    var sq=seqClips(text);if(sq&&playSeq(sq,after||null))return;
     var rc=recClip(text);if(rc&&playClip(rc,after||null))return;
     if(!VOZ_SINTETICA){try{(window.__faltaAudio=window.__faltaAudio||{})[String(text)]=1;}catch(e){}if(after)setTimeout(after,0);return;}
     clearTimeout(autoT);
