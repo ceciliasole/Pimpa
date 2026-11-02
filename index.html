@@ -1600,9 +1600,12 @@ function sayAuto(t,slow){
     vclip.onended=function(){vclip.onended=null;if(prev)prev();go();};
   }else go();
 }
+/* M-064/M-065/M-066: lo que no tiene audio grabado por Jose no suena (nunca la voz del dispositivo, que leía "undefine" o hablaba en otro idioma). Los textos sin audio quedan anotados en window.__faltaAudio para saber qué falta grabar. Poner true para volver a la voz de respaldo. */
+var VOZ_SINTETICA=false;
 function speakTTS(text,after,rate){
   try{
     var rc=recClip(text);if(rc&&playClip(rc,after||null))return;
+    if(!VOZ_SINTETICA){try{(window.__faltaAudio=window.__faltaAudio||{})[String(text)]=1;}catch(e){}if(after)setTimeout(after,0);return;}
     clearTimeout(autoT);
     speechSynthesis.cancel();
     var u=new SpeechSynthesisUtterance(text);
@@ -1711,6 +1714,19 @@ var IC_AGAIN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 
 var IC_NEXT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var seqIds=[];
 function nextLevelOf(lv){var i=seqIds.indexOf(lv.id);return(i>-1&&i<seqIds.length-1)?LV[seqIds[i+1]]:null;}
+/* M-092 / M-133: en modo adulto "Siguiente" siempre está habilitado y sigue con lo que viene. Si el nivel se armó solo (ej. Leer sílabas con la T) no tiene lista de niveles: se pasa a la letra que sigue en el abecedario de la app. */
+function silLevel(mode,set){var key=set.join('_'),nm=set.map(function(c){return c.toUpperCase();}).join(' ');return reg({id:'sil-'+mode+'-'+key,grp:'Sílabas',title:SILT[mode]+': '+nm,kind:'syl',mode:mode==='l'?'read':'build',sc:set.slice()});}
+function followOf(lv){
+  var nx=nextLevelOf(lv);if(nx)return nx;
+  var m=/^sil-([lb])-/.exec(lv.id||'');
+  if(m&&lv.sc&&lv.sc.length){
+    var order=PREM.concat(CLAS,POCO),i=order.indexOf(lv.sc[lv.sc.length-1]);
+    if(i>-1&&i<order.length-1){seqIds=[];return silLevel(m[1],[order[i+1]]);}
+  }
+  return null;
+}
+function canGo(lv,pass){return store.mode==='educador'||(pass&&!!nextLevelOf(lv));}
+function goNext(lv){var nx=followOf(lv);if(nx)openLevelObj(nx);else showTab('camino');}
 function endNav(canNext,mainNext){
   return '<div class="endnav"><button class="ebtn" id="home" type="button"><span class="eic">'+IC_HOME+'</span><span>Volver</span></button>'+
     '<button class="ebtn'+(mainNext?'':' main')+'" id="again" type="button"><span class="eic">'+IC_AGAIN+'</span><span>Repetir</span></button>'+
@@ -1796,8 +1812,7 @@ function startSil(mode,set){
     else{set.forEach(lessonOf);go({s:'list',title:SILT.a,ids:set.map(function(c){return 'sq-pr-'+c;})});}
     return;
   }
-  var key=set.join('_'),nm=set.map(function(c){return c.toUpperCase();}).join(' ');
-  var lv=reg({id:'sil-'+mode+'-'+key,grp:'Sílabas',title:SILT[mode]+': '+nm,kind:'syl',mode:mode==='l'?'read':'build',sc:set.slice()});
+  var lv=silLevel(mode,set);
   seqIds=[];openLevelObj(lv);
 }
 function mixLevel(g,set){
@@ -2615,9 +2630,9 @@ function finishLesson(){
   var p=curProfile(),lvR=run.lv,rec=p.progress[run.lv.id]||{best:0,attempts:0,passed:false,last:null};
   rec.attempts++;rec.best=10;rec.passed=true;rec.last=new Date().toISOString();
   rec.title=plainTitle(run.lv);rec.grp=run.lv.grp;p.progress[run.lv.id]=rec;p.stars=(p.stars||0)+5;save();
-  stage.innerHTML='<div class="end'+(lvR.presentOnly?' lend':'')+'">'+(lvR.presentOnly?lessonEndHTML():celebHTML(true))+starsHTML(3)+'<p class="gain">+5 <img src="'+DEC.star+'" alt=""> para tu Pimpa</p>'+endNav(!!nextLevelOf(lvR),true)+'</div>';
+  stage.innerHTML='<div class="end'+(lvR.presentOnly?' lend':'')+'">'+(lvR.presentOnly?lessonEndHTML():celebHTML(true))+starsHTML(3)+'<p class="gain">+5 <img src="'+DEC.star+'" alt=""> para tu Pimpa</p>'+endNav(store.mode==='educador'||!!nextLevelOf(lvR),true)+'</div>';
   $('#again').onclick=function(){openLevelObj(lvR);};
-  $('#nextlv').onclick=function(){var nx=nextLevelOf(lvR);if(nx)openLevelObj(nx);};
+  $('#nextlv').onclick=function(){goNext(lvR);};
   $('#home').onclick=function(){showTab('camino');};
   if(!lvR.presentOnly)sayEnd('mb'); /* la pantalla de flechas es solo para mirar: sin respuesta del chico no hay elogio */
 }
@@ -2681,12 +2696,12 @@ var TRACE={
  d:['M26 122 L26 20 C100 20 100 122 26 122'],
  r:['M26 122 L26 20 L52 20 C92 20 92 70 52 70 L26 70','M52 70 L78 122'],
  g:['M76 40 C64 12 22 18 22 72 C22 124 66 126 76 96 L76 76 L52 76'],
- v:['M50 122 L20 20','M50 122 L80 20'],
+ v:['M20 20 L50 122 L80 20'],
  ll:['M18 122 L18 20','M18 122 L42 122','M58 122 L58 20','M58 122 L82 122'],
  ch:['M44 34 C36 14 8 18 8 70 C8 122 36 126 44 106','M58 122 L58 20','M92 122 L92 20','M58 70 L92 70'],
  q:['M50 20 C8 20 8 122 50 122 C92 122 92 20 50 20','M56 98 L84 130'],
- y:['M50 122 L50 70','M50 70 L20 20','M50 70 L80 20'],
- z:['M20 122 L80 122 L20 20 L80 20']
+ y:['M20 20 L50 70 L80 20','M50 70 L50 122'],
+ z:['M20 20 L80 20 L20 122 L80 122']
 };
 var TLEVELS=[
  {id:'tr-v',grp:'Grafismo',title:'Trazo de vocales',letters:VOW.slice()},
@@ -2810,9 +2825,9 @@ function finish(){
   var lvR=run.lv;
   stage.innerHTML='<div class="end">'+(pass?celebHTML(run.res.every(function(x){return x;})):'<div class="mascot bigm">'+pimpaImg('intenta')+'</div>')+(pass?starsHTML(score===10?3:(score===9?2:1)):'')+'<div class="score">'+score+'<small> de '+TOTAL+'</small></div>'+(score?'<p class="gain">+'+score+' <img src="'+DEC.star+'" alt=""> para tu Pimpa</p>':'')+
     (pass?'':'<p>Para pasar al siguiente hacen falta '+PASS+' de '+TOTAL+'</p>')+
-    endNav(pass&&!!nextLevelOf(lvR),pass)+'</div>';
+    endNav(canGo(lvR,pass),pass)+'</div>';
   $('#again').onclick=function(){openLevelObj(lvR);};
-  $('#nextlv').onclick=function(){var nx=nextLevelOf(lvR);if(nx)openLevelObj(nx);};
+  $('#nextlv').onclick=function(){goNext(lvR);};
   $('#home').onclick=function(){showTab('camino');};
   perfStreak=(pass&&score===10)?perfStreak+1:0;
   if(pass)sayEnd(score===10?(perfStreak>=2?'es':'br'):(score===9?'ex':'mb'));else sayFail();
