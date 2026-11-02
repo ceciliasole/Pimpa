@@ -3002,17 +3002,30 @@ function openPrint(area,ls,act){
   var o=document.createElement('div');o.id='pv';
   function paint(){
     var pages=pgBuild(area,ls,act);
-    o.innerHTML='<div class="pvbar"><button class="sw" id="pvb" type="button">← Volver</button><button class="sw" id="pvr" type="button">Otra versión</button><button class="btn" id="pvd" type="button" hidden>Guardar para imprimir (A4)</button><button class="sw" id="pvp" type="button">Probar imprimir acá</button></div>'+
-      '<p class="pvh" id="pvm">'+(pages.length===1?'Hoja A4':pages.length+' hojas A4')+'. Con «Guardar para imprimir» se descarga un archivo que se abre en el navegador y ya imprime en A4.</p>'+pages.join('');
+    o.innerHTML='<div class="pvbar"><button class="sw" id="pvb" type="button">← Volver</button><button class="sw" id="pvr" type="button">Otra versión</button><button class="btn" id="pvp" type="button">Imprimir</button><button class="sw" id="pvd" type="button">Descargar hoja (A4)</button></div>'+
+      '<p class="pvh" id="pvm">'+(pages.length===1?'Hoja A4':pages.length+' hojas A4')+'. Con «Imprimir» se abre la impresión: elegí papel A4 y escala 100%. Si no se abre, usá «Descargar hoja (A4)» y abrí el archivo.</p>'+pages.join('');
+    var m=o.querySelector('#pvm');
     o.querySelector('#pvb').onclick=closePrint;
     o.querySelector('#pvr').onclick=paint;
-    o.querySelector('#pvp').onclick=function(){try{window.print();}catch(e){}};
-    var d=o.querySelector('#pvd');
-    try{ if(window.claude&&claude.use){ claude.use('downloads').then(function(dl){ if(!dl||!d||!d.isConnected)return;
-      d.hidden=false;
-      d.onclick=function(){ var m=o.querySelector('#pvm');
-        dl.save({filename:'pimpa-hojas-A4.html',data:printDoc(pages)}).then(function(){ if(m)m.textContent='Listo: abrí el archivo descargado y apretá Imprimir. Ya sale en A4.'; },function(e){ if(m&&e&&e.code!=='declined')m.textContent='No se pudo guardar el archivo. Probá con «Probar imprimir acá» o con clic derecho → Imprimir.'; }); };
-    },function(){}); } }catch(e){}
+    /* M-057: en pantalla completa el navegador no siempre abre el diálogo; se sale de pantalla completa antes de imprimir */
+    o.querySelector('#pvp').onclick=function(){
+      var go=function(){try{window.print();}catch(e){if(m)m.textContent='No se pudo abrir la impresión. Usá «Descargar hoja (A4)».';}};
+      if(fsOn()){
+        var ex=document.exitFullscreen||document.webkitExitFullscreen;
+        try{var r=ex.call(document);if(r&&r.then){r.then(function(){setTimeout(go,300);},function(){go();});return;}}catch(e){}
+        setTimeout(go,300);return;
+      }
+      go();
+    };
+    /* M-057/M-058: la hoja se baja como archivo propio (sin depender del artifact) y ya imprime en A4 */
+    o.querySelector('#pvd').onclick=function(){
+      try{
+        var blob=new Blob([printDoc(pages)],{type:'text/html'}),a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);a.download='pimpa-hojas-A4.html';document.body.appendChild(a);a.click();
+        setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
+        if(m)m.textContent='Listo: abrí el archivo descargado y apretá Imprimir. Ya sale en A4.';
+      }catch(e){if(m)m.textContent='No se pudo descargar la hoja. Probá con «Imprimir».';}
+    };
   }
   paint();document.body.appendChild(o);document.body.classList.add('printing');o.scrollTop=0;
 }
