@@ -822,6 +822,27 @@ body.playing .stage{padding-block:clamp(8px,1.6dvh,16px)}
 .pgl{height:26mm;border:.6mm dashed #17305C;border-radius:4mm;display:grid;place-items:end center;padding-bottom:1mm}
 .pgl small{font-size:3.6mm;color:#9aa4bb}
 .pgp{height:36mm}
+/* imprimibles nuevos */
+.prtareas{flex-wrap:wrap}
+.prow{display:flex;align-items:center;gap:8mm;margin:0 8mm;height:29mm;border-bottom:.3mm dashed #c9cfdd}
+.prow.cont{height:34mm}
+.pbox.big,.pwd,.pbt{white-space:nowrap}
+.pwd{font-family:var(--font-body);font-weight:700;font-size:13mm;color:#17305C;line-height:1.1}
+.pwd.small{font-size:8mm;font-weight:600;min-width:62mm}
+.pwd .gi{font-size:inherit}
+.pfb{display:inline-block;flex:1;height:21mm;border:.7mm dashed #17305C;border-radius:4mm}
+.pfb.sm{width:30mm;flex:none;height:18mm;vertical-align:middle;margin:0 2mm}
+.pfb.sq{flex:none;width:26mm;height:26mm;margin-left:auto}
+.pfb.wide{height:18mm}
+.prow.comp .pem{font-size:18mm}
+.pqe{display:flex;flex-wrap:wrap;gap:1.5mm;justify-content:center;align-items:center;padding:1mm;max-width:100%;line-height:1}
+.prow.cont .pqe{flex:1;justify-content:flex-start}
+.pord{display:grid;grid-template-columns:repeat(7,1fr);gap:2mm;padding:4mm 5mm 0}
+.pord .pgl{height:30mm}
+.pcut.two.c4{grid-template-columns:repeat(3,1fr);padding-top:8mm}
+.ptr{display:flex;justify-content:space-around;align-items:center;padding:3mm 5mm 0}
+.pline{height:16mm;margin:0 10mm;border-bottom:.5mm solid #17305C;position:relative}
+.pline::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:.3mm dashed #9aa4bb}
 @page{size:A4;margin:10mm}
 @media print{
   body.printing>*:not(#pv){display:none!important}
@@ -3094,7 +3115,8 @@ function pgArt(l,area,forced){
 }
 /* Varias letras: las fichas de "una letra" (Pegar, Circular, Pintar) salen una hoja por letra. Las de pares (Unir, Emparejar, Articulema) usan exactamente las letras elegidas, hasta 5 por hoja (si son más, se reparten parejo en varias hojas). Con una sola letra se mantiene como estaba. */
 function pChunk(a){var k=a.length;if(k<=5)return [a];var pages=Math.ceil(k/5),per=Math.ceil(k/pages),out=[];for(var i=0;i<k;i+=per)out.push(a.slice(i,i+per));return out;}
-function pgBuild(area,ls,act){
+function pgBuild(area,ls,act,g){
+  if(area!=='voc'&&area!=='con'){CURPOSE={circ:'lupa',pint:'crayon',unir:'lapiz',pegar:'tijera',comp:'lapiz',trazar:'lapiz',cont:'lapiz',orden:'tijera',hoy:'lapiz'}[act]||'hoja';return pgNew(area,ls,act,g);}
   CURPOSE={pegar:'tijera',circ:'lupa',pint:'crayon',unir:'lapiz',emp:'pegamento',art:'senala'}[act]||'hoja';
   if(act==='pegar')return ls.map(function(l){return pgPegar(l);});
   if(act==='circ')return ls.map(function(l){return pgCirc(l,area);});
@@ -3103,17 +3125,151 @@ function pgBuild(area,ls,act){
   if(ls.length===1)return [fn(ls[0],area)];
   return pChunk(ls).map(function(set){return fn(set[0],area,set);});
 }
+
+/* ---------- M-114 a M-124: imprimibles de las demás áreas (Sílabas, Palabras, Trazos, Inversas y artículos, Mayúscula y minúscula, Números y Calendario) ---------- */
+var PRT_AREAS=[['voc','Vocales'],['con','Consonantes: letra y sonido'],['sil','Sílabas'],['pal','Palabras'],['tra','Trazos'],['inv','Inversas y artículos'],['may','Mayúscula y minúscula'],['num','Números'],['cal','Calendario']];
+PRT_ACT.sil=[['circ','Circular y tachar','Encontrar la sílaba entre muchas'],['pint','Pintar','Pintar las sílabas iguales'],['unir','Unir con flechas','Cada sílaba con su dibujo']];
+PRT_ACT.pal=[['unir','Unir con flechas','Cada palabra con su dibujo'],['pegar','Pegar','Recortar dibujos y pegarlos junto a su palabra'],['comp','Completar','Escribir la sílaba que falta']];
+PRT_ACT.tra=[['trazar','Seguir el trazo','Repasar la letra con el lápiz']];
+PRT_ACT.inv=[['circ','Circular y tachar','Encontrar la sílaba o el artículo'],['unir','Unir con flechas','Unir los que dicen igual']];
+PRT_ACT.may=[['unir','Unir con flechas','Cada mayúscula con su minúscula'],['circ','Circular y tachar','Encontrar la mayúscula y la minúscula']];
+PRT_ACT.num=[['circ','Circular y tachar','Encontrar el número'],['cont','Contar y escribir','Contar y escribir cuántos hay'],['unir','Unir con flechas','Cada cantidad con su número']];
+PRT_ACT.cal=[['orden','Ordenar la semana','Recortar los días y pegarlos en orden'],['hoy','Hoy, ayer y mañana','Completar qué día fue y qué día será']];
+PRT_ICO.trazar='✏️';PRT_ICO.comp='✍️';PRT_ICO.cont='🔢';PRT_ICO.orden='📅';PRT_ICO.hoy='🗓️';
+var PRT_GRP={pal:[['pre','Premium'],['cla','Premium y clásicas'],['tod','Todas']],num:[['3','1 al 3'],['5','1 al 5'],['10','1 al 10'],['20','11 al 20']]};
+function prtLetters(area){
+  if(area==='voc')return VOW;
+  if(area==='con'||area==='sil')return PRT_CONS;
+  if(area==='may')return VOW.concat(PRT_CONS);
+  if(area==='tra')return VOW.concat(PRT_CONS).filter(function(c){return TRACE[c];});
+  return null;
+}
+function pLow(s){return Array.from(String(s)).map(function(ch){return esc(ch.toLowerCase());}).join('');}
+/* items: [{h:html,n:cantidad de letras}], 12 celdas, colores al azar */
+function pGrid12(items){
+  var cols=shuffle(SHCOL.concat(SHCOL));
+  return '<div class="pgrid pg12">'+items.map(function(x,i){return '<div class="pcell pc12"><span style="color:'+cols[i]+';transform:rotate('+(prand(31)-15)+'deg);font-size:'+(x.n>2?22:30)+'mm">'+x.h+'</span></div>';}).join('')+'</div>';
+}
+function pItems(a,f){return a.map(function(x){return {h:f?f(x):pl(x),n:String(x).length};});}
+function pTargetPage(t,pool,inst,f){
+  var others=pool.filter(function(x){return x!==t;});
+  return pPage(pHead(String(t),inst)+pGrid12(shuffle(pItems(seq([t],6).concat(seq(others,6)),f))));
+}
+function pUnirPairs(pairs,inst){
+  var L=pairs.map(function(p){return '<div class="pbox big"'+(p.ls?' style="'+p.ls+'"':'')+'><span class="pbt">'+p.l+'</span><u></u></div>';});
+  var R=shuffle(pairs.slice()).map(function(p){return '<div class="pbox pic"><u></u>'+p.r+'</div>';});
+  return pPage(pHead(null,inst)+'<div class="punir">'+L.join('')+'</div><div class="punir r">'+R.join('')+'</div>','unirpg');
+}
+function pUniq(a,n){var seen={},out=[];shuffle(a.slice()).forEach(function(w){if(out.length<n&&!seen[w[2]]){seen[w[2]]=1;out.push(w);}});return out;}
+function pWordsFor(g){var wc=g==='pre'?PREM:(g==='cla'?PREM.concat(CLAS):PREM.concat(CLAS,POCO));return WORDS.filter(function(w){return learned(w,wc);});}
+function pEmo(e){return '<span class="pem">'+e+'</span>';}
+function traceSvg(l,w){
+  var h='';
+  TRACE[l].forEach(function(d,i){
+    var m=/^M(\d+) (\d+)/.exec(d);
+    h+='<path d="'+d+'" fill="none" stroke="#17305C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 9"/>';
+    if(m)h+='<circle cx="'+m[1]+'" cy="'+m[2]+'" r="6" fill="#3FA27A"/>'+(TRACE[l].length>1?'<text x="'+m[1]+'" y="'+(+m[2]+3.5)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="inherit">'+(i+1)+'</text>':'');
+  });
+  return '<svg viewBox="0 0 100 140" style="width:'+w+'mm;height:'+(w*1.4).toFixed(1)+'mm" aria-hidden="true">'+h+'</svg>';
+}
+function pgTrazar(l){
+  var lines='';for(var i=0;i<3;i++)lines+='<div class="pline"></div>';
+  return pPage(pHead(l,'Seguí el camino de puntitos con el lápiz. Empezá en el punto verde.')+
+    '<div class="ptr">'+traceSvg(l,58)+traceSvg(l,58)+'</div>'+
+    '<div class="ptr">'+traceSvg(l,36)+traceSvg(l,36)+traceSvg(l,36)+traceSvg(l,36)+'</div>'+lines);
+}
+function pgNew(area,ls,act,g){
+  var out=[];
+  if(area==='sil'){
+    if(act==='circ')return ls.map(function(c){var p=sylPool([c]);return pTargetPage(ppick(p),p,'Circulá todas las sílabas que dicen esta.');});
+    if(act==='pint')return ls.map(function(c){
+      var p=sylPool([c]),t=ppick(p),oth=p.filter(function(x){return x!==t;}),pos=shuffle(rng(0,19)).slice(0,13),h='';
+      for(var i=0;i<20;i++){var ok=pos.indexOf(i)>-1,sy=ok?t:ppick(oth);h+='<div class="pcell2"><span class="pout" style="font-size:'+(15+prand(6))+'mm;transform:rotate('+(prand(41)-20)+'deg)">'+pl(sy)+'</span></div>';}
+      return pPage(pHead(t,'Pintá solo las sílabas como esta. Las otras quedan sin pintar.')+'<div class="ppaint">'+h+'</div>');
+    });
+    if(act==='unir'){
+      var sp=sylPool(ls),by={};
+      WORDS.forEach(function(w){var f=strip(w[1][0]);if(sp.indexOf(f)>-1&&!by[f])by[f]=w;});
+      var ks=sample(Object.keys(by),5);
+      if(ks.length<5){ /* si las consonantes elegidas no alcanzan para 5 pares, se completa con sílabas de las premium */
+        var sp2=sylPool(PREM);WORDS.forEach(function(w){var f=strip(w[1][0]);if(sp2.indexOf(f)>-1&&!by[f])by[f]=w;});
+        ks=ks.concat(sample(Object.keys(by).filter(function(k){return ks.indexOf(k)<0;}),5-ks.length));
+      }
+      return [pUnirPairs(ks.map(function(k){return {l:pl(k),ls:'color:'+pcol(k.charAt(k.length-1)),r:pEmo(by[k][2])};}),'Uní cada sílaba con el dibujo que empieza con ella.')];
+    }
+  }
+  if(area==='pal'){
+    var ws=pWordsFor(g);
+    if(act==='unir')return [pUnirPairs(pUniq(ws,5).map(function(w){return {l:pl(w[0]),ls:'font-size:'+(w[0].length>6?7.5:9.5)+'mm',r:pEmo(w[2])};}),'Uní cada palabra con su dibujo.')];
+    if(act==='pegar'){
+      var s5=pUniq(ws,5);
+      return [pPage(pHead(null,'Recortá los dibujos de abajo y pegalos al lado de la palabra que corresponde.')+
+        s5.map(function(w){return '<div class="prow"><span class="pwd">'+pl(w[0])+'</span><i class="pfb"></i></div>';}).join('')+
+        '<div class="pcut two">'+shuffle(s5).map(function(w){return '<div class="pcard sm"><b>✂</b><span class="pem">'+w[2]+'</span></div>';}).join('')+'</div>')];
+    }
+    if(act==='comp'){
+      var w2=pUniq(ws.filter(function(w){return w[1].length===2;}),6);
+      return [pPage(pHead(null,'Escribí la sílaba que falta para que diga el nombre del dibujo.')+
+        w2.map(function(w){var hide=prand(2),sy=w[1];return '<div class="prow comp">'+pEmo(w[2])+'<span class="pwd">'+(hide===0?'<i class="pfb sm"></i>':pl(sy[0]))+(hide===1?'<i class="pfb sm"></i>':pl(sy[1]))+'</span></div>';}).join(''))];
+    }
+  }
+  if(area==='tra')return ls.map(function(l){return pgTrazar(l);});
+  if(area==='inv'){
+    var INV=['en','es','un','al'],ART=['la','las','el','los','una','y'];
+    if(act==='circ')return [INV,ART].map(function(gp){return pTargetPage(ppick(gp),gp,'Circulá todas las que dicen esta.');});
+    if(act==='unir'){
+      var cl=shuffle(SHCOL.slice());
+      return [pUnirPairs(sample(INV.concat(ART),5).map(function(x,i){return {l:pl(x),r:'<span class="pem" style="font-size:16mm;font-family:var(--font-body);font-weight:700;color:'+cl[i%cl.length]+'">'+pl(x)+'</span>'};}),'Uní los que dicen igual.')];
+    }
+  }
+  if(area==='may'){
+    if(act==='unir')return pChunk(ls).map(function(set){return pUnirPairs(set.map(function(l){return {l:pl(l),ls:'color:'+pcol(l),r:'<span class="pem" style="font-size:20mm;font-family:var(--font-body);font-weight:700;color:'+pcol(l)+'">'+pLow(l)+'</span>'};}),'Uní cada letra mayúscula con su minúscula.');});
+    if(act==='circ')return ls.map(function(l){
+      var oth=VOW.concat(PRT_CONS.filter(function(c){return c.length===1;})).filter(function(c){return c!==l;}),it=[];
+      for(var i=0;i<4;i++)it.push({h:pl(l),n:l.length});
+      for(i=0;i<4;i++)it.push({h:pLow(l),n:l.length});
+      sample(oth,4).forEach(function(c,k){it.push({h:k%2?pLow(c):pl(c),n:1});});
+      return pPage(pHead(l,'Circulá todas las letras que son esta, grandes y chiquitas.')+pGrid12(shuffle(it)));
+    });
+  }
+  if(area==='num'){
+    var rg=g==='20'?rng(11,20):rng(1,+g||5);
+    if(act==='circ')return sample(rg,2).map(function(t){return pTargetPage(t,rg,'Circulá todos los números como este.',function(x){return String(x);});});
+    if(act==='cont'){
+      var ct=seq(rg,5);
+      return [pPage(pHead(null,'Contá y escribí cuántos hay.')+ct.map(function(n){var e=ppick(QTYE),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return '<div class="prow cont"><div class="pqe" style="font-size:'+(n>10?8:11)+'mm">'+h+'</div><i class="pfb sq"></i></div>';}).join(''))];
+    }
+    if(act==='unir'){
+      var cu=sample(rg,5);
+      return [pUnirPairs(cu.map(function(n){var e=ppick(QTYE),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return {l:String(n),r:'<div class="pqe" style="font-size:'+(n>10?5.5:(n>5?8:11))+'mm">'+h+'</div>'};}),'Uní cada cantidad con su número.')];
+    }
+  }
+  if(area==='cal'){
+    if(act==='orden')return [pPage(pHead(null,'Recortá los días de abajo y pegalos en el orden de la semana.')+
+      '<div class="pord">'+rng(1,7).map(function(i){return '<div class="pgl"><small>'+i+'</small></div>';}).join('')+'</div>'+
+      '<div class="pcut two c4">'+shuffle(DIAS.slice()).map(function(d){return '<div class="pcard sm"><b>✂</b><span class="pl2" style="font-size:7mm;white-space:nowrap">'+pl(d)+'</span></div>';}).join('')+'</div>')];
+    if(act==='hoy'){
+      var rows='';
+      shuffle(rng(0,6)).slice(0,6).forEach(function(t,k){
+        var ay=k%2===0;
+        rows+='<div class="prow comp"><span class="pwd small">Hoy es '+pl(DIAS[t])+'.<br>'+(ay?'Ayer fue':'Mañana es')+'</span><i class="pfb wide"></i></div>';
+      });
+      return [pPage(pHead(null,'Leé y escribí el día que falta.')+rows)];
+    }
+  }
+  return out;
+}
 function closePrint(){var o=document.getElementById('pv');if(o)o.remove();document.body.classList.remove('printing');}
 function printDoc(pages){ /* documento A4 autónomo: se abre fuera del artifact, ahí @page A4 manda y el diálogo ya sale en A4 */
   var css=[].map.call(document.querySelectorAll('style'),function(x){return x.textContent;}).join('\n');
   var links=[].map.call(document.querySelectorAll('link[rel=stylesheet],link[rel=preconnect]'),function(x){return x.outerHTML;}).join('');
   return '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pimpa - hojas para imprimir</title>'+links+'<style>'+css+'</style></head><body class="printing"><div id="pv"><div class="pvbar"><button class="btn" type="button" onclick="window.print()">Imprimir</button></div><p class="pvh">Elegí tamaño de papel A4 y escala 100% (por defecto ya viene así).</p>'+pages.join('')+'</div></body></html>';
 }
-function openPrint(area,ls,act){
+function openPrint(area,ls,act,g){
   closePrint();
   var o=document.createElement('div');o.id='pv';
   function paint(){
-    var pages=pgBuild(area,ls,act);
+    var pages=pgBuild(area,ls,act,g);
     o.innerHTML='<div class="pvbar"><button class="sw" id="pvb" type="button">← Volver</button><button class="sw" id="pvr" type="button">Otra versión</button><button class="btn" id="pvp" type="button">Imprimir</button><button class="sw" id="pvd" type="button">Descargar hoja (A4)</button></div>'+
       '<p class="pvh" id="pvm">'+(pages.length===1?'Hoja A4':pages.length+' hojas A4')+'. Con «Imprimir» se abre la impresión: elegí papel A4 y escala 100%. Si no se abre, usá «Descargar hoja (A4)» y abrí el archivo.</p>'+pages.join('');
     var m=o.querySelector('#pvm');
@@ -3148,23 +3304,27 @@ function prtSel(n,letters){ /* letras elegidas, siempre en el orden del abecedar
   return n.ls;
 }
 function renderPrt(n){
-  var area=n.area,acts=PRT_ACT[area],letters=area==='voc'?VOW:PRT_CONS,sel=prtSel(n,letters),all=sel.length===letters.length;
-  return topbar('Imprimir en papel')+
-    '<div class="row"><button class="sw" data-area="voc" type="button" aria-pressed="'+(area==='voc')+'">Vocales</button><button class="sw" data-area="con" type="button" aria-pressed="'+(area==='con')+'">Consonantes: letra y sonido</button></div>'+
-    '<p class="hint" style="text-align:center;margin:0">Elegí una, varias o todas las letras con las que se trabaja</p>'+
-    '<div class="chips">'+letters.map(function(c){return '<button class="chip '+(isV(c)?'v':'c')+(c.length>1?' long':'')+'" data-pl="'+c+'" type="button" aria-pressed="'+(sel.indexOf(c)>-1)+'">'+DH(c)+'</button>';}).join('')+'<button class="chip all" data-pall="1" type="button" aria-pressed="'+all+'">Todas</button></div>'+
+  var area=n.area,acts=PRT_ACT[area],letters=prtLetters(area),sel=letters?prtSel(n,letters):[],all=letters&&sel.length===letters.length,grp=PRT_GRP[area];
+  if(grp&&!n.g)n.g=grp[0][0];
+  var areas=PRT_AREAS.map(function(a){return '<button class="sw" data-area="'+a[0]+'" type="button" aria-pressed="'+(area===a[0])+'">'+a[1]+'</button>';}).join('');
+  var pick='';
+  if(letters)pick='<p class="hint" style="text-align:center;margin:0">Elegí una, varias o todas las letras con las que se trabaja</p>'+
+    '<div class="chips">'+letters.map(function(c){return '<button class="chip '+(isV(c)?'v':'c')+(c.length>1?' long':'')+'" data-pl="'+c+'" type="button" aria-pressed="'+(sel.indexOf(c)>-1)+'">'+DH(c)+'</button>';}).join('')+'<button class="chip all" data-pall="1" type="button" aria-pressed="'+all+'">Todas</button></div>';
+  else if(grp)pick='<p class="hint" style="text-align:center;margin:0">Elegí con qué se trabaja</p><div class="row">'+grp.map(function(x){return '<button class="sw" data-pg="'+x[0]+'" type="button" aria-pressed="'+(n.g===x[0])+'">'+x[1]+'</button>';}).join('')+'</div>';
+  return topbar('Imprimir en papel')+'<div class="row prtareas">'+areas+'</div>'+pick+
     '<section class="grp"><h2>Ficha para imprimir</h2><div class="lvgrid">'+acts.map(function(a){var off=(a[0]==='art'&&area==='con'&&sel.some(function(c){return PREM.indexOf(c)<0;}));return '<button class="lvc" data-pa="'+a[0]+'" type="button"'+(off?' disabled':'')+'><span>'+PRT_ICO[a[0]]+' '+a[1]+'</span><span class="hint">'+(off?'Solo con M, P, T, L, S, F':a[2])+'</span></button>';}).join('')+'</div></section>';
 }
 function wirePrt(n){
-  var letters=n.area==='voc'?VOW:PRT_CONS;
-  $$('[data-area]',stage).forEach(function(b){b.onclick=function(){n.area=b.dataset.area;n.l=n.area==='voc'?'a':'m';n.ls=[n.l];renderCamino();};});
+  var letters=prtLetters(n.area)||[];
+  $$('[data-area]',stage).forEach(function(b){b.onclick=function(){n.area=b.dataset.area;var lt=prtLetters(n.area);n.l=lt?lt[0]:'';n.ls=lt?[n.l]:[];n.g=null;renderCamino();};});
+  $$('[data-pg]',stage).forEach(function(b){b.onclick=function(){n.g=b.dataset.pg;renderCamino();};});
   $$('[data-pl]',stage).forEach(function(b){b.onclick=function(){
     var c=b.dataset.pl,cur=prtSel(n,letters).slice(),i=cur.indexOf(c);
     if(i>-1){if(cur.length>1)cur.splice(i,1);}else cur.push(c);
     n.ls=cur;renderCamino();};});
   $$('[data-pall]',stage).forEach(function(b){b.onclick=function(){
     var cur=prtSel(n,letters);n.ls=cur.length===letters.length?[letters[0]]:letters.slice();renderCamino();};});
-  $$('[data-pa]',stage).forEach(function(b){b.onclick=function(){openPrint(n.area,prtSel(n,letters),b.dataset.pa);};});
+  $$('[data-pa]',stage).forEach(function(b){b.onclick=function(){openPrint(n.area,prtLetters(n.area)?prtSel(n,letters):[''],b.dataset.pa,n.g);};});
 }
 
 /* Pantalla completa (mejora Jose): ajuste al alto de la pantalla. En modo juego, si el contenido (Pimpa, progreso, fichas y botón Siguiente) no entra en el alto real de la pantalla, se achica todo junto hasta que entre completo. El lugar de Siguiente se cuenta aunque todavía esté oculto, para que el tamaño no cambie al acertar. */
