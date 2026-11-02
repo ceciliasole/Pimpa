@@ -1441,6 +1441,12 @@ function buildItems(lv){
       if(lv.mode==='read'||(lv.mode!=='build'&&(idx<6||lv.pickOnly))){items.push({type:'syl',ans:s,opts:shuffle([s].concat(sample(pool.filter(function(x){return x!==s;}),2)))});}
       else{items.push({type:'build',ans:s});}
     });
+  }else if(lv.kind==='sfig'){
+    /* M-061: la sílaba aparece sobre figuras (caja, carta, puerta, ventana, boya, pez) y el niño toca la que escucha */
+    var SHN=['caja','carta','puerta','ventana','boya','pez'],sp=sylPool(lv.sc);
+    seq(sp,TOTAL).forEach(function(sy,q){
+      items.push({type:'vshape',ans:sy,opts:shuffle([sy].concat(sample(sp.filter(function(x){return x!==sy;}),4))),shape:SHN[q%SHN.length],cols:shuffle(SHCOL)});
+    });
   }else if(lv.kind==='case'){
     seq(lv.set,TOTAL).forEach(function(l,k){
       items.push({type:'case',up:(k%2===0),ans:l,opts:shuffle([l].concat(sample(lv.set.filter(function(x){return x!==l;}),2)))});
@@ -1754,10 +1760,10 @@ var IC_NEXT='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l
 var seqIds=[];
 function nextLevelOf(lv){var i=seqIds.indexOf(lv.id);return(i>-1&&i<seqIds.length-1)?LV[seqIds[i+1]]:null;}
 /* M-092 / M-133: en modo adulto "Siguiente" siempre está habilitado y sigue con lo que viene. Si el nivel se armó solo (ej. Leer sílabas con la T) no tiene lista de niveles: se pasa a la letra que sigue en el abecedario de la app. */
-function silLevel(mode,set){var key=set.join('_'),nm=set.map(function(c){return c.toUpperCase();}).join(' ');return reg({id:'sil-'+mode+'-'+key,grp:'Sílabas',title:SILT[mode]+': '+nm,kind:'syl',mode:mode==='l'?'read':'build',sc:set.slice()});}
+function silLevel(mode,set){var key=set.join('_'),nm=set.map(function(c){return c.toUpperCase();}).join(' ');return reg({id:'sil-'+mode+'-'+key,grp:'Sílabas',title:SILT[mode]+': '+nm,kind:mode==='f'?'sfig':'syl',mode:mode==='l'?'read':'build',sc:set.slice()});}
 function followOf(lv){
   var nx=nextLevelOf(lv);if(nx)return nx;
-  var m=/^sil-([lb])-/.exec(lv.id||'');
+  var m=/^sil-([lbf])-/.exec(lv.id||'');
   if(m&&lv.sc&&lv.sc.length){
     var order=PREM.concat(CLAS,POCO),i=order.indexOf(lv.sc[lv.sc.length-1]);
     if(i>-1&&i<order.length-1){seqIds=[];return silLevel(m[1],[order[i+1]]);}
@@ -1815,7 +1821,7 @@ function vowelLevels(set){
     {id:'vf-'+key,grp:'Vocales',title:'Sonido inicial: '+nm,kind:'first',known:set.slice(),focus:null}
   ];
 }
-var SILT={a:'Aprendo sílabas',l:'Leer sílabas',b:'Armar sílabas'};
+var SILT={a:'Aprendo sílabas',l:'Leer sílabas',b:'Armar sílabas',f:'Sílabas en figuras'};
 function grpOfC(c){return PREM.indexOf(c)>-1?'Premium':(CLAS.indexOf(c)>-1?'Clásicas':'Poco frecuentes');}
 function lessonOf(c){return LV['sq-pr-'+c]||reg({id:'sq-pr-'+c,grp:grpOfC(c),cons:c,title:'Cómo se forman las sílabas',kind:'lesson',presentOnly:true});}
 /* Sección Sílabas (M-041/M-042): Aprendo = pantalla de flechas, Leer = escuchar y tocar la sílaba, Armar = armar con consonante y vocal */
@@ -2145,7 +2151,8 @@ function renderCamino(){
     h=topbar('Sílabas')+'<div class="hgrid">'+
       hcard('sil-a','Aprendo sílabas','',null,'')+
       hcard('sil-l','Leer sílabas','',null,'')+
-      hcard('sil-b','Armar sílabas','',null,'')+'</div>';
+      hcard('sil-b','Armar sílabas','',null,'')+
+      hcard('sil-f','Sílabas en figuras','',null,'')+'</div>';
   }else if(n.s==='silpick'){
     var ssel=n.sel=n.sel||[];
     h=topbar(SILT[n.mode])+'<p class="hint" style="text-align:center;margin:0">Elegí una consonante, o varias.</p><div class="chips">'+chipsOf('sil').filter(function(c){return !(n.mode==='a'&&c==='ñ');}).map(function(c){
@@ -2182,7 +2189,7 @@ function renderCamino(){
     else if(a==='pim')go({s:'pim'});
     else if(a==='cons')go({s:'cons'});
     else if(a==='sil')go({s:'sil'});
-    else if(a==='sil-a'||a==='sil-l'||a==='sil-b')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
+    else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
     else if(a==='tra')go({s:'tra'});
@@ -2306,7 +2313,7 @@ function openLevelObj(lv){
   renderDots();
   if(lv.intro)drawIntro();else drawItem(true);
 }
-var RTYPE={vowel:'star',first:'coin',syl:'cup',word:'star',wbuild:'star',art:'cup',case:'coin',nchoice:'star'};
+var RTYPE={sfig:'star',vowel:'star',first:'coin',syl:'cup',word:'star',wbuild:'star',art:'cup',case:'coin',nchoice:'star'};
 function rewType(lv){return (lv&&RTYPE[lv.kind])||'star';}
 var SVG_CUP='<img src="'+DEC2.cup+'" alt="">';
 var SVG_COIN='<img src="'+DEC2.coin+'" alt="">';
@@ -2416,11 +2423,18 @@ var SHCOL=['#E0544A','#2076BD','#56B892','#8F2643','#FF9F1C','#5D3497'];
 var SHAPES={
   globo:{fs:40,cy:46,b:function(c){return '<path d="M50 90 L43 106 L57 106 Z" fill="'+c+'"/><ellipse cx="50" cy="46" rx="40" ry="44" fill="'+c+'"/><ellipse cx="33" cy="26" rx="7" ry="12" fill="#fff" opacity=".4" transform="rotate(28 33 26)"/>';}},
   estrella:{fs:34,cy:55,b:function(c){return '<g transform="translate(50 54) scale(.92) translate(-50 -54)"><path d="M50 6 L62 36 L94 38 L69 58 L78 90 L50 72 L22 90 L31 58 L6 38 L38 36 Z" fill="'+c+'" stroke="'+c+'" stroke-width="14" stroke-linejoin="round"/></g>';}},
+  /* M-061: figuras para las sílabas (caja, carta, puerta, ventana, boya, pez) */
+  caja:{fs:34,sf:27,cy:70,b:function(c){return '<rect x="10" y="34" width="80" height="68" rx="6" fill="'+c+'"/><rect x="5" y="20" width="90" height="22" rx="5" fill="'+c+'" stroke="rgba(23,48,92,.35)" stroke-width="3"/><rect x="44" y="20" width="12" height="22" fill="#fff" opacity=".45"/>';}},
+  carta:{fs:34,sf:28,cy:56,b:function(c){return '<rect x="14" y="5" width="72" height="100" rx="10" fill="'+c+'"/><rect x="22" y="13" width="56" height="84" rx="6" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>';}},
+  puerta:{fs:34,sf:27,cy:58,b:function(c){return '<path d="M16 106 V42 Q16 7 50 7 Q84 7 84 42 V106 Z" fill="'+c+'"/><circle cx="75" cy="72" r="5" fill="#FFD166"/><rect x="10" y="102" width="80" height="6" rx="3" fill="rgba(23,48,92,.35)"/>';}},
+  ventana:{fs:34,sf:27,cy:52,b:function(c){return '<rect x="8" y="8" width="84" height="88" rx="8" fill="'+c+'"/><rect x="15" y="15" width="70" height="74" rx="4" fill="#fff" opacity=".28"/><path d="M50 15 V89" stroke="'+c+'" stroke-width="5"/><rect x="3" y="94" width="94" height="11" rx="4" fill="'+c+'" opacity=".8"/>';}},
+  boya:{fs:34,sf:27,cy:62,b:function(c){return '<rect x="45" y="8" width="10" height="22" rx="4" fill="'+c+'"/><circle cx="50" cy="10" r="7" fill="#FFD166"/><ellipse cx="50" cy="62" rx="38" ry="34" fill="'+c+'"/><path d="M14 44 Q50 32 86 44 L88 52 Q50 40 12 52 Z" fill="#fff" opacity=".55"/><path d="M4 104 Q16 96 28 104 T52 104 T76 104 T100 104" fill="none" stroke="#4FB0D9" stroke-width="5" stroke-linecap="round"/>';}},
+  pez:{fs:34,sf:27,cy:58,b:function(c){return '<path d="M78 58 L98 36 L98 80 Z" fill="'+c+'"/><ellipse cx="48" cy="58" rx="40" ry="32" fill="'+c+'"/><circle cx="21" cy="48" r="5" fill="#fff"/><circle cx="20" cy="48" r="2.4" fill="#17305C"/>';}},
   pelota:{fs:40,cy:52,b:function(c){return '<circle cx="50" cy="52" r="44" fill="'+c+'"/><path d="M9 36 Q50 62 91 36" fill="none" stroke="#fff" stroke-width="5" opacity=".6"/><path d="M9 70 Q50 44 91 70" fill="none" stroke="#fff" stroke-width="5" opacity=".6"/>';}}
 };
 function shapeSVG(kind,col,l){
   var sh=SHAPES[kind]||SHAPES.pelota;
-  var fs=sh.fs,glyph;
+  var fs=(l.length>1&&sh.sf)?sh.sf:sh.fs,glyph;
   if(l==='i'&&store.upper){ /* regla de Jose: la I es un palito con un puntito, nunca con rayitas arriba y abajo. Se dibuja, no se escribe con la tipografía */
     var base=sh.cy+.465*fs,bh=.68*fs,bw=.17*fs,top=base-bh,ol=' fill="#fff" stroke="rgba(23,48,92,.55)" stroke-width="4" stroke-linejoin="round" paint-order="stroke"';
     glyph='<rect x="'+(50-bw/2).toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="'+(bw/2).toFixed(1)+'"'+ol+'/><circle cx="50" cy="'+(top-.16*fs).toFixed(1)+'" r="'+(.09*fs).toFixed(1)+'"'+ol+'/>';
@@ -2430,7 +2444,7 @@ function shapeSVG(kind,col,l){
   return '<svg viewBox="0 0 100 110" aria-hidden="true">'+sh.b(col)+glyph+'</svg>';
 }
 function vShape(area,it,auto){
-  area.innerHTML='<p class="q">Tocá la '+(isV(it.ans)?'vocal':'letra')+' que escuchás</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row shapes">'+
+  area.innerHTML='<p class="q">Tocá la '+(it.ans.length>1&&!isV(it.ans)?'sílaba':(isV(it.ans)?'vocal':'letra'))+' que escuchás</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row shapes">'+
     it.opts.map(function(l,k){return '<button class="shp" type="button" data-ok="'+(l===it.ans?1:0)+'" aria-label="Opción '+(k+1)+'">'+shapeSVG(it.shape,it.cols[k%it.cols.length],l)+'</button>';}).join('')+'</div>'+common();
   $('#listen').onclick=function(){say(it.ans);};
   wirePick(it,it.ans);wireNext();
