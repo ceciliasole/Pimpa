@@ -360,6 +360,8 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .lfan .lcol::before{content:'';flex:0 0 auto;width:0;height:0;border-left:11px solid #F2B84B;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-right:3px;opacity:0;transition:opacity .35s}
 .lfan .lcol.s1::before{opacity:.85}
 .fl.on{opacity:.8}
+.fl[data-v="a"]{stroke:#E0544A}.fl[data-v="e"]{stroke:#F2A03D}.fl[data-v="i"]{stroke:#2076BD}.fl[data-v="o"]{stroke:#5D3497}.fl[data-v="u"]{stroke:#3FA27A}
+.lfan .lcol[data-v="a"]::before{border-left-color:#E0544A}.lfan .lcol[data-v="e"]::before{border-left-color:#F2A03D}.lfan .lcol[data-v="i"]::before{border-left-color:#2076BD}.lfan .lcol[data-v="o"]::before{border-left-color:#5D3497}.lfan .lcol[data-v="u"]::before{border-left-color:#3FA27A}
 .lrows{flex:1;display:grid;grid-template-rows:repeat(var(--n),1fr);gap:4px}
 .lfan .lcol{flex-direction:row;justify-content:flex-start;gap:14px}
 .lfan .lcol>*{opacity:0}
@@ -2124,9 +2126,9 @@ function renderCamino(){
     h=topbar(esc(n.title))+'<div class="lvgrid">'+n.ids.map(function(id){return lvBtn(LV[id]);}).join('')+'</div>';
   }else if(n.s==='sil'){
     h=topbar('Sílabas')+'<div class="hgrid">'+
-      hcard('sil-a','Aprendo sílabas','<span class="c">M</span>➜<span class="v">A</span>',null,'Mirá cómo se forma cada sílaba')+
-      hcard('sil-l','Leer sílabas','<span class="c">M</span><span class="v">A</span>',null,'Escuchá y tocá la sílaba')+
-      hcard('sil-b','Armar sílabas','<span class="c">M</span>+<span class="v">A</span>',null,'Armá la sílaba con la consonante y la vocal')+'</div>';
+      hcard('sil-a','Aprendo sílabas','',null,'')+
+      hcard('sil-l','Leer sílabas','',null,'')+
+      hcard('sil-b','Armar sílabas','',null,'')+'</div>';
   }else if(n.s==='silpick'){
     var ssel=n.sel=n.sel||[];
     h=topbar(SILT[n.mode])+'<p class="hint" style="text-align:center;margin:0">Elegí una consonante, o varias.</p><div class="chips">'+chipsOf('sil').filter(function(c){return !(n.mode==='a'&&c==='ñ');}).map(function(c){
@@ -2490,7 +2492,7 @@ function vFirst(area,it,auto){
   if(auto)sayAuto(it.word,true);
 }
 function vSyl(area,it,auto){
-  area.innerHTML='<p class="q">Tocá lo que escuchás</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row">'+
+  area.innerHTML='<p class="q">¿Dónde dice …?</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row">'+
     it.opts.map(function(s){return '<button class="syl" type="button" data-ok="'+(s===it.ans?1:0)+'" aria-label="Sílaba">'+S(s)+'</button>';}).join('')+'</div>'+common();
   $('#listen').onclick=function(){say(it.ans);};
   wirePick(it,it.ans);wireNext();
@@ -2565,8 +2567,8 @@ function drawLesson(){
   var n=vs.length;
   $('#item').innerHTML=mascotHTML('senala','lm')+
     '<div class="lfan" style="--n:'+n+'">'+
-      '<div class="lleft"><div class="tile c big pop lcons'+(c.length>1?' long':'')+'">'+DH(c)+'</div><div class="pic small pop" role="img" aria-label="Dibujo de '+esc(w[0])+'">'+w[1]+'</div></div>'+
-      '<svg class="llines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+vs.map(function(v,i){return '<line class="fl" x1="0" y1="50" x2="0" y2="50" data-x2="100" data-y2="'+((i+.5)/n*100).toFixed(1)+'" vector-effect="non-scaling-stroke"/>';}).join('')+'</svg>'+
+      '<div class="lleft"><div class="tile c big pop lcons'+(c.length>1?' long':'')+'">'+DH(c)+'</div></div>'+
+      '<svg class="llines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+vs.map(function(v,i){return '<line class="fl" data-v="'+v+'" x1="0" y1="50" x2="0" y2="50" data-x2="100" data-y2="'+((i+.5)/n*100).toFixed(1)+'" vector-effect="non-scaling-stroke"/>';}).join('')+'</svg>'+
       '<div class="lrows">'+vs.map(function(v){return '<div class="lcol" data-v="'+v+'"><span class="tile v mini lv">'+DH(v)+'</span><span class="larr">\u27A1\uFE0E</span><span class="lsy">'+S(ctok(c)+v)+'</span></div>';}).join('')+'</div>'+
     '</div>'+
     '<p class="q">Mirá cómo se forma</p>'+
@@ -2601,10 +2603,7 @@ function drawLesson(){
     function afterLine(){
       if(tok!==lessonTok)return;
       cols[k].classList.add('s1');
-      wait(function(d){
-        var cl=letterClip(vs[k]);
-        if(soundOn&&cl)playClip(cl,d);else lt(d,700);
-      },3000,function(){
+      wait(function(d){lt(d,450);},1000,function(){
         cols[k].classList.add('sa');
         lt(function(){
           if(tok!==lessonTok)return;
@@ -2615,11 +2614,7 @@ function drawLesson(){
     }
     if(fl)growLine(fl,afterLine);else afterLine();
   }
-  lt(function(){
-    wait(function(d){if(soundOn)speakTTS(w[0],d,0.8);else lt(d,600);},4000,function(){
-      wait(function(d){var cl=letterClip(c);if(soundOn&&cl)playClip(cl,d);else lt(d,400);},3000,function(){stepCol(0);});
-    });
-  },350);
+  lt(function(){stepCol(0);},500);
 }
 function drawLessonTap(){
   clearLesson();stopSpeech();
@@ -2630,7 +2625,7 @@ function drawLessonTap(){
   function round(){
     var t=targets[k],it={bad:false},last=(k===targets.length-1);
     var opts=shuffle(sylPool([c]).concat(sample(otherSyl,Math.min(3,otherSyl.length))));
-    $('#item').innerHTML=mascotHTML('escucha')+'<p class="q">Tocá lo que escuchás</p><button class="btn ghost" id="listen" type="button">Escuchar</button>'+
+    $('#item').innerHTML=mascotHTML('escucha')+'<p class="q">¿Dónde dice …?</p><button class="btn ghost" id="listen" type="button">Escuchar</button>'+
       '<div class="scatter">'+opts.map(function(s){
         var r=Math.round((Math.random()*14-7)),x=Math.round(Math.random()*20-10),y=Math.round(Math.random()*20-10);
         return '<button class="syl sc" type="button" data-ok="'+(s===t?1:0)+'" style="--r:'+r+'deg;--x:'+x+'px;--y:'+y+'px" aria-label="Opción">'+S(s)+'</button>';
