@@ -318,6 +318,9 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .pico.emob{padding:0;overflow:hidden;width:clamp(110px,28vw,220px);aspect-ratio:1/1;background:#FFF6E5;border:4px solid #E8DCBF}
 .pico.emob img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block;pointer-events:none}
 .pico.emob.ok{border-color:var(--ok)}
+.emosrc{width:clamp(130px,30vw,230px);aspect-ratio:1/1;border-radius:20px;overflow:hidden;border:4px solid #E8DCBF;background:#FFF6E5;margin:0 auto}
+.emosrc img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block}
+.emowb{font-size:clamp(1rem,3.4vw,1.9rem);min-width:min(100%,260px);padding-left:6px;padding-right:6px;overflow:hidden}
 .pico.bocab{padding:4px;width:clamp(100px,28vw,150px);aspect-ratio:auto}
 .pico.bocab .boca{width:100%}
 .bigletter{font-size:clamp(5rem,26vw,9rem);font-weight:700;line-height:1}
@@ -1290,6 +1293,9 @@ var EMOP=[['contento','m','contento-m-1'],['contento','f','contento-f-1'],['cont
  ['cansado','m','cansado-m-1'],['cansado','f','cansado-f-1'],['cansado','f','cansado-f-2'],
  ['asustado','f','asustado-f-1'],['asustado','m','asustado-m-1'],['asustado','f','asustado-f-2']].map(function(e){return {emo:e[0],g:e[1],f:e[2]};});
 LEVELS.push({id:'emo-1',grp:'Emociones',title:'Reconociendo emociones',kind:'emo',free:true});
+/* Ejercicios 2 y 3 propuestos por Cecilia (2 nov), a validar con Jose */
+LEVELS.push({id:'emo-2',grp:'Emociones',title:'Mirá la cara y elegí la palabra',kind:'emow',free:true});
+LEVELS.push({id:'emo-3',grp:'Emociones',title:'Uní las caras que se sienten igual',kind:'emom',free:true});
 PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Premium',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Premium',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
@@ -1442,6 +1448,17 @@ function buildItems(lv){
       var ds=shuffle(EMOP.filter(function(x){return x.g===t.g&&x.emo!==t.emo;}));
       var d=[];ds.forEach(function(x){if(d.length<2&&!d.some(function(y){return y.emo===x.emo;}))d.push(x);});
       items.push({type:'emo',emo:t.emo,g:t.g,word:EMO_W[t.emo][t.g==='f'?1:0],ans:t.f,opts:shuffle([t].concat(d))});
+    });
+  }else if(lv.kind==='emow'){
+    shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
+      var gi=t.g==='f'?1:0,ws=shuffle(Object.keys(EMO_W).filter(function(e){return e!==t.emo;})).slice(0,2).map(function(e){return EMO_W[e][gi];});
+      items.push({type:'emow',emo:t.emo,word:EMO_W[t.emo][gi],ans:t.f,opts:shuffle([EMO_W[t.emo][gi]].concat(ws))});
+    });
+  }else if(lv.kind==='emom'){
+    shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
+      var same=shuffle(EMOP.filter(function(x){return x.emo===t.emo&&x.f!==t.f;}))[0];
+      var ds=[];shuffle(EMOP.filter(function(x){return x.emo!==t.emo;})).forEach(function(x){if(ds.length<2&&!ds.some(function(y){return y.emo===x.emo;}))ds.push(x);});
+      items.push({type:'emom',emo:t.emo,src:t.f,ans:same.f,opts:shuffle([same].concat(ds))});
     });
   }else if(lv.kind==='art'){
     seq(lv.set,TOTAL).forEach(function(l,k){
@@ -2246,7 +2263,7 @@ function renderCamino(){
     else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
-    else if(a==='emo')go({s:'list',title:'Reconociendo emociones',ids:['emo-1']});
+    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-2','emo-3']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
     else if(a==='cal')go({s:'list',title:'Calendario',ids:cardIds('cal')});
@@ -2432,7 +2449,7 @@ function common(){return '<div class="fb" id="fb" role="status"></div>'+nextBtn(
 function drawItem(auto){
   var it=run.items[run.i],area=$('#item');
   renderDots();
-  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
+  ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,emow:vEmoW,emom:vEmoM,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
   area.insertAdjacentHTML('afterbegin',mascotHTML(it.type==='word'?'lee':'escucha'));
   colorTiles(it);fitTiles();fitBtns();
 }
@@ -2579,6 +2596,16 @@ function vEmo(area,it,auto){
   $('#listen').onclick=function(){sayWord(it.word);};
   wirePick(it,it.word,true);wireNext();
   if(auto)sayAuto(it.word,true);
+}
+function vEmoW(area,it,auto){
+  area.innerHTML='<p class="q">¿Cómo se siente?</p><div class="emosrc pop"><img src="assets/emo/'+it.ans+'.webp" alt="" draggable="false"></div>'+
+    '<div class="row emowd">'+it.opts.map(function(w){return '<button class="syl emowb" type="button" data-ok="'+(w===it.word?1:0)+'" aria-label="Palabra">'+Array.from(w).map(function(ch){return LC(ch,true);}).join('')+'</button>';}).join('')+'</div>'+common();
+  wirePick(it,it.word,true);wireNext();
+}
+function vEmoM(area,it,auto){
+  area.innerHTML='<p class="q">¿Quién se siente igual?</p><div class="emosrc pop"><img src="assets/emo/'+it.src+'.webp" alt="" draggable="false"></div>'+
+    '<div class="picopts">'+it.opts.map(function(o,k){return '<button class="pico emob" type="button" data-ok="'+(o.f===it.ans?1:0)+'" aria-label="Foto '+(k+1)+'"><img src="assets/emo/'+o.f+'.webp" alt="" draggable="false"></button>';}).join('')+'</div>'+common();
+  wirePick(it,null);wireNext();
 }
 function vFirst(area,it,auto){
   area.innerHTML='<p class="q">¿Con qué sonido empieza …?</p><div class="pic pop" role="img" aria-label="Dibujo de '+esc(it.word)+'">'+it.pic+'</div>'+
