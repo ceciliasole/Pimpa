@@ -1244,7 +1244,7 @@ function heroHTML(nx){
 /* ---------- Niveles ---------- */
 var LEVELS=[];
 LEVELS.push({id:'v-r',grp:'Vocales',title:'Reconocer vocales',kind:'vowel'});
-LEVELS.push({id:'v-s',grp:'Vocales',title:'Primer sonido: vocales',kind:'first',known:VOW.slice(),focus:null});
+LEVELS.push({id:'v-s',grp:'Vocales',title:'Sonido inicial: vocales',kind:'first',known:VOW.slice(),focus:null});
 LEVELS.push({id:'a-v',grp:'Articulemas',title:'Articulemas: vocales',kind:'art',set:VOW.slice()});
 LEVELS.push({id:'a-p',grp:'Articulemas',title:'Articulemas: M P T L F S',kind:'art',set:PREM.slice()});
 PREM.forEach(function(c,i){
@@ -1365,6 +1365,13 @@ var GENN={
 };
 function buildItems(lv){
   var items=[];
+  if(lv.kind==='vowel'&&lv.mix){
+    /* Reconocimiento de letras (M-134): 10 intentos seguidos, 3 de tarjetas, 4 de globos y estrellas y 3 de escondida en el dibujo */
+    var mb={kind:'vowel',set:lv.set,pool:lv.pool||undefined},soloV=lv.set.every(function(x){return VOW.indexOf(x)>-1;});
+    var mc=buildItems(Object.assign({},mb,{vstyle:'cards'})).slice(0,3);
+    if(!soloV)mc.forEach(function(it){it.type='letter';});
+    return mc.concat(buildItems(Object.assign({},mb,{vstyle:'shapes'})).slice(0,4),buildItems(Object.assign({},mb,{vstyle:'scene'})).slice(0,3));
+  }
   if(lv.kind==='vowel'){
     var vs=lv.set||VOW,vl;
     if(vs.length===1||lv.vstyle){
@@ -1791,7 +1798,7 @@ function vowelLevels(set){
   ];
   return [
     {id:'vr-'+key,grp:'Vocales',title:'Reconocer: '+nm,kind:'vowel',set:set.slice()},
-    {id:'vf-'+key,grp:'Vocales',title:'Primer sonido: '+nm,kind:'first',known:set.slice(),focus:null}
+    {id:'vf-'+key,grp:'Vocales',title:'Sonido inicial: '+nm,kind:'first',known:set.slice(),focus:null}
   ];
 }
 var SILT={a:'Aprendo sílabas',l:'Leer sílabas',b:'Armar sílabas'};
@@ -1845,7 +1852,7 @@ function chipsOf(g){return GLET[g].concat(g==='poc'?['ñ']:[]);}
 function ordered(g,sel){return chipsOf(g).filter(function(c){return sel.indexOf(c)>-1;});}
 function knownUpTo(set){var m=0;set.forEach(function(c){m=Math.max(m,LORD.indexOf(c));});return LORD.slice(0,m+1);}
 function tarjId(c){return VOW.indexOf(c)>-1?'sq-v-'+c:(POCO.indexOf(c)>-1?'pf-'+c+'-s':(c==='ñ'?'sq-ñ-s':c+'-s'));}
-/* Los 4 pasos de cada letra (o de varias): Tarjetas, Primer sonido, Globos y estrellas, Escondida en el dibujo. Con una sola letra son los mismos niveles de Mi camino. */
+/* Los 4 pasos de cada letra (o de varias): Tarjetas, Sonido inicial, Globos y estrellas, Escondida en el dibujo. Con una sola letra son los mismos niveles de Mi camino. */
 function setLevels(g,set){
   var out=[],isv=g==='voc';
   if(set.length===1){
@@ -1861,7 +1868,7 @@ function setLevels(g,set){
   out.push(reg(isv?{id:'ms-t-'+key,grp:grp,title:'Tarjetas: '+nm,kind:'vowel',set:set.slice()}
                   :{id:'ms-t-'+key,grp:grp,title:'Tarjetas: '+nm,kind:'first',rot:true,even:true,known:set.slice()}));
   var pfs=set.filter(function(x){return FIRST[x];});
-  if(pfs.length)out.push(reg({id:'ms-pf-'+key,grp:grp,title:'Primer sonido: '+nm,kind:'first',pf:pfs,known:kn.filter(function(x){return FIRST[x];})}));
+  if(pfs.length)out.push(reg({id:'ms-pf-'+key,grp:grp,title:'Sonido inicial: '+nm,kind:'first',pf:pfs,known:kn.filter(function(x){return FIRST[x];})}));
   var o1={id:'ms-sh-'+key,grp:grp,title:'Globos y estrellas: '+nm,kind:'vowel',set:set.slice(),vstyle:'shapes'};
   var o2={id:'ms-sc-'+key,grp:grp,title:'Escondida en el dibujo: '+nm,kind:'vowel',set:set.slice(),vstyle:'scene'};
   if(!isv){o1.pool=kn;o2.pool=kn;}
@@ -1922,15 +1929,17 @@ var SEQ=[],SEQH=[];
 function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
 (function(){
   function PR(c,grp){return reg({id:'sq-pr-'+c,grp:grp,cons:c,title:'Cómo se forman las sílabas',kind:'lesson',presentOnly:true});}
-  /* Cada letra: 4 pasos (Tarjetas, Primer sonido, Globos, Escondida) y recién después la letra siguiente. M-022, M-023, M-024 */
+  /* Cada letra: 4 pasos (Tarjetas, Sonido inicial, Globos, Escondida) y recién después la letra siguiente. M-022, M-023, M-024 */
   var IC={pf:'🔊',sh:'🎈',sc:'🔍'};
   function four(sec,grp,c,tarj,pool,pfKnown,noPf){
-    sq(sec,tarj);
-    if(!noPf)sq(sec,{id:'sq-pf-'+c,grp:grp,cons:c,title:'Primer sonido',kind:'first',pf:c,known:pfKnown,ico:IC.pf});
+    /* M-134/M-137: en Mi camino cada letra tiene UNA sola actividad, 'Reconocimiento de letras' (3 tarjetas, 4 globos y estrellas, 3 escondida en el dibujo). Sonido inicial ya no está en el camino; los niveles sueltos siguen en el catálogo. */
+    reg(tarj);
+    if(!noPf)reg({id:'sq-pf-'+c,grp:grp,cons:c,title:'Sonido inicial',kind:'first',pf:c,known:pfKnown,ico:IC.pf});
     var o1={id:'sq-sh-'+c,grp:grp,cons:c,title:'Globos y estrellas',kind:'vowel',set:[c],vstyle:'shapes',ico:IC.sh};
     var o2={id:'sq-sc-'+c,grp:grp,cons:c,title:'Escondida en el dibujo',kind:'vowel',set:[c],vstyle:'scene',ico:IC.sc};
     if(pool){o1.pool=pool;o2.pool=pool;}
-    sq(sec,o1);sq(sec,o2);
+    reg(o1);reg(o2);
+    sq(sec,{id:'sq-rl-'+c,grp:grp,cons:c,title:'Reconocimiento de letras',kind:'vowel',set:[c],mix:true,pool:pool||null});
   }
   /* Vocales */
   var vsets=[['a'],['e'],['a','e'],['i'],['a','e','i'],['o'],['a','e','i','o'],['u'],VOW.slice()];
@@ -1939,7 +1948,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
       var v=set[0];
       four('Vocales','Vocales',v,{id:'sq-v-'+v,grp:'Vocales',cons:v,title:'Tarjetas',kind:'vowel',set:[v],vstyle:'cards'},null,VOW.slice());
     }else{
-      sq('Vocales',{id:'sq-v-'+set.join(''),grp:'Vocales',title:'Rotación '+set.map(UP).join(' '),kind:'vowel',set:set.slice()});
+      sq('Vocales',{id:'sq-rl-'+set.join(''),grp:'Vocales',title:'Reconocimiento de letras: '+set.map(UP).join(' '),kind:'vowel',set:set.slice(),mix:true});
     }
   });
   /* Premium */
@@ -1972,7 +1981,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
   function poco(c,sec){
     var kn=BASE.concat(ORD.slice(0,ORD.indexOf(c)+1));
     if(c==='ñ'){
-      /* Ñ: no hay dibujos definidos, así que sin Primer sonido */
+      /* Ñ: no hay dibujos definidos, así que sin Sonido inicial */
       four(sec,'Poco frecuentes','ñ',reg({id:'sq-ñ-s',grp:'Poco frecuentes',cons:'ñ',title:'Letra y sonido',kind:'first',known:kn,focus:'ñ',intro:'ñ'}),kn,kn,true);
       sq(sec,reg({id:'sq-ñ-sil',grp:'Poco frecuentes',cons:'ñ',title:'Sílabas',kind:'syl',sc:['ñ']}));
     }else{
@@ -2473,7 +2482,7 @@ function vArt(area,it,auto){
   if(auto&&snd)sayAuto(it.ans); /* suena solo siempre, tanto con la letra como con la boca */
 }
 function vFirst(area,it,auto){
-  area.innerHTML='<p class="q">¿Con qué letra empieza?</p><div class="pic pop" role="img" aria-label="Dibujo de '+esc(it.word)+'">'+it.pic+'</div>'+
+  area.innerHTML='<p class="q">¿Con qué sonido empieza …?</p><div class="pic pop" role="img" aria-label="Dibujo de '+esc(it.word)+'">'+it.pic+'</div>'+
     '<button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row">'+
     it.opts.map(function(l){return tileHTML(l,l===it.ans);}).join('')+'</div>'+common();
   $('#listen').onclick=function(){sayWord(it.word);};
