@@ -213,8 +213,8 @@ start();
   --font-body:'Pimpa1','Lexend',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
 *{box-sizing:border-box}
-/* Regla de Jose: el 1 va sin la base de abajo, nunca; el 4 va abierto arriba y el 7 lleva travesaño en el medio (foto de Jose, 2 nov 2026). El 1, el 7 y el 4 se rehicieron el 3 nov con las proporciones de los recortes de las fotos de Jose, con trazo medio (el 1 sin base, con gancho largo en diagonal): el 7 con palito de arriba corto y travesaño a mitad de altura que cruza el palo; el 4 abierto, con palo izquierdo inclinado más corto y palo derecho largo. Esta fuente tiene solo el 1, el 4 y el 7 y se usa para esos caracteres en toda la app */
-@font-face{font-family:'Pimpa1';src:url(data:font/ttf;base64,AAEAAAAKAIAAAwAgT1MvMkbTRBsAAAEoAAAAYGNtYXAASADSAAABmAAAAERnbHlmKiWZHAAAAegAAAJ4aGVhZC84+Q8AAACsAAAANmhoZWEFnQGGAAAA5AAAACRobXR4B8UAUAAAAYgAAAAQbG9jYQGOAMcAAAHcAAAACm1heHAACABcAAABCAAAACBuYW1lshAoFwAABGAAAABUcG9zdAA0ABcAAAS0AAAAKgABAAAAAQAA4iyQx18PPPUAAwPoAAAAAOb71T8AAAAA5w/gNAAKAAACDQK8AAAAAwACAAAAAAAAAAEAAAOE/wYAAAJEAAoANwINAAEAAAAAAAAAAAAAAAAAAAAEAAEAAAAEAFoAAwAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAwIcArwABQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAPz8/PwAAADEAMQOE/wYAAAOEAPoAAAAAAAAAAAAAAAAAAAAgAAAB9AAAAZsAIAHyACYCRAAKAAAAAgAAAAMAAAAUAAMAAQAAABQABAAwAAAACAAIAAIAAAAxADQAN///AAAAMQA0ADf////Q/87/zAABAAAAAAAAAAAAAAAAAFIAxwE8AAAAAgAgAAABXwK8AB0AOwAAZQ8GLwYTPwYfBgMPBC8GNzcTPwQfBgcHAVQCBggLDg8PEA8NCwgFAQsCBggLDg8PEA8NCwgFAb0JDA4PEA8ODQoHBAEDB7MJDA4PEA8ODQoHBAEDB0UQDw0LCAUBAgYICw4PDwIwEA8NCwgFAQIGCAsODw/+qw0KBwQBAwcJDA4PEA8OATMNCgcEAQMHCQwODxAPDgADACYAAAG2ArwAHQA7AFkAAFMPBS8GNxM/BR8GBx8HDwYjLwY/BgEPBi8GEz8GHwaxBAcKDQ4QDxANDAoGAwEuBAcKDQ4QDxANDAoGAwF7EA4OCwgFAgIFCAsODhDuEA4OCwgFAgIFCAsODhABHAMHCgwODw8QDgwKCAMBLgMHCgwODw8QDgwKCAMBATwQDQwKBgMBBAcKDQ4QDwEwEA0MCgYDAQQHCg0OEA/gAgUICw4OEBAODgsIBQICBQgLDg4QEA4OCwgFAv60EA4MCggDAQMHCgwODw8B9BAODAoIAwEDBwoMDg8PAAADAAoAAAINArwAHQA7AFkAAEEfBg8GIS8GPwYTDwUvBjcTPwUfBgcHHwYPBiEvBj8GAZMQDg4LCAUCAgUICw4OEP69EA4OCwgFAgIFCAsODhDyBgkLDg8PEA8NCggFAQKVBgkLDg8PEA8NCggFAQIQEA4OCwgFAgIFCAsODhD+0BAODgsIBQICBQgLDg4QArwCBQgLDg4QEA4OCwgFAgIFCAsODhAQDg4LCAUC/XgPDQoIBQECBgkLDg8PEAIwDw0KCAUBAgYJCw4PDxC6AgUICw4OEBAODgsIBQICBQgLDg4QEA4OCwgFAgAAAAQANgABAAAAAAABAAYAAAABAAAAAAACAAQABgADAAEECQABAAwACgADAAEECQACAAgAFlBpbXBhMUJvbGQAUABpAG0AcABhADEAQgBvAGwAZAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAUABcAGgAA) format('truetype');font-weight:100 900;unicode-range:U+0031,U+0034,U+0037;font-display:block}
+/* Regla de Jose: el 1 va sin la base de abajo, nunca; el 4 va abierto arriba y el 7 lleva travesaño en el medio (foto de Jose, 2 nov 2026). El 1, el 7 y el 4 se rehicieron el 3 nov con las proporciones de los recortes de las fotos de Jose, con trazo medio (el 1 sin base, con gancho largo en diagonal): el 7 con palito de arriba corto y travesaño a mitad de altura que cruza el palo; el 4 abierto, con palo izquierdo inclinado más corto y palo derecho largo. El 3 nov Jose pidió números menos gruesos: el trazo de 1, 4 y 7 se afinó (radio 50) y los demás dígitos (0, 2, 3, 5, 6, 8, 9) vienen de Lexend variable (OFL) a peso 380, con la forma de siempre. Esta fuente tiene solo los dígitos 0 al 9 y se usa para ellos en toda la app */
+@font-face{font-family:'Pimpa1';src:url(data:font/ttf;base64,AAEAAAAKAIAAAwAgT1MvMkbTRBsAAAEoAAAAYGNtYXAAWwC7AAABtAAAAEhnbHlmbu5xBQAAAhQAAAYGaGVhZC9e/JMAAACsAAAANmhoZWEFwgGSAAAA5AAAACRobXR4FtEBagAAAYgAAAAsbG9jYQgFCW0AAAH8AAAAGG1heHAADwBcAAABCAAAACBuYW1lshAoFwAACBwAAABUcG9zdACDAHUAAAhwAAAAOAABAAAAAQAALCy6HV8PPPUAAwPoAAAAAOb71T8AAAAA5w/jtgAK//YCMgLIAAAAAwACAAAAAAAAAAEAAAOE/wYAAAJgAAoAIAIyAAEAAAAAAAAAAAAAAAAAAAALAAEAAAALAFoAAwAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAwIcArwABQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAPz8/PwAAADEAMQOE/wYAAAOEAPoAAAAAAAAAAAAAAAAAAAAgAAAB9AAAAXYAIAHTACYCLQAKAmAALgIkADMCEQAUAjgAJwIwACoCQwA1AicAHwAAAAIAAAADAAAAFAADAAEAAAAUAAQANAAAAAQABAABAAAAOf//AAAAMP//AAAAAQAEAAAABAABAAUABgACAAcACAADAAkACgAAAAAAUgDIAT0BaQGdAdsCFwJeAsIDAwACACAAAAFEArwAHQA7AABlDwYvBhM/Bh8GAw8ELwY3NxM/BB8GBwcBOAEEBwgJCwsLCwkIBQQBDAEEBwgJCwsLCwkIBQQBxwcICgsLCwoJBwYCAQIFwAcICgsLCwoJBwYCAQIFMQsLCQgFBAEBBAcICQsLAlgLCwkIBQQBAQQHCAkLC/6fCQcGAgECBQcICgsLCwoBSQkHBgIBAgUHCAoLCwsKAAMAJgAAAaECvAAdADsAWQAAUw8FLwY3Ez8FHwYHEx8GDwYjLwY/BgEPBSMvBTUTPwUzHwUViQMFBwkKCwwKCgkGBQIBMgMFBwkKCwwKCgkGBQIBnAsLCQgGBAEBBAYICQsL/wsLCQgGBAEBBAYICQsLARgCBQcJCQsMCwoJBwUDMQIFBwkJCwwLCgkHBQMBPAoKCQYFAgEDBQcJCgsMAUYKCgkGBQIBAwUHCQoLDP70AQQGCAkLCwsLCQgGBAEBBAYICQsLCwsJCAYEAf63CwoJBwUDAgUHCQkLDAIYCwoJBwUDAgUHCQkLDAAAAwAKAAACAAK8AB0AOwBZAABBHwYPBiEvBj8GEw8FLwY3Ez8FHwYHHwcPBiEvBj8GAZYLCwkIBgQBAQQGCAkLC/6mCwsJCAYEAQEEBggJCwvrBAYICgsLCwoKBwYDAQKfBAYICgsLCwoKBwYDAQIICwsJCAYEAQEEBggJCwv+ugsLCQgGBAEBBAYICQsLArwBBAYICQsLCwsJCAYEAQEEBggJCwsLCwkIBgQB/WkKCgcGAwECBAYICgsLCwJYCgoHBgMBAgQGCAoLCwvmAQQGCAkLCwsLCQgGBAEBBAYICQsLCwsJCAYEAQAAAgAu//YCMgLGAA8AGwAARSImJjU0NjYzMhYWFRQGBicyNjU0JiMiBhUUFgEwUXM+PnNRUHQ+PnRQS1NTS0xTUwpYoW9voVhYoW9voVhdjH9/jIx/f4wAAAEAMwAAAgQCxgAiAABzJzc+AzU0JiYjIgYGByc+AjMyFhYVFA4DBwcnIRVdH9oRJSIVGzEiHjowDU8RRWE5O1w0ChYiLR2oEgFcTfYSLzMyFiEuGSE/KzE6UywxVjkXMDI2OyC3HWIAAQAU//YB7gK8ACgAAFciJic3HgIzMjY2NTQmJiMiBgYHJzcXITUhFwcnNjYzMh4CFRQGBvxKbjBQGTM2HiQ+JR44JxElKhkc3hT+0gGMFOcYCSUNLU06IUFtCkRQMiYwFiU/KCk5HwcODEz0H18o/hgFCCE8Ty1Eaj4AAAEAJ//5AfwCvAAmAABFIiYnNxYWMzI2NjU0JiYjIgYGBycTIRUhNwcnPgIzMhYWFRQGBgEBRXAlOS5JKitEKSZAKRQlMSY2KQF6/sUVIRkLMT0bQWU7QnIHPztANScmQScpQSYGExJJASlfE+IaCxQNO2hDRW9BAAIAKv//AgsCxwAfAC8AAEUiLgI1ND4CNzczFwcOAgcnPgMzMhYWFRQGBicyNjY1NCYmIyIGBhUUFhYBHTRZQSUPHisdXWMEbh0uIAoWEy0zOB86Yjs9bEYoQCQlPyYqQiUlQAElQlo2G0JPWC+eCroxWVEiYCAvIBE/aD9KdENfJkUrJ0MpJ0IpK0QoAAADADX//QIOArwAJQA1AEUAAEUiJiY1ND4CNwcuAzU0NjYzMhYWFRQOAgcnHgMVFAYGJzI2NjU0JiYjIgYGFRQWFhMyNjY1NCYmIyIGBhUUFhYBIUFrQBIjMyEGGioeDztiPT1iOw8cLBsDHjIlE0BrQic9JCQ9JyY9IyM9JiE1Hx81ISE1Hh41AzdcOB83LicOFQodJi0YNVU0NFU1GCwlHgsRCycwNh05XDZfHTMgIjQfHzQiIDIeAUAYKxwcLBoaLBwcKxgAAAIAHwAAAgMCyAAbACsAAHMnExcOAyMiJiY1NDY2MzIeAhUUDgIHBwMyNjY1NCYmIyIGBhUUFhbpBM8EEiwzNx05YTpAb0QyWEIlCxglG1NEKEAlJD8oJjojIzoKAbZMHy8iETxlO0dwQiRBVTAaO0lZOa4BUiQ+JilBJSRAKiQ/JgAAAAAABAA2AAEAAAAAAAEABgAAAAEAAAAAAAIABAAGAAMAAQQJAAEADAAKAAMAAQQJAAIACAAWUGltcGExQm9sZABQAGkAbQBwAGEAMQBCAG8AbABkAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwAAABQAFwAaABMAFQAWABgAGQAbABw=) format('truetype');font-weight:100 900;unicode-range:U+0030-0039;font-display:block}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font-family:inherit}
 :focus-visible{outline:3px solid var(--ink);outline-offset:3px}
@@ -315,6 +315,9 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 
 .wordbig{font-size:clamp(2.6rem,11vw,4.2rem);font-weight:700;display:flex;gap:0;flex-wrap:wrap;justify-content:center;letter-spacing:.04em}
 .picopts{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+/* Los dibujos para elegir entran un poquito después de que suena la consigna (así no distraen mientras escucha) */
+.picopts.late{visibility:hidden;opacity:0}
+.picopts.late.go{visibility:visible;opacity:1;transition:opacity .6s}
 .pico{position:relative;width:clamp(92px,26vw,130px);aspect-ratio:1;border-radius:18px;border:3px solid var(--line);background:var(--surface);font-size:clamp(3rem,11vw,4.4rem);cursor:pointer;display:grid;place-items:center}
 .pico.ok{border-color:var(--ok);background:var(--ok-bg)}
 .pico:disabled{cursor:default}
@@ -708,16 +711,16 @@ body.isfs.playing #item{zoom:.82}body.playing .qopt .qty{max-width:100%}
   body.playing .stage{padding:clamp(14px,2.4dvh,34px) clamp(14px,3vw,48px)}
   body.playing .q{font-size:clamp(1.6rem,4.6dvh,3rem)}
   body.playing .fb{font-size:clamp(1.3rem,3.4dvh,2rem);min-height:clamp(34px,6dvh,64px)}
-  body.playing .tile{width:clamp(96px,min(15vw,16dvh),210px)}
-  body.playing .bigletter{font-size:clamp(4.4rem,18dvh,13rem)}
-  body.playing .bigletter.long{font-size:clamp(4rem,18dvh,11rem)}
+  body.playing .tile{width:clamp(82px,min(12.5vw,13.5dvh),176px)}
+  body.playing .bigletter{font-size:clamp(3.8rem,15dvh,11rem)}
+  body.playing .bigletter.long{font-size:clamp(3.4rem,15dvh,9rem)}
   body.playing .pic{width:min(100%,420px,26dvh);font-size:clamp(5rem,min(22vw,23dvh),14rem)}
   body.playing .pic.small{width:clamp(110px,min(20vw,19dvh),240px);font-size:clamp(3.4rem,min(14vw,10dvh),8rem)}
   body.playing .pico{max-width:240px}
   body.playing .bocabig{width:clamp(120px,min(30vw,24dvh),320px)}
-  body.playing .syl{min-height:clamp(100px,17dvh,190px)}
+  body.playing .syl{min-height:clamp(88px,14.5dvh,160px)}
   body.playing .row:has(>[data-ok]:nth-child(3):last-child)>[data-ok],body.playing .picopts:has(>[data-ok]:nth-child(3):last-child)>[data-ok]{max-width:380px}
-  body.playing .row:has(>[data-ok]:nth-child(3):last-child)>.syl{font-size:clamp(3rem,11dvh,6.4rem)}
+  body.playing .row:has(>[data-ok]:nth-child(3):last-child)>.syl{font-size:clamp(2.5rem,9.2dvh,5.4rem)}
   body.playing .cshow .hand{height:clamp(150px,34dvh,360px)}
   body.playing .qopt .hand{height:clamp(110px,22dvh,250px)}
   body.playing .copts>.qopt{min-height:clamp(130px,26dvh,290px)}
@@ -742,20 +745,20 @@ body.isfs.playing #item{zoom:.82}body.playing .qopt .qty{max-width:100%}
 /* v18 (mejora Jose): en pantalla grande se ocultan todas las consignas escritas (quedan para lectores de pantalla), salvo donde llevan información (letra a buscar en la escena, días y secuencias), y lo liberado se usa para agrandar lo que el niño toca */
 @media (min-width:900px) and (min-height:620px){
   body.playing #item:not(:has(.scene,.wkrow,.seqrow)) .q{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0;padding:0}
-  body.playing .tile{width:clamp(96px,min(13vw,18dvh),230px)}
-  body.playing .bigletter{font-size:clamp(4.4rem,22dvh,16rem)}
-  body.playing .bigletter.long{font-size:clamp(3.6rem,18dvh,11rem)}
+  body.playing .tile{width:clamp(80px,min(11vw,15dvh),190px)}
+  body.playing .bigletter{font-size:clamp(3.6rem,17dvh,12rem)}
+  body.playing .bigletter.long{font-size:clamp(3rem,14dvh,8.5rem)}
   body.playing .pic{width:min(100%,520px,32dvh);font-size:clamp(5rem,min(22vw,28dvh),16rem)}
   body.playing .bocabig{width:clamp(120px,min(34vw,32dvh),420px)}
-  body.playing .row:has(>[data-ok]:nth-child(3):last-child)>.syl{min-height:clamp(110px,28dvh,250px);font-size:clamp(2.8rem,13dvh,7.5rem)}
-  body.playing .row:has(>[data-ok]:nth-child(4))>.syl{min-height:clamp(100px,19dvh,200px);font-size:clamp(2.4rem,9dvh,5rem)}
+  body.playing .row:has(>[data-ok]:nth-child(3):last-child)>.syl{min-height:clamp(96px,23dvh,210px);font-size:clamp(2.3rem,10.5dvh,6rem)}
+  body.playing .row:has(>[data-ok]:nth-child(4))>.syl{min-height:clamp(86px,16dvh,170px);font-size:clamp(2rem,7.5dvh,4.2rem)}
   body.playing .cshow .hand{height:clamp(150px,28dvh,320px)}
   body.playing .qopt .hand{height:clamp(100px,17dvh,200px)}
   body.playing .copts>.qopt{min-height:clamp(120px,22dvh,250px)}
   body.playing .qty span{font-size:clamp(3rem,9dvh,5.5rem)}
   body.playing .qopt .qty span{font-size:clamp(1.8rem,5.2dvh,3.4rem)}
   body.playing .slots.wbx .slot{width:clamp(80px,min(14dvh,calc((100vw - 80px) / (var(--nn,4) * 1.1))),190px);height:clamp(92px,min(17dvh,calc((100vw - 80px) / (var(--nn,4) * .95))),220px);font-size:clamp(2.6rem,min(9dvh,calc((100vw - 80px) / (var(--nn,4) * 2.2))),6rem)}
-  body.playing .slot{width:clamp(120px,22dvh,260px);height:clamp(140px,26dvh,300px);font-size:clamp(4rem,14dvh,9rem)}
+  body.playing .slot{width:clamp(100px,18dvh,210px);height:clamp(116px,21dvh,240px);font-size:clamp(3.2rem,11.5dvh,7.4rem)}
   /* más atractivo: tarjetas redondeadas con relieve, iguales para todas las opciones (el color no da pista) y un hundido al tocar */
   body.playing .syl:not(.ok):not(.bad):not(.miss){border-radius:clamp(22px,3.4dvh,36px);background-image:linear-gradient(#fff,#FFF6DC);box-shadow:0 7px 0 #E5D8B4}
   body.playing .syl,body.playing .shp,body.playing .tile,body.playing .qopt,body.playing .pico{transition:transform .12s ease}
@@ -1210,7 +1213,7 @@ var WORDS=[
  ['ballena',['ba','lle','na'],'🐳'],['caballo',['ca','ba','llo'],'🐴'],['chaleco',['cha','le','co'],'🦺'],['cuchara',['cu','cha','ra'],'🥄'],['gallina',['ga','lli','na'],'🐔'],['gorila',['go','ri','la'],'🦍'],['gusano',['gu','sa','no'],'🪱'],['jirafa',['ji','ra','fa'],'🦒'],['jugo',['ju','go'],'🧃'],['leche',['le','che'],'🥛'],['lechuga',['le','chu','ga'],'🥬'],['llama',['lla','ma'],'🦙'],['llave',['lla','ve'],'🔑'],['loro',['lo','ro'],'🦜'],['noche',['no','che'],'🌃'],['paloma',['pa','lo','ma'],'🕊️'],['payaso',['pa','ya','so'],'🤡'],['rana',['ra','na'],'🐸'],['regalo',['re','ga','lo'],'🎁'],['silla',['si','lla'],'🪑'],['taza',['ta','za'],'☕'],['tijera',['ti','je','ra'],'✂️'],['toro',['to','ro'],'🐂'],['yoyó',['yo','yo'],'🪀'],['zapallo',['za','pa','llo'],'🎃']
 ];
 /* Dibujos nuevos (láminas de Cecilia/Jose, 2 nov): reemplazan al emoji donde hay dibujo. Nene, nena y popo se dejan con el emoji por ahora. */
-var WIMG={bote:'bote',pino:'pino',sapo:'sapo',sapito:'sapo',rana:'sapo',lupa:'lupa',queso:'queso',casa:'casa',beso:'beso',pelota:'pelota',lana:'lana',lobo:'lobo',mono:'mono',nube:'nube',coco:'coco',mano:'mano',dado:'dado',boca:'boca',cama:'cama',caja:'caja',taza:'taza',luna:'luna','bebé':'bebe',dedo:'dedo',gato:'gato',llama:'llama',llave:'llave',sopa:'sopa',pila:'pila',lata:'lata',pato:'pato',bota:'bota',taco:'taco',foca:'foca',bicicleta:'bicicleta',foto:'foto',papa:'papa',mapa:'mapa',mate:'mate',moto:'moto',tele:'tele',tomate:'tomate',patito:'patito',maleta:'maleta',banana:'banana',moneda:'moneda',camino:'camino',conejo:'conejo',vaca:'vaca',rosa:'rosa',vela:'vela',yate:'yate',barco:'yate',pera:'pera',yema:'yema',zapato:'zapato',camisa:'camisa',tigre:'tigre',libro:'libro',leche:'leche',silla:'silla',serpiente:'serpiente',fuego:'fuego',gallina:'pollo',caballo:'caballo',abeja:'abeja','avión':'avion',auto:'auto',anillo:'anillo','árbol':'arbol','araña':'arana',elefante:'elefante',estrella:'estrella',escoba:'escoba',espejo:'espejo',edificio:'edificio','imán':'iman',iglesia:'iglesia',iguana:'iguana',oso:'oso',ojo:'ojo',oveja:'oveja',oreja:'oreja',uva:'uva',manzana:'manzana',mariposa:'mariposa',mosca:'mosca',pez:'pez',pan:'pan',perro:'perro','piña':'pina',pizza:'pizza','pingüino':'pinguino',puerta:'puerta',paloma:'paloma',tren:'tren',tortuga:'tortuga',tijera:'tijera',torta:'torta','teléfono':'telefono',taxi:'taxi',toro:'toro',tambor:'tambor','león':'leon','lápiz':'lapiz',loro:'loro',lengua:'lengua','limón':'limon',lechuga:'lechuga','sandía':'sandia',sombrero:'sombrero',sal:'sal',sobre:'sobre',flor:'flor',fresa:'fresa',frutilla:'fresa',fideos:'fideos',flan:'flan',balde:'balde',ballena:'ballena',nariz:'nariz',naranja:'naranja',cuchara:'cuchara','corazón':'corazon',cohete:'cohete','camión':'camion',jirafa:'jirafa',jugo:'jugo','jabón':'jabon','delfín':'delfin',dientes:'dientes','ratón':'raton',regalo:'regalo',reloj:'reloj',gorra:'gorra',globo:'globo',gusano:'gusano',gorila:'gorila',vestido:'vestido','violín':'violin',ventana:'ventana',chocolate:'chocolate',choclo:'choclo',chancho:'chancho',chaleco:'chaleco',quiosco:'quiosco','yoyó':'yoyo',yogur:'yogur',zorro:'zorro',zanahoria:'zanahoria',zapallo:'zapallo',nene:'nene',nena:'nena',payaso:'payaso',rey:'rey',unicornio:'unicornio','dragón':'dragon',fantasma:'fantasma',dinosaurio:'dinosaurio',robot:'robot',sol:'sol',mar:'mar',noche:'noche',lluvia:'lluvia',nieve:'nieve',fiesta:'fiesta',isla:'isla','volcán':'volcan',miel:'miel',mula:'mula'};
+var WIMG={bote:'bote',pino:'pino',sapo:'sapo',sapito:'sapo',rana:'sapo',pollo:'pollo',lupa:'lupa',queso:'queso',casa:'casa',beso:'beso',pelota:'pelota',lana:'lana',lobo:'lobo',mono:'mono',nube:'nube',coco:'coco',mano:'mano',dado:'dado',boca:'boca',cama:'cama',caja:'caja',taza:'taza',luna:'luna','bebé':'bebe',dedo:'dedo',gato:'gato',llama:'llama',llave:'llave',sopa:'sopa',pila:'pila',lata:'lata',pato:'pato',bota:'bota',taco:'taco',foca:'foca',bicicleta:'bicicleta',foto:'foto',papa:'papa',mapa:'mapa',mate:'mate',moto:'moto',tele:'tele',tomate:'tomate',patito:'patito',maleta:'maleta',banana:'banana',moneda:'moneda',camino:'camino',conejo:'conejo',vaca:'vaca',rosa:'rosa',vela:'vela',yate:'yate',barco:'yate',pera:'pera',yema:'yema',zapato:'zapato',camisa:'camisa',tigre:'tigre',libro:'libro',leche:'leche',silla:'silla',serpiente:'serpiente',fuego:'fuego',gallina:'pollo',caballo:'caballo',abeja:'abeja','avión':'avion',auto:'auto',anillo:'anillo','árbol':'arbol','araña':'arana',elefante:'elefante',estrella:'estrella',escoba:'escoba',espejo:'espejo',edificio:'edificio','imán':'iman',iglesia:'iglesia',iguana:'iguana',oso:'oso',ojo:'ojo',oveja:'oveja',oreja:'oreja',uva:'uva',manzana:'manzana',mariposa:'mariposa',mosca:'mosca',pez:'pez',pan:'pan',perro:'perro','piña':'pina',pizza:'pizza','pingüino':'pinguino',puerta:'puerta',paloma:'paloma',tren:'tren',tortuga:'tortuga',tijera:'tijera',torta:'torta','teléfono':'telefono',taxi:'taxi',toro:'toro',tambor:'tambor','león':'leon','lápiz':'lapiz',loro:'loro',lengua:'lengua','limón':'limon',lechuga:'lechuga','sandía':'sandia',sombrero:'sombrero',sal:'sal',sobre:'sobre',flor:'flor',fresa:'fresa',frutilla:'fresa',fideos:'fideos',flan:'flan',balde:'balde',ballena:'ballena',nariz:'nariz',naranja:'naranja',cuchara:'cuchara','corazón':'corazon',cohete:'cohete','camión':'camion',jirafa:'jirafa',jugo:'jugo','jabón':'jabon','delfín':'delfin',dientes:'dientes','ratón':'raton',regalo:'regalo',reloj:'reloj',gorra:'gorra',globo:'globo',gusano:'gusano',gorila:'gorila',vestido:'vestido','violín':'violin',ventana:'ventana',chocolate:'chocolate',choclo:'choclo',chancho:'chancho',chaleco:'chaleco',quiosco:'quiosco','yoyó':'yoyo',yogur:'yogur',zorro:'zorro',zanahoria:'zanahoria',zapallo:'zapallo',nene:'nene',nena:'nena',payaso:'payaso',rey:'rey',unicornio:'unicornio','dragón':'dragon',fantasma:'fantasma',dinosaurio:'dinosaurio',robot:'robot',sol:'sol',mar:'mar',noche:'noche',lluvia:'lluvia',nieve:'nieve',fiesta:'fiesta',isla:'isla','volcán':'volcan',miel:'miel',mula:'mula'};
 function wimgTag(f){return '<img class="wimg" src="assets/w/'+f+'.webp" alt="" draggable="false">';}
 Object.keys(FIRST).forEach(function(k){FIRST[k].forEach(function(e){if(WIMG[e[0]])e[1]=wimgTag(WIMG[e[0]]);});});
 WORDS.forEach(function(e){if(WIMG[e[0]])e[2]=wimgTag(WIMG[e[0]]);});
@@ -1389,6 +1392,8 @@ function numWord(n){if(n<30)return UN[n];var d=Math.floor(n/10),u=n%10;return DE
 var DIAS=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
 var DIAS3=['lun','mar','mié','jue','vie','sáb','dom'];
 var QTYE=['🍎','⭐','🐟','🎈','🍓','🐥'];
+/* Fichas imprimibles de contar: fotos reales (no emojis) */
+var QTYP=['manzana','estrella','pez','globo','fresa','patito'].map(function(f){return wimgTag(f);});
 function numOpt(n){return {h:String(n),cls:'tile c'+(String(n).length>1?' long':'')};}
 function dayOpt(i){return {h:'<span class="dw" style="color:'+DCOL(i)+'">'+DH(DIAS[i])+'</span>',cls:'syl dopt'};}
 function dateH(x){var p=x.lastIndexOf(' '),nm=x.slice(0,p),nu=x.slice(p+1),i=DIAS.indexOf(nm);return '<span class="dw"><span style="color:'+DCOL(i)+'">'+DH(nm)+'</span> <span style="color:'+DCOL(i+3)+'">'+esc(nu)+'</span></span>';}
@@ -1900,6 +1905,8 @@ function nextLevelOf(lv){var i=seqIds.indexOf(lv.id);return(i>-1&&i<seqIds.lengt
 /* M-092 / M-133: en modo adulto "Siguiente" siempre está habilitado y sigue con lo que viene. Si el nivel se armó solo (ej. Leer sílabas con la T) no tiene lista de niveles: se pasa a la letra que sigue en el abecedario de la app. */
 /* M-101 / M-113: 'Asociar sílabas'. Aparece una sílaba (MA) y el niño toca, entre 3 dibujos sin palabra escrita, el que empieza con ella (masa, mesa, moto). Usa las palabras que ya tienen foto. */
 var ASOC_NO={sapito:1,'piña':1,rana:1};
+/* Palabras elegidas por Jose para Asociar sílabas (3 nov). Solo se usan las que ya tienen foto en assets/w/; el resto se suma cuando se carga la foto (masa.webp, mesa.webp, etc.) y se agrega a WIMG */
+var ASOC_CUR={ma:['masa','mate','mariposa','mama','madera','mano'],me:['mesa','medias','medalla','melon'],mi:['miel','milanesa','microfono'],mo:['moto','mono','moneda','mochila','mosquito'],mu:['muñeca','musica'],po:['pollo']};
 var _ASOC=null;
 function asocTable(){
   if(_ASOC)return _ASOC;
@@ -1912,6 +1919,10 @@ function asocTable(){
     if(rest!==''&&!/^[aeiou]/.test(rest)&&!/^(ll|ch|rr|[bcdfgjlmnpqrstvyz])[aeiou]/.test(rest))return; /* la primera sílaba tiene que ser CV (no mar, pan, sol) */
     var k=m[1]+m[2];
     (t[k]=t[k]||[]).push({w:w,img:WIMG[w],c:(m[1]==='qu'?'q':m[1])});
+  });
+  Object.keys(ASOC_CUR).forEach(function(k){
+    var l=[];ASOC_CUR[k].forEach(function(w){if(WIMG[w])l.push({w:w,img:WIMG[w],c:k[0]});});
+    if(l.length)t[k]=l;else delete t[k];
   });
   return (_ASOC=t);
 }
@@ -2025,7 +2036,8 @@ function mixLevel(g,set){
 }
 /* Orden en que se aprenden las letras (el de Mi camino). Sirve para saber qué letras ya conoce el niño cuando trabaja una. */
 var LORD=VOW.concat(PREM,CLAS,['r','g','v','ch','ll','q','ñ','y','z']);
-function chipsOf(g){return GLET[g].concat(g==='poc'?['ñ']:[]);}
+function chipsOf(g){if(g==='art')return VOW.concat(PREM); /* las bocas (articulemas) existen solo para las vocales y M P T L F S */
+  return GLET[g].concat(g==='poc'?['ñ']:[]);}
 function ordered(g,sel){return chipsOf(g).filter(function(c){return sel.indexOf(c)>-1;});}
 function knownUpTo(set){var m=0;set.forEach(function(c){m=Math.max(m,LORD.indexOf(c));});return LORD.slice(0,m+1);}
 function tarjId(c){return VOW.indexOf(c)>-1?'sq-v-'+c:(POCO.indexOf(c)>-1?'pf-'+c+'-s':(c==='ñ'?'sq-ñ-s':c+'-s'));}
@@ -2318,6 +2330,12 @@ function renderCamino(){
       return '<button class="chip '+(c.length>1?'long':'')+'" style="color:'+LCOL(c)+'" data-c="'+c+'" type="button" aria-pressed="'+(ssel.indexOf(c)>-1)+'">'+DH(c)+'</button>';
     }).join('')+'</div><div class="row"><button class="sw" data-pre="all" type="button">Todas</button><button class="sw" data-pre="none" type="button">Limpiar</button></div>'+
       '<button class="btn" id="go" type="button"'+(ssel.length<1?' disabled':'')+'>Empezar</button>';
+  }else if(n.s==='artpick'){
+    var asel=n.sel=n.sel||[];
+    h=topbar('Articulemas')+'<p class="hint" style="text-align:center;margin:0">Elegí con qué letras trabajar: vocales, consonantes, o las dos. Hacen falta al menos 2.</p><div class="chips">'+chipsOf('art').map(function(c){
+      return '<button class="chip" style="color:'+LCOL(c)+'" data-c="'+c+'" type="button" aria-pressed="'+(asel.indexOf(c)>-1)+'">'+DH(c)+'</button>';
+    }).join('')+'</div><div class="row"><button class="sw" data-pre="'+VOW.join('')+'" type="button">Vocales</button><button class="sw" data-pre="'+PREM.join('')+'" type="button">Consonantes</button><button class="sw" data-pre="all" type="button">Todas</button><button class="sw" data-pre="none" type="button">Limpiar</button></div>'+
+      '<button class="btn" id="go" type="button"'+(asel.length<2?' disabled':'')+'>Empezar</button>';
   }else if(n.s==='pim'){
     h=renderPim(n);
   }else if(n.s==='seq'){
@@ -2350,7 +2368,7 @@ function renderCamino(){
     else if(a==='sil')go({s:'sil'});
     else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-s')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
-    else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
+    else if(a==='art')go({s:'artpick',g:'art',sel:[]});
     else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-3','emo-5','emo-6','emo-7','emo-8','emo-9']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
@@ -2371,6 +2389,11 @@ function renderCamino(){
   };});
   var gb=$('#go');if(gb)gb.onclick=function(){
     var set=ordered(n.g,n.sel);if(set.length<1)return;
+    if(n.s==='artpick'){
+      if(set.length<2)return;
+      var same=function(a,b){return a.join('')===b.join('');},tt=same(set,VOW)?'vocales':(same(set,PREM)?'M P T L F S':set.map(function(c){return c.toUpperCase();}).join(' '));
+      openLevelObj(same(set,VOW)?LV['a-v']:(same(set,PREM)?LV['a-p']:reg({id:'a-x-'+set.join('_'),grp:'Articulemas',title:'Articulemas: '+tt,kind:'art',set:set.slice()})));return;
+    }
     if(n.s==='silpick'){if(n.mode==='a')startSil(n.mode,set);else askConflicts(set,function(s2){startSil(n.mode,s2);});return;}
     go({s:'set',g:n.g,set:set});
   };
@@ -2540,7 +2563,9 @@ function drawItem(auto){
   ({vowel:vVowel,vshape:vShape,vscene:vScene,letter:vLetter,first:vFirst,syl:vSyl,build:vBuild,word:vWord,art:vArt,emo:vEmo,emow:vEmoW,emom:vEmoM,emol:vEmoL,emod:vEmoD,emos:vEmoS,asoc:vAsoc,emosit:vEmoSit,case:vCase,choice:vChoice,wbuild:vWBuild})[it.type](area,it,auto);
   area.insertAdjacentHTML('afterbegin',mascotHTML(it.type==='word'?'lee':'escucha'));
   colorTiles(it);fitTiles();fitBtns();
+  $$('#item .picopts').forEach(function(p){p.classList.add('late');setTimeout(function(){p.classList.add('go');},PIC_DELAY);});
 }
+var PIC_DELAY=1500;
 /* La letra siempre entra en su cuadrado: el tamaño sale del ancho real de la ficha, no de otra unidad (vw, dvh, zoom) */
 /* Colores (M-018, M-021): al presentar una letra tiene su color fijo; en los juegos de letras las fichas son todas de colores distintos y al azar, así el color no da pista */
 var TCOL=['#D8483D','#2076BD','#2E8A66','#8F2643','#E07B00','#5D3497'];
@@ -3450,11 +3475,11 @@ function pgNew(area,ls,act,g){
     if(act==='circ')return sample(rg,2).map(function(t){return pTargetPage(t,rg,'Circulá todos los números como este.',function(x){return String(x);});});
     if(act==='cont'){
       var ct=seq(rg,5);
-      return [pPage(pHead(null,'Contá y escribí cuántos hay.')+ct.map(function(n){var e=ppick(QTYE),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return '<div class="prow cont"><div class="pqe" style="font-size:'+(n>10?8:11)+'mm">'+h+'</div><i class="pfb sq"></i></div>';}).join(''))];
+      return [pPage(pHead(null,'Contá y escribí cuántos hay.')+ct.map(function(n){var e=ppick(QTYP),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return '<div class="prow cont"><div class="pqe" style="font-size:'+(n>10?8:11)+'mm">'+h+'</div><i class="pfb sq"></i></div>';}).join(''))];
     }
     if(act==='unir'){
       var cu=sample(rg,5);
-      return [pUnirPairs(cu.map(function(n){var e=ppick(QTYE),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return {l:String(n),r:'<div class="pqe" style="font-size:'+(n>10?5.5:(n>5?8:11))+'mm">'+h+'</div>'};}),'Uní cada cantidad con su número.')];
+      return [pUnirPairs(cu.map(function(n){var e=ppick(QTYP),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return {l:String(n),r:'<div class="pqe" style="font-size:'+(n>10?5.5:(n>5?8:11))+'mm">'+h+'</div>'};}),'Uní cada cantidad con su número.')];
     }
   }
   if(area==='cal'){
