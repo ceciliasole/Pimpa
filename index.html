@@ -1669,6 +1669,8 @@ function seqClips(text){
   if(fk&&FRFULL[fk])return [FRFULL[fk]];
   var em=/^¿está (contento|contenta|enojado|enojada|cansado|cansada|asustado|asustada|triste)\?$/.exec(k);
   if(em&&FRFULL['esta_'+em[1]])return [FRFULL['esta_'+em[1]]];
+  /* Situaciones de Emociones (emo-7): si Jose grabó la frase (fra_sit_<id>), suena la suya */
+  for(var si=0;si<EMO_SIT.length;si++){if(EMO_SIT[si].t.toLowerCase()===k&&FRFULL['sit_'+EMO_SIT[si].id])return [FRFULL['sit_'+EMO_SIT[si].id]];}
   if(k==='¿qué número viene después?')c=[FRAUD.numero_despues];
   else if((m=/^¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.que_dia,m[1]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
   else if((m=/^si hoy es ([^.]+)\. ¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.si_hoy_es,recClip(m[1]),FRAUD.que_dia,m[2]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
