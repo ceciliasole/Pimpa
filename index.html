@@ -320,8 +320,7 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .pico.emob.ok{border-color:var(--ok)}
 .emosrc{width:clamp(130px,30vw,230px);aspect-ratio:1/1;border-radius:20px;overflow:hidden;border:4px solid #E8DCBF;background:#FFF6E5;margin:0 auto}
 .emosrc img{width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block}
-.sittxt{font-size:clamp(1.5rem,6.2vw,2.5rem);font-weight:700;line-height:1.3;text-align:center;max-width:min(100%,760px);margin:0 auto;letter-spacing:.03em}
-.sitw{display:inline-block;white-space:nowrap}
+.sitcap{font-size:clamp(.8rem,2.6vw,1rem);color:#7B8AA6;text-align:center;max-width:min(100%,560px);margin:0 auto}
 .sitimg{width:clamp(110px,24vw,190px)}
 .emowb{font-size:clamp(1rem,3.4vw,1.9rem);min-width:min(100%,260px);padding-left:6px;padding-right:6px;overflow:hidden}
 .pico.bocab{padding:4px;width:clamp(100px,28vw,150px);aspect-ratio:auto}
@@ -1302,7 +1301,7 @@ LEVELS.push({id:'emo-1',grp:'Emociones',title:'Reconociendo emociones',kind:'emo
 LEVELS.push({id:'emo-3',grp:'Emociones',title:'Uní las caras que se sienten igual',kind:'emom',free:true});
 LEVELS.push({id:'emo-5',grp:'Emociones',title:'¿Cuál se siente distinta?',kind:'emod',free:true});
 LEVELS.push({id:'emo-6',grp:'Emociones',title:'¿Está contento?',kind:'emos',free:true});
-/* Ejercicio 7 (3 nov): situación -> emoción. Se lee/escucha una situación cotidiana y se toca la cara de cómo se siente. Es el nivel más difícil (ponerse en el lugar del otro): va después de reconocer caras. Sin dibujos nuevos todavía: si existe assets/emo/sit/<id>.webp se muestra arriba de la frase; si no, solo el texto. Situaciones y emociones a validar con Jose. Las caras de las opciones son del mismo género que el protagonista, así que nada da pista. */
+/* Ejercicio 7 (3 nov): situación -> emoción. Se ESCUCHA una situación cotidiana (todo oral, como el resto de Emociones: los chicos casi no leen; la frase va solo en letra chica para el adulto) y se toca la cara de cómo se siente. Es el nivel más difícil (ponerse en el lugar del otro): va después de reconocer caras. Sin dibujos nuevos todavía: si existe assets/emo/sit/<id>.webp se muestra arriba de la frase; si no, solo el texto. Situaciones y emociones a validar con Jose. Las caras de las opciones son del mismo género que el protagonista, así que nada da pista. */
 var EMO_SIT=[
  {id:'s01',emo:'contento',g:'m',t:'El nene juega con su perro.'},
  {id:'s02',emo:'contento',g:'f',t:'La nena come su helado favorito.'},
@@ -2715,11 +2714,10 @@ function vEmoS(area,it,auto){
   if(auto)sayAuto(it.q);
 }
 function vEmoSit(area,it,auto){
-  /* La frase se muestra con letras grandes (la I con puntito, como en el resto de la app) y se escucha despacio. Si el error repite la frase, nunca dice la emoción. */
-  var txt=it.text.split(' ').map(function(w){return '<span class="sitw">'+Array.from(w).map(function(ch){return LC(ch,true);}).join('')+'</span>';}).join(' ');
+  /* Todo oral: la situación suena sola y se repite con Escuchar; el texto es solo una ayuda chica para el adulto. Si el error repite la frase, nunca dice la emoción. */
   area.innerHTML='<p class="q">¿Cómo se siente?</p>'+
     '<div class="emosrc pop sitimg"><img src="assets/emo/sit/'+it.sid+'.webp" alt="" draggable="false" onerror="this.parentNode.remove()"></div>'+
-    '<div class="sittxt">'+txt+'</div><button class="btn ghost" id="listen" type="button">Escuchar</button>'+
+    '<button class="btn" id="listen" type="button">Escuchar</button><p class="sitcap">'+esc(it.text)+'</p>'+
     '<div class="picopts">'+it.opts.map(function(o,k){return '<button class="pico emob" type="button" data-ok="'+(o.f===it.ans?1:0)+'" aria-label="Foto '+(k+1)+'"><img src="assets/emo/'+o.f+'.webp" alt="" draggable="false"></button>';}).join('')+'</div>'+common();
   $('#listen').onclick=function(){sayWord(it.text);};
   wirePick(it,it.text,true);wireNext();
