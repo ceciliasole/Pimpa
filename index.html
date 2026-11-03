@@ -1044,7 +1044,7 @@ body.playing .stage:has(.lend) .ebtn .eic{width:clamp(72px,11dvh,120px)}
 <div class="app">
   <aside class="side">
   <header class="top">
-    <div class="brand"><div><h1 class="logoh"><img class="logo" id="logoimg" alt="Pimpa" draggable="false"></h1><p class="acro"><b class="a1">Practicar</b> · <b class="a2">Interactuar</b> · <b class="a3">Memorizar</b> · <b class="a4">Pensar</b> · <b class="a5">Aprender</b></p></div><span class="tag">Prototipo de prueba</span></div>
+    <div class="brand"><div><h1 class="logoh"><img class="logo" id="logoimg" alt="Pimpa" draggable="false"></h1><p class="acro"><b class="a1">Practicar</b> · <b class="a2">Interactuar</b> · <b class="a3">Memorizar</b> · <b class="a4">Pensar</b> · <b class="a5">Aprender</b></p></div></div>
     <div class="who"><span class="acct" id="acctChip" hidden title="Cuenta que está usando Pimpa"><span class="av" id="acctAv"></span><span id="acctName"></span></span><span class="whoname" id="whoName"></span><span class="pill" id="whoMode"></span><button class="starbal" id="starBal" type="button" aria-label="Mis estrellas"></button></div>
   </header>
 
@@ -1319,6 +1319,9 @@ var EMO_SIT=[
  {id:'s14',emo:'asustado',g:'m',t:'El nene ve una araña grande.'},
  {id:'s15',emo:'asustado',g:'f',t:'La nena escucha un ruido fuerte en la noche.'}];
 LEVELS.push({id:'emo-7',grp:'Emociones',title:'¿Cómo se siente? Una situación',kind:'emosit',free:true});
+/* 3 nov: se vuelven a ofrecer, al final, los 2 ejercicios con la palabra escrita (para chicos que ya leen): son otra forma de trabajar lo mismo. Ids nuevos para no mezclar el progreso de los viejos emo-1/emo-2 (el emo-7 es el de situaciones). */
+LEVELS.push({id:'emo-8',grp:'Emociones',title:'Tocá la cara que dice la palabra',kind:'emo',free:true});
+LEVELS.push({id:'emo-9',grp:'Emociones',title:'Mirá la cara y elegí la palabra',kind:'emow',free:true});
 PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Premium',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Premium',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
@@ -1664,6 +1667,8 @@ function seqClips(text){
   if(fm)fk='dia_'+(fm[1]==='fue ayer'?'ayer':'manana');
   else if((fm=/^si hoy es ([^.]+)\. ¿qué día (fue ayer|es mañana)\?$/.exec(k)))fk='si_hoy_'+fm[1].normalize('NFD').replace(/[\u0300-\u036f]/g,'')+'_'+(fm[2]==='fue ayer'?'ayer':'manana');
   if(fk&&FRFULL[fk])return [FRFULL[fk]];
+  var em=/^¿está (contento|contenta|enojado|enojada|cansado|cansada|asustado|asustada|triste)\?$/.exec(k);
+  if(em&&FRFULL['esta_'+em[1]])return [FRFULL['esta_'+em[1]]];
   if(k==='¿qué número viene después?')c=[FRAUD.numero_despues];
   else if((m=/^¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.que_dia,m[1]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
   else if((m=/^si hoy es ([^.]+)\. ¿qué día (fue ayer|es mañana)\?$/.exec(k)))c=[FRAUD.si_hoy_es,recClip(m[1]),FRAUD.que_dia,m[2]==='fue ayer'?FRAUD.fue_ayer:FRAUD.es_manana];
@@ -2344,7 +2349,7 @@ function renderCamino(){
     else if(a==='sil-a'||a==='sil-l'||a==='sil-b'||a==='sil-s'||a==='sil-f')go({s:'silpick',mode:a.slice(-1),g:'sil',sel:[]});
     else if(a==='pal')go({s:'list',title:'Palabras',ids:['pal-1','palb-1','pal-1b','pal-2','palb-2','pal-2b','pal-3','palb-3','pal-3b']});
     else if(a==='art')go({s:'list',title:'Articulemas',ids:['a-v','a-p']});
-    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-3','emo-5','emo-6','emo-7']});
+    else if(a==='emo')go({s:'list',title:'Emociones',ids:['emo-1','emo-3','emo-5','emo-6','emo-7','emo-8','emo-9']});
     else if(a==='tra')go({s:'tra'});
     else if(a==='num')go({s:'list',title:'Números',ids:cardIds('num')});
     else if(a==='cal')go({s:'list',title:'Calendario',ids:cardIds('cal')});
