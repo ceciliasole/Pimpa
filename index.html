@@ -796,6 +796,9 @@ body.playing .row:has(>.tile[data-ok]:nth-child(4)){grid-template-columns:repeat
 body.playing .row:has(>.tile[data-ok]:nth-child(5)){grid-template-columns:repeat(3,auto)}
 body.playing .row:has(>.tile[data-ok]:nth-child(7)){grid-template-columns:repeat(4,auto)}
 @media (min-width:760px){body.playing .row:has(>.tile[data-ok]:nth-child(5)):not(:has(>.tile[data-ok]:nth-child(7))){grid-template-columns:repeat(5,auto)}}
+/* 4 nov (M-145/146, Jose): en las tarjetas de Consonantes las letras van todas en una fila, como antes, y no en cuadrícula de 2 por 2. Vocales no cambia (usa otro ejercicio). */
+body.playing .row.lrow,body.playing .row.lrow:has(>.tile[data-ok]:nth-child(4)),body.playing .row.lrow:has(>.tile[data-ok]:nth-child(5)),body.playing .row.lrow:has(>.tile[data-ok]:nth-child(7)){display:flex;flex-wrap:nowrap;grid-template-columns:none;width:100%;max-width:100%;margin-inline:auto;justify-content:center;gap:clamp(6px,1.6vw,16px)}
+body.playing .row.lrow>.tile{flex:1 1 0;min-width:0;width:auto;max-width:clamp(78px,17vw,200px)}
 #item .tile{line-height:1}
 body.playing .pic.small{width:clamp(66px,min(26vw,13dvh),140px);font-size:clamp(2.4rem,min(14vw,7dvh),5.5rem)}
 body.playing .lleft{gap:4px}
@@ -902,6 +905,9 @@ body.playing .stage{padding-block:clamp(8px,1.6dvh,16px)}
 .pbigl{font-family:var(--font-display);font-weight:600;font-size:22mm;line-height:1;min-width:24mm;text-align:center}
 .pbigl .gi,.pbox .gi{font-size:inherit}
 .pem{font-size:24mm;line-height:1}
+/* 4 nov (M-148, Jose): en las fichas imprimibles las fotos se ven un poco más grandes. Se agrandan sin mover el casillero para no romper las hojas. */
+.pem .wimg,.pqe .wimg{transform:scale(1.2)}
+.pcut .pem .wimg{transform:scale(1.4)}
 .pfr{margin:0 5mm;height:105mm;border:.8mm dashed #17305C;border-radius:6mm;display:grid;place-items:center;font-size:6mm;color:#9aa4bb;font-weight:600}
 .pcut{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;padding:6mm 5mm 0}
 .pcard{position:relative;height:42mm;border:.5mm dashed #666;border-radius:4mm;display:grid;place-items:center}
@@ -2769,7 +2775,7 @@ function vScene(area,it,auto){
   if(auto)sayAuto(it.ans);
 }
 function vLetter(area,it,auto){
-  area.innerHTML='<p class="q">Tocá la letra que escuchás</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row">'+
+  area.innerHTML='<p class="q">Tocá la letra que escuchás</p><button class="btn ghost" id="listen" type="button">Escuchar</button><div class="row lrow">'+
     it.opts.map(function(l){return tileHTML(l,l===it.ans);}).join('')+'</div>'+common();
   $('#listen').onclick=function(){say(it.ans);};
   wirePick(it,it.ans);wireNext();
@@ -3489,7 +3495,12 @@ function pTargetPage(t,pool,inst,f){
   var others=pool.filter(function(x){return x!==t;});
   return pPage(pHead(String(t),inst)+pGrid12(shuffle(pItems(seq([t],6).concat(seq(others,6)),f))));
 }
-function pUnirPairs(pairs,inst){
+function pUnirPairs(pairs,inst,swap){
+  if(swap){ /* cantidad a la izquierda (la cuenta el chico) y los números a la derecha: primero cuenta y después une */
+    var L2=pairs.map(function(p){return '<div class="pbox pic">'+p.r+'<u></u></div>';});
+    var R2=shuffle(pairs.slice()).map(function(p){return '<div class="pbox big"><u></u><span class="pbt">'+p.l+'</span></div>';});
+    return pPage(pHead(null,inst)+'<div class="punir">'+L2.join('')+'</div><div class="punir r">'+R2.join('')+'</div>','unirpg');
+  }
   var L=pairs.map(function(p){return '<div class="pbox big"'+(p.ls?' style="'+p.ls+'"':'')+'><span class="pbt">'+p.l+'</span><u></u></div>';});
   var R=shuffle(pairs.slice()).map(function(p){return '<div class="pbox pic"><u></u>'+p.r+'</div>';});
   return pPage(pHead(null,inst)+'<div class="punir">'+L.join('')+'</div><div class="punir r">'+R.join('')+'</div>','unirpg');
@@ -3575,7 +3586,7 @@ function pgNew(area,ls,act,g){
     }
     if(act==='unir'){
       var cu=sample(rg,5);
-      return [pUnirPairs(cu.map(function(n){var e=ppick(QTYP),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return {l:String(n),r:'<div class="pqe" style="font-size:'+(n>10?5.5:(n>5?8:11))+'mm">'+h+'</div>'};}),'Uní cada cantidad con su número.')];
+      return [pUnirPairs(cu.map(function(n){var e=ppick(QTYP),h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return {l:String(n),r:'<div class="pqe" style="font-size:'+(n>10?5.5:(n>5?8:11))+'mm">'+h+'</div>'};}),'Uní cada cantidad con su número.',true)];
     }
   }
   if(area==='cal'){
