@@ -5,6 +5,21 @@
     <h1 id="gateT"><img class="glogo" src="assets/pimpa-logo.webp" alt="Pimpa" width="520" height="173" draggable="false"></h1>
     <img class="gpimpa" src="assets/pimpa-hola.webp" alt="" width="420" height="418" draggable="false">
     <p class="gtag">Letras, sonidos y sílabas para aprender jugando.</p>
+    <section id="gc" class="gc" hidden aria-labelledby="gcT">
+      <h2 id="gcT">Antes de empezar</h2>
+      <p class="gc-hi" id="gcHi"></p>
+      <div class="gc-body">
+        <p><strong>Pimpa es un complemento, no un tratamiento.</strong></p>
+        <p>Pimpa es una herramienta de juego para acompañar el aprendizaje inicial de la lectura, la escritura y los números. Fue diseñada con una psicopedagoga, pero no es una terapia ni un tratamiento, y no reemplaza la evaluación ni el seguimiento de un profesional.</p>
+        <p>Jugar con Pimpa no garantiza que un chico aprenda a leer o a escribir. Cada chico tiene su propio ritmo y necesita acompañamiento personalizado de su familia y de los profesionales que lo asisten.</p>
+        <p>La escritura se aprende con lápiz y papel. Los ejercicios de trazo de la app son una preparación y no sustituyen esa práctica.</p>
+        <p>Recomendamos usar Pimpa siempre con un adulto al lado y consultar con el equipo terapéutico del chico cómo incorporarla.</p>
+        <p>Pimpa está en etapa de prueba y puede tener errores. Si encontrás alguno, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a>.</p>
+      </div>
+      <label class="gwl-c gc-ck"><input type="checkbox" id="gcOk"><span>Leí y entiendo lo anterior, y acepto las <a href="/condiciones" target="_blank" rel="noopener">condiciones del servicio</a> y la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+      <button type="button" id="gcGo" disabled>Empezar</button>
+      <button type="button" id="gcOut" class="g2">Salir</button>
+    </section>
     <p id="gateM" class="gmsg">Cargando…</p>
     <button type="button" id="gateGo" hidden><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Entrar con Google</span></button>
     <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
@@ -17,10 +32,11 @@
       <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
       <p id="wlProN" class="gwl-pn" hidden>Pimpa para profesionales tiene un plan propio, en función de los pacientes que tengas y de las familias que recomiendes. Te escribimos con los valores cuando salga.</p>
       <button type="submit" id="wlGo">Anotarme en la lista</button>
+      <p class="gdisc">Pimpa es un complemento y no reemplaza una terapia ni a un profesional. No garantiza que un chico aprenda a leer: cada uno tiene su ritmo y necesita acompañamiento. Usala siempre con un adulto.</p>
       <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
       <p class="gwl-n">Para entrar a Pimpa vas a necesitar una cuenta de Google. Si tu mail no es de Gmail, te avisamos cómo hacerlo.</p>
     </form>
-    <p class="gfoot">Por ahora el acceso es solo por invitación.<br>Ante cualquier duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a><br>Al ingresar aceptás las <a href="/condiciones">condiciones del servicio</a> y la <a href="/privacidad">política de privacidad</a>.</p>
+    <p class="gfoot"><strong class="gmin">Complemento del trabajo terapéutico. No reemplaza a un profesional.</strong><br>Por ahora el acceso es solo por invitación.<br>Ante cualquier duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a><br>Al ingresar aceptás las <a href="/condiciones">condiciones del servicio</a> y la <a href="/privacidad">política de privacidad</a>.</p>
   </div>
 </div>
 <style>
@@ -63,6 +79,19 @@
 #gate .gwl-n{margin:6px 0 0;font-size:.8rem;line-height:1.35;text-align:center;color:var(--ink-2,#506082)}
 #gate .gfoot{margin:16px 0 0;font-size:.82rem;line-height:1.45;color:var(--ink-2,#506082)}
 #gate .gfoot a{color:var(--cons,#2076BD);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+#gate .gdisc{margin:10px 4px 0;font-size:.8rem;line-height:1.4;text-align:center;color:var(--ink-2,#506082)}
+#gate .gmin{color:var(--ink,#17305C);font-weight:700}
+#gate .gc{margin:10px 0 0;text-align:left}
+#gate .gc[hidden]{display:none}
+#gate .gc h2{margin:0 0 4px;font-size:1.2rem;line-height:1.2;text-align:center;color:var(--ink,#17305C)}
+#gate .gc-hi{margin:0 0 8px;text-align:center;font-weight:600;color:var(--ink-2,#506082);font-size:.92rem}
+#gate .gc-body{max-height:36vh;overflow-y:auto;padding:12px 14px;border:2px solid var(--line,#E8DCBF);border-radius:18px;background:#FFFCF3;font-size:.9rem;line-height:1.45;color:var(--ink,#17305C)}
+#gate .gc-body p{margin:0 0 9px}
+#gate .gc-body p:last-child{margin-bottom:0}
+#gate .gc-body a,#gate .gc-ck a{color:var(--cons,#2076BD);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+#gate .gc-ck{margin:12px 4px 0;color:var(--ink,#17305C)}
+#gate #gcGo{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
+#gate #gcGo:disabled{background:#E7B3AE;border-color:#DDA19B;box-shadow:0 4px 0 #D8C2BE;opacity:1}
 @keyframes gfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 @media (prefers-reduced-motion:reduce){#gate .gpimpa{animation:none}}
 @media (max-height:640px){#gate .gpimpa{width:130px}#gate .gtag{display:none}}
@@ -78,10 +107,21 @@ var SB_URL='https://fhzqiuvubcytuewwktyf.supabase.co';
 var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 var gate=document.getElementById('gate'),msg=document.getElementById('gateM'),go=document.getElementById('gateGo'),retry=document.getElementById('gateRetry');
 var CK='pimpa-ok-';
+var TV='2026-11-03',TK='pimpa-terms-';
+var gc=document.getElementById('gc'),gcOk=document.getElementById('gcOk'),gcGo=document.getElementById('gcGo'),gcOut=document.getElementById('gcOut'),gcHi=document.getElementById('gcHi');
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
 var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
-function show(m,btn,rbtn){gate.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
+function show(m,btn,rbtn){gate.hidden=false;gc.hidden=true;msg.hidden=false;wl.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
+function termsOk(e){try{return localStorage.getItem(TK+e)===TV;}catch(x){return false;}}
+function termsSet(e){try{localStorage.setItem(TK+e,TV);}catch(x){}}
+function showTerms(u){
+  pending=u;
+  if(!gc.hidden)return;
+  gate.hidden=false;msg.hidden=true;go.hidden=true;retry.hidden=true;wl.hidden=true;
+  gcHi.textContent='Hola, '+u.nombre+'.';gcOk.checked=false;gcGo.disabled=true;gc.hidden=false;
+  try{gc.scrollIntoView({block:'nearest'});}catch(x){}
+}
 function cacheGet(e){try{return localStorage.getItem(CK+e);}catch(x){return null;}}
 function cacheSet(e,v){try{if(v!==null)localStorage.setItem(CK+e,v);else localStorage.removeItem(CK+e);}catch(x){}}
 function firstName(s){return String(s||'').trim().split(/\s+/)[0]||'';}
@@ -112,7 +152,10 @@ function tryBoot(){
   try{if(location.search.indexOf('code=')>-1||location.hash.indexOf('access_token')>-1){history.replaceState(null,'',location.pathname);}}catch(x){}
 }
 window.__pimpaTry=tryBoot;
-function openFor(u){pending=u;tryBoot();}
+function openFor(u){if(!termsOk(u.email)){showTerms(u);return;}pending=u;tryBoot();}
+gcOk.addEventListener('change',function(){gcGo.disabled=!gcOk.checked;});
+gcGo.onclick=function(){if(!gcOk.checked||!pending)return;termsSet(pending.email);gc.hidden=true;msg.hidden=false;msg.textContent='Cargando…';wl.hidden=false;tryBoot();};
+gcOut.onclick=function(){pending=null;if(sb)sb.auth.signOut();else location.reload();};
 async function check(session){
   var email=String(session&&session.user&&session.user.email||'').toLowerCase();
   if(booted){
