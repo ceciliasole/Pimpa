@@ -109,6 +109,8 @@
 .acct{display:inline-flex;align-items:center;gap:6px;padding:2px 10px 2px 3px;border:1.5px solid var(--line,#E8DCBF);border-radius:999px;background:var(--surface,#fff);font-size:.85rem;font-weight:600;color:var(--ink,#17305C);white-space:nowrap}
 .acct .av{position:relative;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;overflow:hidden;background:var(--sun,#FFD24F);color:var(--ink,#17305C);font-size:.8rem;font-weight:700}
 .acct .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.acct .atx{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+.acct .atx small{font-size:.68rem;font-weight:700;color:var(--cons,#1C5FA8);letter-spacing:.02em}
 </style>
 <script src="vendor/supabase-2.45.4.js"></script>
 <script>
@@ -172,12 +174,14 @@ function paintAv(el,u){
     im.src=u.avatar;el.appendChild(im);
   }
 }
+var ROLTXT={founder:'Modo founder',cofounder:'Modo co-founder',educador:'Modo educador',familia:'Modo familia'};
 function setAcct(){
   if(!cur)return;
   var chip=document.getElementById('acctChip');if(chip)chip.hidden=false;
   ['acctName','acctName2'].forEach(function(id){var n=document.getElementById(id);if(n)n.textContent=cur.nombre;});
   paintAv(document.getElementById('acctAv'),cur);paintAv(document.getElementById('acctAv2'),cur);
   var e=document.getElementById('acctEmail');if(e)e.textContent=cur.email;
+  var rl=document.getElementById('acctRol');if(rl)rl.textContent=ROLTXT[cur.rol||'familia']||'';
 }
 document.addEventListener('DOMContentLoaded',setAcct);
 function tryBoot(){
@@ -204,15 +208,16 @@ async function check(session){
     if(!session){show('Entrá con tu cuenta para empezar.',true,false);return;}
     var md=session.user.user_metadata||{};
     var avatar=md.avatar_url||md.picture||'';
-    var r=await sb.from('allowed_emails').select('email,nombre').eq('email',email).maybeSingle();
+    var r=await sb.from('allowed_emails').select('email,nombre,rol').eq('email',email).maybeSingle();
     if(r.error){
       var c=cacheGet(email);
-      if(c!==null){openFor({email:email,nombre:(c&&c!=='1'?c:firstName(md.full_name||md.name)||email.split('@')[0]),avatar:avatar});return;}
+      if(c!==null){openFor({email:email,nombre:(c&&c!=='1'?c:firstName(md.full_name||md.name)||email.split('@')[0]),avatar:avatar,rol:cacheGet('rol:'+email)||'familia'});return;}
       show('No pude comprobar tu cuenta. Revisá la conexión e intentá de nuevo.',false,true);return;
     }
     if(r.data){
       var nombre=r.data.nombre||firstName(md.full_name||md.name)||email.split('@')[0];
-      cacheSet(email,nombre);openFor({email:email,nombre:nombre,avatar:avatar});return;
+      var rol=r.data.rol||'familia';
+      cacheSet(email,nombre);cacheSet('rol:'+email,rol);openFor({email:email,nombre:nombre,avatar:avatar,rol:rol});return;
     }
     cacheSet(email,null);
     wasDenied=true;
@@ -688,6 +693,16 @@ body.picking .tabs{display:none}
 .spacer{width:48px}
 .tbl tr.gr td{background:var(--surface-2);font-weight:700;color:var(--ink);font-family:var(--font-display)}
 .wlist{width:100%;display:grid;gap:12px}
+.entry{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.ebtn{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px;border-radius:22px;border:2px solid var(--line);background:var(--surface);cursor:pointer;font-family:inherit;color:var(--ink);box-shadow:0 4px 0 #EFE3C6}
+.ebtn:first-child{border-color:var(--sun,#FFD24F);background:#FFF8DD}
+.ebtn .epim,.ebtn .eav,.ebtn .eini{width:84px;height:84px;border-radius:50%;object-fit:contain}
+.ebtn .eav{object-fit:cover}
+.ebtn .eini{display:grid;place-items:center;background:var(--sun,#FFD24F);font-size:2rem;font-weight:800}
+.ebtn .et{font-size:1.2rem;font-weight:800}
+.ebtn .es{font-size:.85rem;color:var(--ink-2)}
+@media(max-width:420px){.entry{grid-template-columns:1fr}}
+.wpim{width:44px;height:44px;object-fit:contain;justify-self:start}
 .wb{display:grid;gap:6px;text-align:left;padding:16px 18px;border-radius:18px;border:2px solid var(--line);background:var(--surface);cursor:pointer;font-family:inherit;color:var(--ink)}
 .wb.main{border-color:var(--cons);background:var(--surface-2);box-shadow:0 4px 0 var(--cons)}
 .wn{font-family:var(--font-display);font-size:1.5rem;font-weight:600}
@@ -1165,7 +1180,7 @@ body.playing .stage:has(.lend) .ebtn .eic{width:clamp(72px,11dvh,120px)}
   <aside class="side">
   <header class="top">
     <div class="brand"><div><h1 class="logoh"><img class="logo" id="logoimg" alt="Pimpa" draggable="false"></h1><p class="acro"><b class="a1">Practicar</b> · <b class="a2">Interactuar</b> · <b class="a3">Memorizar</b> · <b class="a4">Pensar</b> · <b class="a5">Aprender</b></p></div></div>
-    <div class="who"><span class="acct" id="acctChip" hidden title="Cuenta que está usando Pimpa"><span class="av" id="acctAv"></span><span id="acctName"></span></span><span class="whoname" id="whoName"></span><span class="pill" id="whoMode"></span><button class="starbal" id="starBal" type="button" aria-label="Mis estrellas"></button></div>
+    <div class="who"><span class="acct" id="acctChip" hidden title="Cuenta que está usando Pimpa"><span class="av" id="acctAv"></span><span class="atx"><span id="acctName"></span><small id="acctRol"></small></span></span><span class="whoname" id="whoName"></span><span class="pill" id="whoMode"></span><button class="starbal" id="starBal" type="button" aria-label="Mis estrellas"></button></div>
   </header>
 
   <details class="adj" id="adj">
@@ -1255,11 +1270,14 @@ try{ /* los perfiles que ya había en este navegador pasan a la primera cuenta q
     localStorage.setItem(KEY,localStorage.getItem(KEY0));localStorage.setItem('pimpa-legacy-claimed',window.__pimpaUser.email);
   }
 }catch(e){}
+var ROL=(window.__pimpaUser&&window.__pimpaUser.rol)||'familia'; /* founder, cofounder, educador: todo abierto; familia: solo por el chico o por el adulto (configuraciones) */
+function isPro(){return ROL==='founder'||ROL==='cofounder'||ROL==='educador';}
 var store={profiles:[],current:null,mode:'educador',upper:true};
 try{var raw=localStorage.getItem(KEY);if(raw){var s0=JSON.parse(raw);if(s0&&Array.isArray(s0.profiles)&&s0.profiles.length){store=s0;}}}catch(e){}
 function newProfile(alias){return {id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),alias:alias,progress:{}};}
 if(!store.profiles.length){var p0=newProfile('Perfil 1');store.profiles.push(p0);store.current=p0.id;}
-if(store.mode!=='familia'&&store.mode!=='educador')store.mode='educador'; /* niño (familia): se desbloquea por niveles, 8 de 10. Adulto (educador): todo abierto, se puede saltar */
+if(store.mode!=='familia'&&store.mode!=='educador')store.mode='educador';
+if(!isPro())store.mode='familia'; /* una familia nunca queda en modo educador, aunque el navegador lo tuviera guardado */ /* niño (familia): se desbloquea por niveles, 8 de 10. Adulto (educador): todo abierto, se puede saltar */
 if(typeof store.upper!=='boolean')store.upper=true;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}}
 function curProfile(){return store.profiles.filter(function(p){return p.id===store.current;})[0]||store.profiles[0];}
@@ -1939,7 +1957,8 @@ var stage=$('#stage'), tab='camino', run=null;
 function passedId(id){var p=curProfile(),r=p.progress[id];return !!(r&&r.passed)||!!(p.skipped&&p.skipped[id]);}
 var SKIP=null; /* prueba para saltear: {id,i} */
 var PRUEBA_TODO_ABIERTO=false; /* TEMPORAL para probar el prototipo: pasar a false para volver a exigir 8/10 en modo familia */
-function unlocked(idx){return PRUEBA_TODO_ABIERTO||store.mode==='educador'||idx===0||passedId(LEVELS[idx-1].id);}
+function eduOn(){return isPro()&&store.mode==='educador';}
+function unlocked(idx){return PRUEBA_TODO_ABIERTO||eduOn()||idx===0||passedId(LEVELS[idx-1].id);}
 function nextIdx(){for(var i=0;i<LEVELS.length;i++){if(!passedId(LEVELS[i].id))return i;}return -1;}
 function plainTitle(lv){return (lv.cons?UP(lv.cons)+' · ':'')+lv.title;}
 function giTxt(h){return h.replace(/\u0130/g,GI);} /* cualquier İ escrita como texto se reemplaza por el palito con puntito */
@@ -2048,7 +2067,7 @@ function followOf(lv){
   }
   return null;
 }
-function canGo(lv,pass){return store.mode==='educador'||(pass&&!!nextLevelOf(lv));}
+function canGo(lv,pass){return eduOn()||(pass&&!!nextLevelOf(lv));}
 function goNext(lv){var nx=followOf(lv);if(nx)openLevelObj(nx);else showTab('camino');}
 function endNav(canNext,mainNext){
   return '<div class="endnav"><button class="ebtn" id="home" type="button"><span class="eic">'+IC_HOME+'</span><span>Volver</span></button>'+
@@ -2304,7 +2323,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
   ['y','z'].forEach(function(c){poco(c,'Las últimas letras');});
   sq('Palabras con todas las consonantes',LV['pal-3']);sq('Palabras con todas las consonantes',LV['palb-3']);sq('Palabras con todas las consonantes',LV['pal-3b']);
 })();
-function seqOpen(i){return store.mode==='educador'||i===0||passedId(SEQ[i-1].id);}
+function seqOpen(i){return eduOn()||i===0||passedId(SEQ[i-1].id);}
 function seqNext(){for(var i=0;i<SEQ.length;i++){if(!passedId(SEQ[i].id))return i;}return -1;}
 function seqStat(p){var st=statOf(SEQ.map(function(l){return l.id;}),p),d=0;SEQ.forEach(function(l){var r=p.progress&&p.progress[l.id];if((r&&r.passed)||(p.skipped&&p.skipped[l.id]))d++;});st.done=d;if(d)st.touched=Math.max(st.touched,d);return st;}
 function sqLab(lv){
@@ -2512,13 +2531,24 @@ function renderCamino(){
 }
 function cardIdsOfLetter(c){return LEVELS.filter(function(l){return l.cons===c&&l.kind!=='syl';}).map(function(l){return l.id;});}
 
+/* ---------- Entrada de las familias (4 nov): por el chico o por el adulto ---------- */
+function renderEntrada(){
+  document.body.classList.add('picking');
+  var u=window.__pimpaUser||{},av=u.avatar?'<img class="eav" src="'+esc(u.avatar)+'" alt="" referrerpolicy="no-referrer" draggable="false" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'eini\',textContent:\''+esc((u.nombre||'?').charAt(0).toUpperCase())+'\'}))">':'<span class="eini">'+esc((u.nombre||'?').charAt(0).toUpperCase())+'</span>';
+  stage.innerHTML='<div class="map who2">'+heroBox('hola','¿Quién entra hoy?')+
+    '<div class="entry"><button class="ebtn" id="eKid" type="button"><img class="epim" src="'+pimImg(curProfile())+'" alt="" draggable="false"><span class="et">Soy el chico</span><span class="es">A jugar con Pimpa</span></button>'+
+    '<button class="ebtn" id="eAd" type="button">'+av+'<span class="et">Soy adulto</span><span class="es">Configuraciones y progreso</span></button></div></div>';
+  $('#eKid').onclick=function(){showTab('quien');};
+  $('#eAd').onclick=function(){var d=$('#adj');if(d)d.open=true;nav=[{s:'home'}];showTab('progreso');try{window.scrollTo(0,0);}catch(x){}};
+}
+
 /* ---------- Quién practica ---------- */
 function renderQuien(){
   var cur=curProfile(),list=[cur].concat(store.profiles.filter(function(q){return q.id!==cur.id;})).filter(function(q){return !(q.alias==='Perfil 1'&&!allStat(q).touched);});
   stage.innerHTML='<div class="map who2">'+heroBox('hola','¿Con quién practicamos hoy?')+''+
     '<div class="wlist">'+list.map(function(q,i){
       var st=allStat(q);
-      return '<button class="wb'+(i===0?' main':'')+'" data-id="'+q.id+'" type="button"><span class="wn">'+(i===0?'Seguir con ':'')+esc(q.alias)+'</span>'+pbar(st)+'<span class="hs">'+st.done+' de '+st.total+' ejercicios superados</span></button>';
+      return '<button class="wb'+(i===0?' main':'')+'" data-id="'+q.id+'" type="button"><img class="wpim" src="'+pimImg(q)+'" alt="" draggable="false"><span class="wn">'+(i===0?'Seguir con ':'')+esc(q.alias)+'</span>'+pbar(st)+'<span class="hs">'+st.done+' de '+st.total+' ejercicios superados</span></button>';
     }).join('')+'</div>'+
     '<div class="newk"><label class="lab" for="nk">Tu nombre</label><div class="line"><input id="nk" class="inp" maxlength="24" autocomplete="off" placeholder="Escribí tu nombre"><button class="btn" id="nkb" type="button">Empezar</button></div></div></div>';
   function enter(id){store.current=id;save();nav=[{s:'home'}];syncUI();showTab('camino');}
@@ -3385,7 +3415,7 @@ $('#voz').onchange=function(){
   say('Ma, me, mi, mo, mu.');
 };
 $$('.tab').forEach(function(b){b.onclick=function(){if(b.dataset.t==='camino'&&tab==='camino')nav=[{s:'home'}];showTab(b.dataset.t);};});
-(function(){var w=$('#whoName');w.setAttribute('role','button');w.setAttribute('tabindex','0');w.onclick=function(){showTab('quien');};w.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();showTab('quien');}};})();
+(function(){var w=$('#whoName');w.setAttribute('role','button');w.setAttribute('tabindex','0');w.onclick=function(){if(isPro())showTab('quien');else renderEntrada();};w.onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(isPro())showTab('quien');else renderEntrada();}};})();
 
 /* ---------- Imprimir en papel ---------- */
 /* Fichas imprimibles (A4, imprenta mayúscula). Vocales: las actividades que Jose arma en el consultorio.
@@ -3726,7 +3756,7 @@ if(window.MutationObserver){fitMO=new MutationObserver(fitSoon);fitMO.observe(do
 window.addEventListener('resize',fitSoon);
 document.addEventListener('fullscreenchange',fitSoon);document.addEventListener('webkitfullscreenchange',fitSoon);
 syncUI();
-showTab('quien');
+if(!isPro()){var ad=$$('[data-mode]');if(ad.length&&ad[0].closest('.field'))ad[0].closest('.field').hidden=true;renderEntrada();}else showTab('quien');
 };
 if(window.__pimpaTry)window.__pimpaTry();
 </script>
