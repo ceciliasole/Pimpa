@@ -1485,7 +1485,7 @@ LEVELS.push({id:'pal-3',grp:'Palabras',title:'Lectura de palabras de 2 sílabas 
 LEVELS.push({id:'palb-3',grp:'Palabras',title:'Armar palabras de 2 sílabas con todas las consonantes',kind:'wbuild',wc:PREM.concat(CLAS,POCO),ns:2});
 LEVELS.push({id:'pal-3b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:3});
 LEVELS.push({id:'inv-1',grp:'Inversas y artículos',title:'Sílabas inversas: EN ES UN AL',kind:'syl',sc:['l','n','s'],vw:['a','e','u'],pool:['en','es','un','al']});
-LEVELS.push({id:'art-1',grp:'Inversas y artículos',title:'Artículos: LA LAS EL LOS UNA Y',kind:'syl',pool:['la','las','el','los','una','y'],pickOnly:true});
+LEVELS.push({id:'art-1',grp:'Inversas y artículos',title:'Artículos: LA LAS EL LOS UNA',kind:'syl',pool:['la','las','el','los','una'],pickOnly:true});
 LEVELS.push({id:'ma-v',grp:'Mayúscula y minúscula',title:'Vocales',kind:'case',set:VOW.slice()});
 LEVELS.push({id:'ma-p',grp:'Mayúscula y minúscula',title:'Premium',kind:'case',set:PREM.slice()});
 LEVELS.push({id:'ma-c',grp:'Mayúscula y minúscula',title:'Clásicas',kind:'case',set:CLAS.slice()});
@@ -3612,7 +3612,7 @@ function pgNew(area,ls,act,g){
   }
   if(area==='tra')return ls.map(function(l){return pgTrazar(l);});
   if(area==='inv'){
-    var INV=['en','es','un','al'],ART=['la','las','el','los','una','y'];
+    var INV=['en','es','un','al'],ART=['la','las','el','los','una'];
     if(act==='circ')return [INV,ART].map(function(gp){return pTargetPage(ppick(gp),gp,'Circulá todas las que dicen esta.');});
     if(act==='unir'){
       var cl=shuffle(SHCOL.slice());
