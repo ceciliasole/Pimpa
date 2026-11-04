@@ -1430,7 +1430,7 @@ var EMO_SIT=[
  {id:'s13',emo:'asustado',g:'f',t:'La nena escucha truenos muy fuertes.'},
  {id:'s14',emo:'asustado',g:'m',t:'El nene ve una araña grande.'},
  {id:'s15',emo:'asustado',g:'f',t:'La nena escucha un ruido fuerte en la noche.'}];
-LEVELS.push({id:'emo-7',grp:'Emociones',title:'¿Cómo se siente? Una situación',kind:'emosit',free:true});
+LEVELS.push({id:'emo-7',grp:'Emociones',title:'¿Cómo se siente? Una situación',kind:'emosit',free:true,soon:true}); /* 4 nov: en gris hasta tener las 15 imágenes (assets/emo/sit/s01-s15) y los audios de Jose; sacar soon:true para activarlo */
 /* 3 nov: se vuelven a ofrecer, al final, los 2 ejercicios con la palabra escrita (para chicos que ya leen): son otra forma de trabajar lo mismo. Ids nuevos para no mezclar el progreso de los viejos emo-1/emo-2 (el emo-7 es el de situaciones). */
 LEVELS.push({id:'emo-8',grp:'Emociones',title:'Tocá la cara que dice la palabra',kind:'emo',free:true});
 LEVELS.push({id:'emo-9',grp:'Emociones',title:'Mirá la cara y elegí la palabra',kind:'emow',free:true});
@@ -2061,6 +2061,7 @@ function lvBtn(lv){
   if(r&&r.passed)pill='<span class="pill ok">Superado · '+r.best*10+'%</span>';
   else if(r)pill='<span class="pill warn">Mejor: '+r.best*10+'%</span>';
   else pill='<span class="pill">Sin empezar</span>';
+  if(lv.soon)return '<button class="lvc" type="button" disabled aria-disabled="true"><span>'+cardTitle(lv)+'</span><span class="pill">Próximamente</span></button>';
   return '<button class="lvc" data-lid="'+esc(lv.id)+'" type="button"><span>'+cardTitle(lv)+codeTag(lv.id,1,lv)+'</span>'+pill+'</button>';
 }
 function traceBtn(ti){
@@ -3159,13 +3160,25 @@ var TRACE={
  ch:['M44 34 C36 14 8 18 8 70 C8 122 36 126 44 106','M58 122 L58 20','M92 122 L92 20','M58 70 L92 70'],
  q:['M50 20 C8 20 8 122 50 122 C92 122 92 20 50 20','M56 98 L84 130'],
  y:['M20 20 L50 70 L80 20','M50 70 L50 122'],
- z:['M20 20 L80 20 L20 122 L80 122']
+ z:['M20 20 L80 20 L20 122 L80 122'],
+ /* NÚMEROS (4 nov) — BORRADOR: Jo pidió que arranquen de abajo; el orden/sentido exacto de cada uno lo tiene que confirmar Fati y se corrige acá. */
+ '0':['M50 122 C8 122 8 20 50 20 C92 20 92 122 50 122'],
+ '1':['M50 122 L50 20 L30 40'],
+ '2':['M20 122 L72 62 C92 40 80 16 50 18 C30 18 22 30 20 42','M32 122 L80 122'],
+ '3':['M20 104 C30 130 80 130 80 100 C80 80 60 72 40 72 C68 70 78 56 78 42 C78 14 28 12 20 36'],
+ '4':['M66 122 L66 20 L16 90 L86 90'],
+ '5':['M20 108 C32 130 84 128 82 94 C80 64 36 62 24 76 L32 20 L78 20'],
+ '6':['M50 122 C20 122 20 74 50 74 C80 74 80 122 50 122','M22 98 C22 56 44 24 78 20'],
+ '7':['M38 122 L80 20 L20 20'],
+ '8':['M50 122 C14 122 14 74 50 72 C86 70 86 20 50 20 C14 20 14 70 50 72 C86 74 86 122 50 122'],
+ '9':['M26 112 C46 126 78 108 78 62 C78 28 66 20 50 20 C30 20 22 32 22 46 C22 62 36 72 50 72 C66 72 78 62 78 56']
 };
 var TLEVELS=[
  {id:'tr-v',grp:'Grafismo',title:'Trazo de vocales',letters:VOW.slice()},
  {id:'tr-p',grp:'Grafismo',title:'Trazo de consonantes premium',letters:PREM.slice()},
  {id:'tr-c',grp:'Grafismo',title:'Trazo de consonantes clásicas',letters:CLAS.slice()},
- {id:'tr-x',grp:'Grafismo',title:'Trazo de consonantes poco frecuentes',letters:POCO.slice()}
+ {id:'tr-x',grp:'Grafismo',title:'Trazo de consonantes poco frecuentes',letters:POCO.slice()},
+ {id:'tr-n',grp:'Grafismo',title:'Trazo de números',letters:['1','2','3','4','5','6','7','8','9','0'],num:true}
 ];
 function traceRec(id){var p=curProfile();p.trace=p.trace||{};return p.trace[id];}
 function openTrace(ti){
@@ -3186,9 +3199,9 @@ function drawTrace(){
   var letter=run.tl.letters[run.i],defs=TRACE[letter],isV=VOW.indexOf(letter)>-1,NS='http://www.w3.org/2000/svg';
   traceDots();
   $('#item').innerHTML=
-    '<div class="tchips" role="group" aria-label="Elegí la letra">'+run.tl.letters.map(function(x,k){return '<button type="button" class="tchip'+(k===run.i?' on':'')+'" data-k="'+k+'" aria-label="Letra '+esc(x.toUpperCase())+'">'+DH(x)+'</button>';}).join('')+'</div>'+
+    '<div class="tchips" role="group" aria-label="Elegí la letra">'+run.tl.letters.map(function(x,k){return '<button type="button" class="tchip'+(k===run.i?' on':'')+'" data-k="'+k+'" aria-label="'+(run.tl.num?'Número':'Letra')+' '+esc(x.toUpperCase())+'">'+DH(x)+'</button>';}).join('')+'</div>'+
     '<p class="q">Seguí el caminito con el dedo</p>'+
-    '<div class="tzwrap"><svg id="tz" viewBox="0 0 100 140" role="img" aria-label="Letra '+esc(letter.toUpperCase())+'"></svg></div>'+
+    '<div class="tzwrap"><svg id="tz" viewBox="0 0 100 140" role="img" aria-label="'+(run.tl.num?'Número':'Letra')+' '+esc(letter.toUpperCase())+'"></svg></div>'+
     '<div class="row">'+(isV?'<button class="btn ghost" id="listen" type="button">Escuchar</button>':'')+'<button class="btn ghost" id="trep" type="button">Otra vez</button>'+
     '<button class="btn" id="next" type="button" hidden>'+(run.i===run.tl.letters.length-1?'Terminar':'Siguiente')+'</button></div>';
   var svg=$('#tz'),N=100,TOL=15,strokes=[],act=0,tracing=false,finished=false;
