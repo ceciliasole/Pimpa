@@ -375,6 +375,8 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 .lvc:disabled{opacity:.55;cursor:not-allowed}
 .lvc.nx{border-color:var(--cons);background:var(--surface-2)}
 .soon{display:flex;flex-wrap:wrap;gap:8px}
+.nivel1{margin:-4px 0 12px;text-align:center;font-size:.95rem;color:var(--ink-2)}
+.nivel1 b{color:var(--cons,#1C5FA8)}
 .soon span{padding:6px 12px;border:1.5px dashed var(--line);border-radius:999px;font-size:.9rem;color:var(--ink-2)}
 
 .wimg{width:1em;height:1em;object-fit:contain;display:block;margin:auto;pointer-events:none;user-select:none}
@@ -714,6 +716,12 @@ img.pstar.on{filter:none;animation:pop .5s both}
 .copts{align-items:stretch}
 .seqrow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
 .seqrow .tile{width:clamp(58px,15vw,84px);font-size:clamp(1.8rem,7vw,2.8rem)}
+/* 4 nov (Fati): en 'Qué número viene después' las respuestas no pueden ser más grandes que el número que se muestra: los dos van al mismo tamaño, en proporción al ancho */
+body.playing #item:has(.seqrow.big){--bn:clamp(104px,15vw,180px)}
+body.playing #item .seqrow.big .tile{width:var(--bn)!important;height:var(--bn)!important;font-size:calc(var(--bn)*.5)!important;line-height:1}
+body.playing #item .seqrow.big .sarr{font-size:calc(var(--bn)*.3)}
+body.playing #item:has(.seqrow.big) .row .tile{width:var(--bn)!important;max-width:var(--bn)!important;height:var(--bn)!important;min-height:0!important;aspect-ratio:auto!important;font-size:calc(var(--bn)*.5)!important;flex:none!important}
+body.playing #item:has(.seqrow.big) .row{display:flex!important;flex-wrap:nowrap!important;justify-content:center!important;gap:clamp(8px,2vw,20px)!important;grid-template-columns:none!important}
 .tile.q{background:var(--surface-2);color:var(--ink-2);border:3px dashed var(--line);display:grid;place-items:center}
 .sarr{font-size:1.8rem;color:var(--ink-2)}
 .qty{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:280px}
@@ -1501,7 +1509,7 @@ function dayOpt(i){return {h:'<span class="dw" style="color:'+DCOL(i)+'">'+DH(DI
 function dateH(x){var p=x.lastIndexOf(' '),nm=x.slice(0,p),nu=x.slice(p+1),i=DIAS.indexOf(nm);return '<span class="dw"><span style="color:'+DCOL(i)+'">'+DH(nm)+'</span> <span style="color:'+DCOL(i+3)+'">'+esc(nu)+'</span></span>';}
 function optsOf(set,ans,mk){return shuffle([ans].concat(sample(set.filter(function(x){return x!==ans;}),2))).map(function(v){var o=mk(v);o.ok=(v===ans);return o;});}
 function qtyHTML(n,e){var h='';for(var i=0;i<n;i++)h+='<span>'+e+'</span>';return '<div class="qty">'+h+'</div>';}
-function seqRow(arr){return '<div class="seqrow">'+arr.map(function(x){return x==='?'?'<span class="tile q">?</span>':(x==='>'?'<span class="sarr">➜</span>':'<span class="tile c'+(String(x).length>1?' long':'')+'">'+x+'</span>');}).join('')+'</div>';}
+function seqRow(arr,cls){return '<div class="seqrow'+(cls?' '+cls:'')+'">'+arr.map(function(x){return x==='?'?'<span class="tile q">?</span>':(x==='>'?'<span class="sarr">➜</span>':'<span class="tile c'+(String(x).length>1?' long':'')+'">'+x+'</span>');}).join('')+'</div>';}
 function weekHTML(t,dates){
   return '<div class="wkrow">'+DIAS3.map(function(d,i){
     return '<div class="wd'+(i===t?' hoy':'')+'"><span class="wn" style="color:'+DCOL(i)+'">'+DH(d)+'</span>'+(dates?'<span class="wnum" style="color:'+DCOL(i+3)+'">'+dates[i]+'</span>':'')+(i===t?'<span class="wh">hoy</span>':'')+'</div>';
@@ -1533,7 +1541,7 @@ var GENN={
   sig:function(lv){return seq(lv.set,TOTAL).map(function(n){
     var pool=[n-1,n+2,n+3,n-2].filter(function(x){return x>=1&&x<=20;});
     var ans=n+1,o=shuffle([ans].concat(sample(pool,2))).map(function(v){var x=numOpt(v);x.ok=(v===ans);return x;});
-    return {type:'choice',q:'¿Qué número viene después?',show:seqRow([n,'>','?']),say:'¿Qué número viene después?',opts:o};
+    return {type:'choice',q:'¿Qué número viene después?',show:seqRow([n,'>','?'],'big'),say:'¿Qué número viene después?',opts:o};
   });},
   dayrec:function(lv){return seq(lv.set,TOTAL).map(function(i){return {type:'choice',q:'Tocá el día que escuchás',say:DIAS[i],opts:optsOf(lv.set,i,dayOpt)};});},
   dayord:function(lv){return seq(lv.set,TOTAL).map(function(i,k){
@@ -1605,8 +1613,8 @@ function buildItems(lv){
   }else if(lv.kind==='emod'){
     /* Tres fotos: dos se sienten igual y una distinta; hay que tocar la distinta */
     shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
-      var same=shuffle(EMOP.filter(function(x){return x.emo===t.emo&&x.f!==t.f;}))[0];
-      var odd=shuffle(EMOP.filter(function(x){return x.emo!==t.emo;}))[0];
+      var same=shuffle(EMOP.filter(function(x){return x.emo===t.emo&&x.g===t.g&&x.f!==t.f;}))[0];
+      var odd=shuffle(EMOP.filter(function(x){return x.emo!==t.emo&&x.g===t.g;}))[0];
       items.push({type:'emod',ans:odd.f,opts:shuffle([t,same,odd])});
     });
   }else if(lv.kind==='emos'){
@@ -1624,8 +1632,9 @@ function buildItems(lv){
     });
   }else if(lv.kind==='emom'){
     shuffle(EMOP.slice()).slice(0,TOTAL).forEach(function(t){
-      var same=shuffle(EMOP.filter(function(x){return x.emo===t.emo&&x.f!==t.f;}))[0];
-      var ds=[];shuffle(EMOP.filter(function(x){return x.emo!==t.emo;})).forEach(function(x){if(ds.length<2&&!ds.some(function(y){return y.emo===x.emo;}))ds.push(x);});
+      /* 4 nov (Fati): se une varón con varón y nena con nena, para que la única diferencia sea la emoción */
+      var same=shuffle(EMOP.filter(function(x){return x.emo===t.emo&&x.g===t.g&&x.f!==t.f;}))[0];
+      var ds=[];shuffle(EMOP.filter(function(x){return x.emo!==t.emo&&x.g===t.g;})).forEach(function(x){if(ds.length<2&&!ds.some(function(y){return y.emo===x.emo;}))ds.push(x);});
       items.push({type:'emom',emo:t.emo,src:t.f,ans:same.f,opts:shuffle([same].concat(ds))});
     });
   }else if(lv.kind==='art'){
@@ -2363,9 +2372,9 @@ function renderCamino(){
   var n=curNav(),h='',p=curProfile();
   if(n.s==='home'){
     var st=allStat(p);
-    var soon=['Oraciones y comprensión (quién, qué, dónde)','Trazo de minúsculas'];
+    var soon=['Nivel 2','Oraciones y comprensión (quién, qué, dónde)','Trazo de minúsculas'];
     h=heroHTML()+'<div class="gprog"><div class="gtop"><b>Progreso general</b><span>'+st.done+' de '+st.total+'</span></div>'+pbar(st)+'</div>'+
-      '<h2 class="h2 qq">¿Qué practicamos?</h2><div class="hgrid">'+
+      '<h2 class="h2 qq">¿Qué practicamos?</h2><p class="nivel1"><b>Nivel 1</b> · Iniciación a la lectoescritura y matemática</p><div class="hgrid">'+
       hcard('seq','Mi camino','<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 40c10-2 6-14 16-14s6-12 16-14" fill="none" stroke="#2076BD" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 7"/><circle cx="8" cy="40" r="4.5" fill="#56B892"/><path d="M40 6l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7z" fill="#FFD24F" stroke="#F0A81C" stroke-width="1.2"/></svg>',seqStat(p),null,store.mode==='familia'?'Un paso a la vez':'Todos los pasos, en orden')+
       (store.mode==='familia'?'':hcard('voc','Vocales',VOW.map(function(v){return '<img class="vimg" src="'+ART2['v'+v.toUpperCase()]+'" alt="'+v+'" draggable="false">';}).join(''),cardStat('voc'))+
       hcard('cons','Consonantes','<span class="allc">'+fichas(PREM.concat(CLAS,POCO))+'</span>',cardStat('cons'))+
