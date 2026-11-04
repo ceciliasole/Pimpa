@@ -29,6 +29,9 @@
       <label class="gwl-l" for="wlMail">Tu mail</label>
       <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@mail.com">
       <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <label class="gwl-l gwl-l2" for="wlCup">¿Tenés un código de descuento? <span class="gwl-o">(opcional)</span></label>
+      <input id="wlCup" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="Ej.: NOMBRE-1">
+      <p id="wlCupM" class="gwl-cm" role="status" aria-live="polite"></p>
       <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
       <p id="wlProN" class="gwl-pn" hidden>Pimpa para profesionales tiene un plan propio, en función de los pacientes que tengas y de las familias que recomiendes. Te escribimos con los valores cuando salga.</p>
       <button type="submit" id="wlGo">Anotarme en la lista</button>
@@ -66,6 +69,14 @@
 #gate .gwl-l{display:block;margin:0 0 4px 6px;font-size:.85rem;font-weight:700;color:var(--ink,#17305C)}
 #gate .gwl input[type=email]{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif)}
 #gate .gwl input[type=email]:focus{outline:3px solid #FFD24F;border-color:#2076BD}
+#gate .gwl-l2{margin-top:12px}
+#gate .gwl-o{font-weight:600;color:var(--ink-2,#506082)}
+#gate .gwl #wlCup{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif);text-transform:uppercase}
+#gate .gwl #wlCup::placeholder{text-transform:none}
+#gate .gwl #wlCup:focus{outline:3px solid #FFD24F;border-color:#2076BD}
+#gate .gwl-cm{margin:6px 6px 0;min-height:1.2em;font-size:.86rem;font-weight:600;line-height:1.35}
+#gate .gwl-cm.ok{color:#2E8A68}
+#gate .gwl-cm.err{color:#B93A30}
 #gate .gwl-c{display:flex;align-items:flex-start;gap:10px;margin:12px 4px 0;font-size:.88rem;line-height:1.35;color:var(--ink-2,#506082);cursor:pointer}
 #gate .gwl-c input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:#D8483D;cursor:pointer}
 #gate .gwl-pn{margin:8px 4px 0;padding:10px 12px;border-radius:16px;background:#FFF3CC;font-size:.85rem;line-height:1.35;color:var(--ink,#17305C)}
@@ -112,6 +123,32 @@ var gc=document.getElementById('gc'),gcOk=document.getElementById('gcOk'),gcGo=d
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
 var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
+var wlCup=document.getElementById('wlCup'),wlCupM=document.getElementById('wlCupM'),cupOk=null,CUP_KEY='pimpa-cupon';
+function cupDig(b){var w=[1,3,7,9],t=0;for(var i=0;i<b.length;i++){var c=b.charAt(i),v=(c>='0'&&c<='9')?c.charCodeAt(0)-48:c.charCodeAt(0)-55;t+=v*w[i%4];}return t%10;}
+function cupNorm(x){x=String(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(x.length<4||x.length>13)return null;var b=x.slice(0,-1);if(String(cupDig(b))!==x.slice(-1))return null;return b+'-'+x.slice(-1);}
+function cupSay(m,ok){wlCupM.textContent=m;wlCupM.className='gwl-cm'+(m?(ok?' ok':' err'):'');}
+async function cupCheck(){
+  var v=String(wlCup.value||'').trim();
+  cupOk=null;
+  if(!v){cupSay('',true);return true;}
+  var n=cupNorm(v);
+  if(!n){cupSay('Revisá el código: parece tener un error de tipeo.',false);return false;}
+  if(!sb){cupSay('No pudimos comprobar el código ahora. Probá de nuevo.',false);return false;}
+  try{
+    var r=await sb.rpc('validar_cupon',{p_codigo:n});
+    if(r.error){console.error(r.error);cupSay('No pudimos comprobar el código ahora. Probá de nuevo.',false);return false;}
+    var d=r.data;
+    if(d&&d.valido){
+      cupOk=d.codigo;wlCup.value=d.codigo;
+      var dur=d.descuento_meses===12?'durante el primer año':'durante '+d.descuento_meses+' meses';
+      cupSay('¡Código aplicado! Tenés '+d.descuento_pct+'% de descuento '+dur+' cuando te habilitemos.',true);
+      return true;
+    }
+    cupSay('Ese código no existe o ya no está vigente.',false);return false;
+  }catch(x){console.error(x);cupSay('No pudimos comprobar el código ahora. Probá de nuevo.',false);return false;}
+}
+wlCup.addEventListener('input',function(){cupOk=null;cupSay('',true);try{sessionStorage.removeItem(CUP_KEY);}catch(x){}});
+wlCup.addEventListener('blur',function(){if(String(wlCup.value||'').trim())cupCheck();});
 function show(m,btn,rbtn){gate.hidden=false;gc.hidden=true;msg.hidden=false;wl.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
 function termsOk(e){try{return localStorage.getItem(TK+e)===TV;}catch(x){return false;}}
 function termsSet(e){try{localStorage.setItem(TK+e,TV);}catch(x){}}
@@ -210,16 +247,23 @@ wl.addEventListener('submit',async function(e){
   if(!sb){wlSay('No se pudo conectar. Recargá la página e intentá de nuevo.',false);return;}
   wlGo.disabled=true;wlSay('',true);
   try{
-    var row={email:m};if(wlPro.checked)row.es_profesional=true;
-    var r=await sb.from('waitlist').insert(row);
-    if(r.error&&r.error.code!=='23505'){
-      console.error(r.error);
-      wlSay('No pudimos anotarte ahora. Intentá de nuevo o escribinos a pimpa@impactese.com.',false);
+    if(!(await cupCheck())){wlCup.focus();wlGo.disabled=false;return;}
+    var r=await sb.rpc('anotarse',{p_email:m,p_profesional:!!wlPro.checked,p_cupon:cupOk||null});
+    if(r.error||!r.data||!r.data.ok){
+      if(r.data&&r.data.motivo==='cupon_invalido'){
+        cupSay('Ese código no existe o ya no está vigente.',false);wlCup.focus();
+      }else{
+        console.error(r.error);
+        wlSay('No pudimos anotarte ahora. Intentá de nuevo o escribinos a pimpa@impactese.com.',false);
+      }
     }else{
+      var usado=r.data.cupon;
       wlMail.value='';
+      wlCup.value='';cupOk=null;cupSay('',true);
+      try{sessionStorage.removeItem(CUP_KEY);}catch(x){}
       wlPro.checked=false;
       wlProN.hidden=true;
-      wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);
+      wlSay(usado?'¡Listo! Te anotamos con tu código '+usado+'. Te avisamos por mail cuando puedas entrar.':'¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);
     }
   }catch(x){
     console.error(x);
@@ -232,6 +276,15 @@ document.addEventListener('click',function(e){
   if(!t||!sb)return;
   sb.auth.signOut();
 });
+(function(){
+  var c='';
+  try{
+    var q=new URLSearchParams(location.search);
+    c=q.get('cupon')||q.get('c')||'';
+    if(c)sessionStorage.setItem(CUP_KEY,c.slice(0,20));else c=sessionStorage.getItem(CUP_KEY)||'';
+  }catch(x){}
+  if(c){wlCup.value=c.slice(0,20);setTimeout(cupCheck,500);}
+})();
 start();
 })();
 </script>

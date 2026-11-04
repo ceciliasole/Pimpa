@@ -26,7 +26,7 @@ La app pide ingresar con Google (Supabase Auth, proyecto `pimpa` de la cuenta im
 
 La pantalla de ingreso tiene un campo para dejar el mail (se acepta cualquier mail válido; para entrar a la app hace falta una cuenta de Google). Los mails se guardan en la tabla `waitlist` de Supabase; se crea una sola vez con `supabase/002_lista_de_espera.sql` (SQL Editor). La web solo puede insertar: la lista se mira desde Supabase > Table Editor > waitlist.
 
-Para habilitar a alguien que ya pagó, se agrega su mail a `allowed_emails` (el SQL de ejemplo está al final de `002_lista_de_espera.sql`).
+Para habilitar a alguien que ya pagó: `select public.habilitar('mail@gmail.com', 'Nombre');` en el SQL Editor. Es mejor que insertar a mano en `allowed_emails` porque copia el cupón que la persona dejó en la lista de espera (ver Cupones).
 
 El formulario tiene un casillero opcional "Soy profesional de la psicopedagogía o la educación…". Si lo tildan, se guarda `es_profesional = true` en `waitlist` (se agrega con `supabase/003_lista_de_espera_profesionales.sql`). Si no lo tildan, el valor queda en `false`. La landing sigue pensada para familias.
 
@@ -35,3 +35,15 @@ El formulario tiene un casillero opcional "Soy profesional de la psicopedagogía
 Las grabaciones de Jose son archivos sueltos en `audio/` (mp3 mono), no van dentro del `index.html`. El nombre lleva una huella del contenido (`pal_camion.a1b2c3d4.mp3`): al regrabar un audio sale un archivo nuevo y el navegador no usa el viejo (cache de un año). En `index.html` los diccionarios (`SAUD` sílabas, `WAUD`/`PALAUD` palabras, números, días y frases, `CAUD` sonidos, `LNAUD` nombres de letras, etc.) apuntan a esas rutas. `warmAudio()` los precarga en segundo plano.
 
 Para sumar una tanda nueva: convertir los WAV a mp3, guardarlos en `audio/` con huella y agregar la clave (el texto en minúsculas, tal como lo dice la app) al diccionario que corresponda. Si hay dos tomas de lo mismo, vale la más nueva.
+
+## Cupones de descuento
+
+Se crean con `supabase/004_cupones.sql` (ya corrido en el proyecto `pimpa`). Cada cupón tiene la forma `BASE-D`, donde D es un dígito verificador calculado con la base: frena errores de tipeo y adivinanzas, pero no hace secreto el código.
+
+- La familia lo escribe en el campo opcional de la lista de espera, o entra por un link con el cupón puesto: `https://pimpa.impactese.com/?cupon=FATI-0`. La web lo valida con `validar_cupon` y lo guarda con `anotarse` en `waitlist.cupon`. Si el mail ya estaba anotado, se le suma el cupón solo si todavía no tenía uno.
+- `habilitar(mail)` pasa ese cupón a `allowed_emails.cupon`; de ahí sale la comisión de la embajadora.
+- Ver cuántas anotó y cuántas se habilitaron por cupón: Supabase > Table Editor > vista `cupones_resumen`.
+- Crear un cupón nuevo (el dígito lo calcula solo): `select public.crear_cupon('MARGA', 'Marga Pérez', 'marga@mail.com', 20, 12, 10, 'FATI-0');` (base, titular, mail, % descuento, meses de descuento, % comisión, cupón "madre" opcional).
+- Cambiar valores: `update public.coupons set descuento_pct = 25, comision_pct = 12 where codigo = 'FATI-0';`. Apagar uno: `set activo = false`.
+- Cupones cargados: `FATI-0` (Fatima, embajadora, 20% de descuento 12 meses, 10% de comisión) y `JOSE-3` (Jose, promo, 20%, sin comisión). Los porcentajes son provisorios, todavía no están decididos.
+- Todavía no se cobra ni se calcula comisión en la app: el cobro es manual (alias) y la comisión se calcula mirando `cupones_resumen`.
