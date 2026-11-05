@@ -36,6 +36,8 @@ Las grabaciones de Jose son archivos sueltos en `audio/` (mp3 mono), no van dent
 
 Para sumar una tanda nueva: convertir los WAV a mp3, guardarlos en `audio/` con huella y agregar la clave (el texto en minúsculas, tal como lo dice la app) al diccionario que corresponda. Si hay dos tomas de lo mismo, vale la más nueva.
 
+Frases enteras de Jose (`FRFULL`): las preguntas de días (`fra_dia_*`, `fra_si_hoy_<día>_ayer|manana`), `¿Está …?` (`fra_esta_*`), `¿Quién se siente igual?` y las 15 situaciones de Emociones (`fra_sit_s01…s15`). Jose grabó "¿Qué día **será** mañana?", así que el texto de la app dice "será" (las piezas viejas de Cecilia con "es mañana" ya no se usan para esa pregunta). Las palabras de emociones sueltas (`emo_*`) están en `PALAUD`.
+
 ## Cupones de descuento
 
 Se crean con `supabase/004_cupones.sql` (ya corrido en el proyecto `pimpa`). Cada cupón tiene la forma `BASE-D`, donde D es un dígito verificador calculado con la base: frena errores de tipeo y adivinanzas, pero no hace secreto el código.
