@@ -205,7 +205,10 @@ async function check(session){
   }
   if(busy)return;busy=true;
   try{
-    if(!session){show('Entrá con tu cuenta para empezar.',true,false);return;}
+    if(!session){
+      show(authErr?'El ingreso se interrumpió. Tocá "Entrar con Google" para probar de nuevo.':'Entrá con tu cuenta para empezar.',true,false);
+      authErr=false;return;
+    }
     var md=session.user.user_metadata||{};
     var avatar=md.avatar_url||md.picture||'';
     var r=await sb.from('allowed_emails').select('email,nombre,rol').eq('email',email).maybeSingle();
@@ -229,8 +232,14 @@ async function check(session){
     show('Algo salió mal al entrar. Intentá de nuevo.',false,true);
   }finally{busy=false;}
 }
+var authErr=false;
 function start(){
   if(!window.supabase||!window.supabase.createClient){show('No se pudo cargar el ingreso. Recargá la página.',false,true);return;}
+  /* Si volvemos de un login cortado (p. ej. botón atrás: error=bad_oauth_state), limpiamos la URL y avisamos en vez de dejar el error pegado. */
+  try{
+    var qe=location.search+'&'+location.hash.replace(/^#/,'');
+    if(/(^|[?&])(error|error_code)=/.test(qe)){authErr=true;history.replaceState(null,'',location.pathname);}
+  }catch(x){}
   sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   sb.auth.onAuthStateChange(function(ev,session){
     if(ev==='SIGNED_OUT'&&wasDenied){wasDenied=false;return;}
