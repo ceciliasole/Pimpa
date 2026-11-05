@@ -30,7 +30,7 @@
       <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@mail.com">
       <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label class="gwl-l gwl-l2" for="wlCup">¿Tenés un código de descuento? <span class="gwl-o">(opcional)</span></label>
-      <input id="wlCup" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="Ej.: NOMBRE-1">
+      <input id="wlCup" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="Ej.: NOMBRE1">
       <p id="wlCupM" class="gwl-cm" role="status" aria-live="polite"></p>
       <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
       <p id="wlProN" class="gwl-pn" hidden>Pimpa para profesionales tiene un plan propio, en función de los pacientes que tengas y de las familias que recomiendes. Te escribimos con los valores cuando salga.</p>
@@ -126,15 +126,14 @@ var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
 var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
 var wlCup=document.getElementById('wlCup'),wlCupM=document.getElementById('wlCupM'),cupOk=null,CUP_KEY='pimpa-cupon';
-function cupDig(b){var w=[1,3,7,9],t=0;for(var i=0;i<b.length;i++){var c=b.charAt(i),v=(c>='0'&&c<='9')?c.charCodeAt(0)-48:c.charCodeAt(0)-55;t+=v*w[i%4];}return t%10;}
-function cupNorm(x){x=String(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(x.length<4||x.length>13)return null;var b=x.slice(0,-1);if(String(cupDig(b))!==x.slice(-1))return null;return b+'-'+x.slice(-1);}
+function cupNorm(x){x=String(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(x.length<3||x.length>13)return null;return x;}
 function cupSay(m,ok){wlCupM.textContent=m;wlCupM.className='gwl-cm'+(m?(ok?' ok':' err'):'');}
 async function cupCheck(){
   var v=String(wlCup.value||'').trim();
   cupOk=null;
   if(!v){cupSay('',true);return true;}
   var n=cupNorm(v);
-  if(!n){cupSay('Revisá el código: parece tener un error de tipeo.',false);return false;}
+  if(!n){cupSay('Revisá el código: no lo encontramos.',false);return false;}
   if(!sb){cupSay('No pudimos comprobar el código ahora. Probá de nuevo.',false);return false;}
   try{
     var r=await sb.rpc('validar_cupon',{p_codigo:n});
@@ -142,8 +141,9 @@ async function cupCheck(){
     var d=r.data;
     if(d&&d.valido){
       cupOk=d.codigo;wlCup.value=d.codigo;
-      var dur=d.descuento_meses===12?'durante el primer año':'durante '+d.descuento_meses+' meses';
-      cupSay('¡Código aplicado! Tenés '+d.descuento_pct+'% de descuento '+dur+' cuando te habilitemos.',true);
+      var dur=d.descuento_meses===1?'el primer mes':'los primeros '+d.descuento_meses+' meses';
+      var anual=d.descuento_anual_pct?', o '+d.descuento_anual_pct+'% si elegís el plan anual':'';
+      cupSay('¡Código aplicado! Tenés '+d.descuento_pct+'% de descuento '+dur+anual+', cuando te habilitemos.',true);
       return true;
     }
     cupSay('Ese código no existe o ya no está vigente.',false);return false;

@@ -40,12 +40,13 @@ Frases enteras de Jose (`FRFULL`): las preguntas de días (`fra_dia_*`, `fra_si_
 
 ## Cupones de descuento
 
-Se crean con `supabase/004_cupones.sql` (ya corrido en el proyecto `pimpa`). Cada cupón tiene la forma `BASE-D`, donde D es un dígito verificador calculado con la base: frena errores de tipeo y adivinanzas, pero no hace secreto el código.
+Se crearon con `supabase/004_cupones.sql` y se simplificaron con `supabase/005_cupones_simples.sql` (ya corridos en el proyecto `pimpa`). Cada cupón es una base más un número de versión, sin guion ni dígito verificador: `FATI1`, `JOSE1`. El número deja sumar otros descuentos con la misma persona (`FATI2`, `JOSE2`) sin tocar los anteriores. Escribir solo `FATI` también sirve y se toma como `FATI1`. El código no es secreto: es solo un descuento y una forma de atribuir quién trajo a la familia.
 
-- La familia lo escribe en el campo opcional de la lista de espera, o entra por un link con el cupón puesto: `https://pimpa.impactese.com/?cupon=FATI-0`. La web lo valida con `validar_cupon` y lo guarda con `anotarse` en `waitlist.cupon`. Si el mail ya estaba anotado, se le suma el cupón solo si todavía no tenía uno.
+- Oferta con código (igual para Fati y para Jo): 15% los primeros 3 meses del plan mensual, o 20% si elige el plan anual. Sin código, el anual tiene 15%. Fati solo cobra más comisión (8% sobre lo que la familia efectivamente paga).
+- La familia lo escribe en el campo opcional de la lista de espera, o entra por un link con el cupón puesto: `https://pimpa.impactese.com/?cupon=FATI1`. La web lo valida con `validar_cupon` y lo guarda con `anotarse` en `waitlist.cupon`. Si el mail ya estaba anotado, se le suma el cupón solo si todavía no tenía uno.
 - `habilitar(mail)` pasa ese cupón a `allowed_emails.cupon`; de ahí sale la comisión de la embajadora.
 - Ver cuántas anotó y cuántas se habilitaron por cupón: Supabase > Table Editor > vista `cupones_resumen`.
-- Crear un cupón nuevo (el dígito lo calcula solo): `select public.crear_cupon('MARGA', 'Marga Pérez', 'marga@mail.com', 20, 12, 10, 'FATI-0');` (base, titular, mail, % descuento, meses de descuento, % comisión, cupón "madre" opcional).
-- Cambiar valores: `update public.coupons set descuento_pct = 25, comision_pct = 12 where codigo = 'FATI-0';`. Apagar uno: `set activo = false`.
-- Cupones cargados: `FATI-0` (Fatima, embajadora, 20% de descuento 12 meses, 10% de comisión) y `JOSE-3` (Jose, promo, 20%, sin comisión). Los porcentajes son provisorios, todavía no están decididos.
-- Todavía no se cobra ni se calcula comisión en la app: el cobro es manual (alias) y la comisión se calcula mirando `cupones_resumen`.
+- Crear un cupón nuevo: `select public.crear_cupon('MARGA', 'Marga Pérez', 'marga@mail.com', 15, 3, 10, 'FATI1');` (código, titular, mail, % descuento mensual, meses de descuento, % comisión, cupón "madre" opcional). `MARGA` crea `MARGA1`.
+- Cambiar valores: `update public.coupons set descuento_pct = 15, descuento_anual_pct = 20, comision_pct = 8 where codigo = 'FATI1';`. Apagar uno: `set activo = false`.
+- Cupones cargados: `FATI1` (Fatima, embajadora, 15% por 3 meses o 20% anual, 8% de comisión) y `JOSE1` (Jose, promo, mismo descuento, sin comisión). Los códigos viejos `FATI-0` y `JOSE-3` ya no existen.
+- Todavía no se cobra ni se calcula comisión en la app: el cobro es manual (links de Mercado Pago) y la comisión se calcula mirando `cupones_resumen`.
