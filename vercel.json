@@ -19,6 +19,27 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/mail/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/pagar",
+      "destination": "https://mpago.la/1yMJ5uy",
+      "permanent": false
+    },
+    {
+      "source": "/entrar",
+      "destination": "/",
+      "permanent": false
     }
   ]
 }
