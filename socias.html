@@ -25,6 +25,8 @@
   #msg{min-height:22px;font-weight:700;margin:8px 0}
   .chico{font-size:12px;color:#777}
   .tabla-wrap{overflow-x:auto}
+  .res{background:#FFF6E5;border-radius:12px;padding:8px 12px;font-size:13px}
+  .res b{display:block;font-size:12px;text-transform:uppercase;color:#777;margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -49,6 +51,15 @@
       <div class="tabla-wrap"><table>
         <thead><tr><th></th><th>Mail</th><th>Cupón</th><th>Acceso</th><th>Listo</th><th>Confirmado</th><th>Clics</th></tr></thead>
         <tbody id="filas"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <strong>Quiénes entraron</strong>
+      <p class="chico">Datos que cada persona completó la primera vez que entró. De los chicos solo está la edad. El celular y el mail son datos personales: no los compartas fuera del equipo y escribile por marketing solo a quien dice "sí".</p>
+      <div id="p-res" class="acciones" style="margin-top:8px"></div>
+      <div class="tabla-wrap"><table>
+        <thead><tr><th>Persona</th><th>Vínculo</th><th>Dónde</th><th>Chicos</th><th>Contacto</th><th>Marketing</th><th>Llegó por</th></tr></thead>
+        <tbody id="p-filas"></tbody>
       </table></div>
     </div>
     <div class="card">
@@ -93,6 +104,33 @@
     datos=r.data||[];
     pintar();
     msg(datos.length+' mails');
+    cargarPerfiles();
+  }
+
+  var REL={madre:'Mamá',padre:'Papá',abuela_o:'Abuela/o',otro_familiar:'Otro familiar',docente:'Docente',profesional:'Profesional',otro:'Otro'};
+  function cuenta(arr){var o={};arr.forEach(function(k){o[k]=(o[k]||0)+1});return Object.keys(o).sort(function(a,b){return o[b]-o[a]}).map(function(k){return esc(k)+' '+o[k]}).join(' · ')||'—'}
+  async function cargarPerfiles(){
+    var r=await sb.rpc('socias_perfiles');
+    if(r.error){$('p-filas').innerHTML='<tr><td colspan="7">Error: '+esc(r.error.message)+'</td></tr>';return}
+    var d=r.data||[];
+    var mk=d.filter(function(f){return f.marketing_ok}).length;
+    var edades=[];d.forEach(function(f){(f.edades_chicos||[]).forEach(function(e){edades.push(e<=5?'0-5':(e<=9?'6-9':(e<=13?'10-13':'14-18')))})});
+    var res=[['Perfiles',d.length+' de '+datos.filter(function(f){return f.habilitada}).length+' habilitadas'],
+      ['Aceptan marketing',d.length?mk+' ('+Math.round(100*mk/d.length)+'%)':'—'],
+      ['Vínculo',cuenta(d.map(function(f){return REL[f.relacion]||f.relacion}))],
+      ['País',cuenta(d.map(function(f){return f.pais}))],
+      ['Edad de los chicos',cuenta(edades)],
+      ['Llegaron por',cuenta(d.filter(function(f){return f.como_nos_conociste}).map(function(f){return f.como_nos_conociste}))]];
+    $('p-res').innerHTML=res.map(function(x){return '<div class="res"><b>'+x[0]+'</b>'+(x[0]==='Perfiles'||x[0]==='Aceptan marketing'?esc(x[1]):x[1])+'</div>'}).join('');
+    $('p-filas').innerHTML=d.length?d.map(function(f){
+      return '<tr><td>'+esc(f.nombre+' '+f.apellido)+'<br><span class="chico">'+esc(f.email)+(f.anio_nacimiento?' · nació en '+esc(f.anio_nacimiento):'')+'</span></td>'
+        +'<td>'+esc(REL[f.relacion]||f.relacion)+'</td>'
+        +'<td>'+esc(f.ciudad)+'<br><span class="chico">'+esc(f.pais)+'</span></td>'
+        +'<td>'+esc((f.edades_chicos||[]).join(', '))+'</td>'
+        +'<td>'+esc(f.celular||'')+'</td>'
+        +'<td>'+(f.marketing_ok?'<span class="tag ok">sí</span><br><span class="chico">'+esc(fecha(f.marketing_ok_en))+'</span>':'<span class="tag pend">no</span>')+'</td>'
+        +'<td>'+esc(f.como_nos_conociste||'')+'</td></tr>';
+    }).join(''):'<tr><td colspan="7" class="chico">Todavía nadie completó el perfil.</td></tr>';
   }
 
   function est(estado,fecha_){

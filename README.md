@@ -58,3 +58,5 @@ La primera vez que alguien entra (después de aceptar las condiciones) se le pid
 Se guarda en la tabla `perfiles` (`supabase/007_perfiles.sql`, ya corrido). La web solo escribe con `guardar_perfil()`, que valida y toma el mail de la sesión; cada persona solo puede leer su propia fila. Para ver los datos: Supabase > Table Editor > perfiles. `marketing_ok` y `marketing_ok_en` registran el consentimiento y cuándo se dio o se retiró.
 
 Si la base no responde al comprobar el perfil, la persona entra igual y se lo pedimos la próxima vez. Quienes ya tenían cuenta también ven el formulario una vez. Para pedir la pantalla de nuevo en un navegador: borrar la clave `pimpa-perfil-<mail>` del almacenamiento local.
+
+El panel /socias muestra los perfiles (con resumen por vínculo, país, edad de los chicos y marketing) mediante `socias_perfiles()` (`supabase/008_socias_perfiles.sql`), que solo responde a founder y cofounder.
