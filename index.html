@@ -1474,25 +1474,25 @@ PREM.forEach(function(c,i){
   LEVELS.push({id:c+'-sil',grp:'Iniciales',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
 });
 LEVELS.push({id:'mx-fre',grp:'Iniciales',title:'Mezcla: '+PREM.join(' ').toUpperCase(),kind:'syl',sc:PREM.slice()});
-LEVELS.push({id:'pal-1',grp:'Palabras',title:'Lectura de palabras de 2 sílabas con consonantes iniciales',kind:'word',wc:PREM.slice(),ns:2});
-LEVELS.push({id:'palb-1',grp:'Palabras',title:'Armar palabras de 2 sílabas con consonantes iniciales',kind:'wbuild',wc:PREM.slice(),ns:2});
-LEVELS.push({id:'pal-1b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con consonantes iniciales',kind:'word',wc:PREM.slice(),ns:3});
+LEVELS.push({id:'pal-1',grp:'Palabras',title:'Lectura de palabras de 2 sílabas directas con consonantes iniciales',kind:'word',wc:PREM.slice(),ns:2});
+LEVELS.push({id:'palb-1',grp:'Palabras',title:'Armar palabras de 2 sílabas directas con consonantes iniciales',kind:'wbuild',wc:PREM.slice(),ns:2});
+LEVELS.push({id:'pal-1b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas directas con consonantes iniciales',kind:'word',wc:PREM.slice(),ns:3});
 CLAS.forEach(function(c,i){
   LEVELS.push({id:c+'-s',grp:'Clásicas',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM,CLAS.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:c+'-sil',grp:'Clásicas',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
 });
 LEVELS.push({id:'mx-men',grp:'Clásicas',title:'Mezcla: '+CLAS.join(' ').toUpperCase(),kind:'syl',sc:CLAS.slice()});
-LEVELS.push({id:'pal-2',grp:'Palabras',title:'Lectura de palabras de 2 sílabas con consonantes iniciales y clásicas',kind:'word',wc:PREM.concat(CLAS),ns:2});
-LEVELS.push({id:'palb-2',grp:'Palabras',title:'Armar palabras de 2 sílabas con consonantes iniciales y clásicas',kind:'wbuild',wc:PREM.concat(CLAS),ns:2});
-LEVELS.push({id:'pal-2b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con consonantes iniciales y clásicas',kind:'word',wc:PREM.concat(CLAS),ns:3});
+LEVELS.push({id:'pal-2',grp:'Palabras',title:'Lectura de palabras de 2 sílabas directas con consonantes iniciales y clásicas',kind:'word',wc:PREM.concat(CLAS),ns:2});
+LEVELS.push({id:'palb-2',grp:'Palabras',title:'Armar palabras de 2 sílabas directas con consonantes iniciales y clásicas',kind:'wbuild',wc:PREM.concat(CLAS),ns:2});
+LEVELS.push({id:'pal-2b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas directas con consonantes iniciales y clásicas',kind:'word',wc:PREM.concat(CLAS),ns:3});
 POCO.forEach(function(c,i){
   LEVELS.push({id:'pf-'+c+'-s',grp:'Poco frecuentes',cons:c,title:'Letra y sonido',kind:'first',known:VOW.concat(PREM,CLAS,POCO.slice(0,i+1)),focus:c,intro:c});
   LEVELS.push({id:'pf-'+c+'-sil',grp:'Poco frecuentes',cons:c,title:'Sílabas',kind:'syl',sc:[c]});
 });
 LEVELS.push({id:'mx-poc',grp:'Poco frecuentes',title:'Mezcla: '+POCO.join(' ').toUpperCase(),kind:'syl',sc:POCO.slice()});
-LEVELS.push({id:'pal-3',grp:'Palabras',title:'Lectura de palabras de 2 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:2});
-LEVELS.push({id:'palb-3',grp:'Palabras',title:'Armar palabras de 2 sílabas con todas las consonantes',kind:'wbuild',wc:PREM.concat(CLAS,POCO),ns:2});
-LEVELS.push({id:'pal-3b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:3});
+LEVELS.push({id:'pal-3',grp:'Palabras',title:'Lectura de palabras de 2 sílabas directas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:2});
+LEVELS.push({id:'palb-3',grp:'Palabras',title:'Armar palabras de 2 sílabas directas con todas las consonantes',kind:'wbuild',wc:PREM.concat(CLAS,POCO),ns:2});
+LEVELS.push({id:'pal-3b',grp:'Palabras',title:'Lectura de palabras de 3 sílabas directas con todas las consonantes',kind:'word',wc:PREM.concat(CLAS,POCO),ns:3});
 LEVELS.push({id:'inv-1',grp:'Inversas y artículos',title:'Sílabas inversas: EN ES UN AL',kind:'syl',sc:['l','n','s'],vw:['a','e','u'],pool:['en','es','un','al']});
 LEVELS.push({id:'art-1',grp:'Inversas y artículos',title:'Artículos: LA LAS EL LOS UNA',kind:'syl',pool:['la','las','el','los','una'],pickOnly:true});
 LEVELS.push({id:'ma-v',grp:'Mayúscula y minúscula',title:'Vocales',kind:'case',set:VOW.slice()});
@@ -3216,15 +3216,16 @@ var TRACE={
  /* NÚMEROS (4 nov) — BORRADOR. 5 nov: 3, 5, 6, 8 y 0 según Jo (M-162, M-165 a M-172): 3 arriba izq.; 5 baja, panza y después la rayita; 6 arriba der.; 8 y 0 arriba al medio hacia la izquierda. 1, 2, 4, 7 y 9 siguen en borrador (falta Fati). */
  '0':['M50 20 C8 20 8 122 50 122 C92 122 92 20 50 20'],
  '1':['M54 122 L54 20 L22 76'],
- '2':['M20 122 L72 62 C92 40 80 16 50 18 C30 18 22 30 20 42','M32 122 L80 122'],
+ '2':['M20 42 C22 30 30 18 50 18 C80 16 92 40 72 62 L20 122','M32 122 L80 122'],
  '3':['M22 38 C30 8 78 8 78 42 C78 58 66 70 42 72 C68 74 82 86 82 100 C82 134 30 134 20 106'],
  '4':['M70 122 L70 20','M90 90 L16 90 L52 22'],
  '5':['M30 20 L24 72 C34 62 52 60 66 64 C90 72 88 120 54 124 C38 126 26 118 20 106','M30 20 L80 20'],
  '6':['M76 20 C44 30 22 66 22 98 C22 132 78 132 78 98 C78 70 34 66 22 96'],
- '7':['M38 122 L80 20 L20 20','M32 74 L82 74'],
+ '7':['M20 20 L80 20 L38 122','M32 74 L82 74'],
  '8':['M50 20 C14 20 14 70 50 72 C86 74 86 122 50 122 C14 122 14 74 50 72 C86 70 86 20 50 20'],
  '9':['M26 112 C46 126 78 108 78 62 C78 28 66 20 50 20 C30 20 22 32 22 46 C22 62 36 72 50 72 C66 72 78 62 78 56']
 };
+var NONUM={e:[1,2,3]}; /* M-181: en la E las rayas horizontales van sin número */
 var TLEVELS=[
  {id:'tr-v',grp:'Grafismo',title:'Trazo de vocales',letters:VOW.slice()},
  {id:'tr-p',grp:'Grafismo',title:'Trazo de consonantes iniciales',letters:PREM.slice()},
@@ -3277,7 +3278,7 @@ function drawTrace(){
     var ar=mk('polygon',{points:'-5,-5 6,0 -5,5',transform:'translate('+a.x+' '+a.y+') rotate('+ang+')'},'dir');
     var dot=mk('circle',{cx:p0.x,cy:p0.y,r:9},'startdot pulse');
     g.appendChild(ar);g.appendChild(dot);
-    if(strokes.length>1){var tx=mk('text',{x:p0.x,y:p0.y},'startnum');tx.textContent=String(act+1);g.appendChild(tx);}
+    if(strokes.length>1&&!(NONUM[letter]&&NONUM[letter].indexOf(act)>-1)){var tx=mk('text',{x:p0.x,y:p0.y},'startnum');tx.textContent=String(act+1);g.appendChild(tx);}
     marker.appendChild(g);
   }
   paintMarker();
@@ -3520,8 +3521,8 @@ function pgArt(l,area,forced){
 }
 /* Varias letras: las fichas de "una letra" (Pegar, Circular, Pintar) salen una hoja por letra. Las de pares (Unir, Emparejar, Articulema) usan exactamente las letras elegidas, hasta 5 por hoja (si son más, se reparten parejo en varias hojas). Con una sola letra se mantiene como estaba. */
 function pChunk(a){var k=a.length;if(k<=5)return [a];var pages=Math.ceil(k/5),per=Math.ceil(k/pages),out=[];for(var i=0;i<k;i+=per)out.push(a.slice(i,i+per));return out;}
-function pgBuild(area,ls,act,g){
-  if(area!=='voc'&&area!=='con'){CURPOSE={circ:'lupa',pint:'crayon',unir:'lapiz',pegar:'tijera',comp:'lapiz',trazar:'lapiz',cont:'lapiz',orden:'tijera',hoy:'lapiz'}[act]||'hoja';return pgNew(area,ls,act,g);}
+function pgBuild(area,ls,act,g,ds){
+  if(area!=='voc'&&area!=='con'){CURPOSE={circ:'lupa',pint:'crayon',unir:'lapiz',pegar:'tijera',comp:'lapiz',trazar:'lapiz',sec:'lapiz',cont:'lapiz',orden:'tijera',hoy:'lapiz'}[act]||'hoja';return pgNew(area,ls,act,g,ds);}
   CURPOSE={pegar:'tijera',circ:'lupa',pint:'crayon',unir:'lapiz',emp:'pegamento',art:'senala'}[act]||'hoja';
   if(act==='pegar')return ls.map(function(l){return pgPegar(l);});
   if(act==='circ')return ls.map(function(l){return pgCirc(l,area);});
@@ -3538,10 +3539,11 @@ PRT_ACT.pal=[['unir','Unir con flechas','Cada palabra con su dibujo'],['pegar','
 PRT_ACT.tra=[['trazar','Seguir el trazo','Repasar la letra con el lápiz']];
 PRT_ACT.inv=[['circ','Circular y tachar','Encontrar la sílaba o el artículo'],['unir','Unir con flechas','Unir los que dicen igual']];
 PRT_ACT.may=[['unir','Unir con flechas','Cada mayúscula con su minúscula'],['circ','Circular y tachar','Encontrar la mayúscula y la minúscula']];
-PRT_ACT.num=[['circ','Circular y tachar','Encontrar el número'],['cont','Contar y escribir','Contar y escribir cuántos hay'],['unir','Unir con flechas','Cada cantidad con su número']];
+PRT_ACT.num=[['sec','Secuencias','Ordenar números y completar el que falta'],['circ','Circular y tachar','Encontrar el número'],['cont','Contar y escribir','Contar y escribir cuántos hay'],['unir','Unir con flechas','Cada cantidad con su número']];
 PRT_ACT.cal=[['orden','Ordenar la semana','Recortar los días y pegarlos en orden'],['hoy','Hoy, ayer y mañana','Completar qué día fue y qué día será']];
-PRT_ICO.trazar='✏️';PRT_ICO.comp='✍️';PRT_ICO.cont='🔢';PRT_ICO.orden='📅';PRT_ICO.hoy='🗓️';
-var PRT_GRP={pal:[['pre','Iniciales'],['cla','Iniciales y clásicas'],['tod','Todas']],num:[['3','1 al 3'],['5','1 al 5'],['10','1 al 10'],['20','11 al 20']]};
+PRT_ICO.sec='🧩';PRT_ICO.trazar='✏️';PRT_ICO.comp='✍️';PRT_ICO.cont='🔢';PRT_ICO.orden='📅';PRT_ICO.hoy='🗓️';
+var PRT_GRP={pal:[['pre','Iniciales'],['cla','Iniciales y clásicas'],['tod','Todas']],num:[['3','1 al 3'],['5','1 al 5'],['10','1 al 10'],['20','11 al 20'],['10-20','10 al 20'],['20-30','20 al 30'],['30-40','30 al 40'],['40-50','40 al 50'],['50-60','50 al 60'],['60-70','60 al 70'],['70-80','70 al 80'],['80-90','80 al 90'],['90-100','90 al 100']]};
+function numRange(g){if(g==='20')return rng(11,20);var m=/^(\d+)-(\d+)$/.exec(g||'');return m?rng(+m[1],+m[2]):rng(1,+g||5);}
 function prtLetters(area){
   if(area==='voc')return VOW;
   if(area==='con'||area==='sil')return PRT_CONS;
@@ -3578,7 +3580,7 @@ function traceSvg(l,w){
   TRACE[l].forEach(function(d,i){
     var m=/^M(\d+) (\d+)/.exec(d);
     h+='<path d="'+d+'" fill="none" stroke="#17305C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1 9"/>';
-    if(m)h+='<circle cx="'+m[1]+'" cy="'+m[2]+'" r="6" fill="#3FA27A"/>'+(TRACE[l].length>1?'<text x="'+m[1]+'" y="'+(+m[2]+3.5)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="inherit">'+(i+1)+'</text>':'');
+    if(m)h+='<circle cx="'+m[1]+'" cy="'+m[2]+'" r="6" fill="#3FA27A"/>'+(TRACE[l].length>1&&!(NONUM[l]&&NONUM[l].indexOf(i)>-1)?'<text x="'+m[1]+'" y="'+(+m[2]+3.5)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="inherit">'+(i+1)+'</text>':'');
   });
   return '<svg viewBox="0 0 100 140" style="width:'+w+'mm;height:'+(w*1.4).toFixed(1)+'mm" aria-hidden="true">'+h+'</svg>';
 }
@@ -3588,10 +3590,17 @@ function pgTrazar(l){
     '<div class="ptr">'+traceSvg(l,58)+traceSvg(l,58)+'</div>'+
     '<div class="ptr">'+traceSvg(l,36)+traceSvg(l,36)+traceSvg(l,36)+traceSvg(l,36)+'</div>'+lines);
 }
-function pgNew(area,ls,act,g){
+function pgNew(area,ls,act,g,ds){
   var out=[];
   if(area==='sil'){
-    if(act==='circ')return ls.map(function(c){var p=sylPool([c]);return pTargetPage(ppick(p),p,'Circulá todas las sílabas que dicen esta.');});
+    if(act==='circ')return ls.map(function(c){ /* M-186: 4 o 5 de la sílaba pedida y 6 a 8 distractores: otras sílabas de la misma consonante y de otras consonantes (las elegidas o, si no hay, las anteriores en el orden) */
+      var own=sylPool([c]),t=ppick(own),ownOth=own.filter(function(x){return x!==t;}),pool=[];
+      var oc=(ds&&ds.length?ds:PRT_CONS.slice(0,Math.max(0,PRT_CONS.indexOf(c)))).filter(function(k){return k!==c;});
+      oc.forEach(function(k){pool=pool.concat(sylPool([k]));});
+      var nT=4+prand(2),nD=12-nT,nOwn=pool.length?Math.ceil(nD/2):nD;
+      var all=seq([t],nT).concat(seq(ownOth,nOwn),pool.length?seq(pool,nD-nOwn):[]);
+      return pPage(pHead(String(t),'Circulá todas las sílabas que dicen esta.')+pGrid12(shuffle(pItems(all))));
+    });
     if(act==='pint')return ls.map(function(c){
       var p=sylPool([c]),t=ppick(p),oth=p.filter(function(x){return x!==t;}),pos=shuffle(rng(0,19)).slice(0,13),h='';
       for(var i=0;i<20;i++){var ok=pos.indexOf(i)>-1,sy=ok?t:ppick(oth);h+='<div class="pcell2"><span class="pout" style="font-size:'+(15+prand(6))+'mm;transform:rotate('+(prand(41)-20)+'deg)">'+pl(sy)+'</span></div>';}
@@ -3643,7 +3652,22 @@ function pgNew(area,ls,act,g){
     });
   }
   if(area==='num'){
-    var rg=g==='20'?rng(11,20):rng(1,+g||5);
+    var rg=numRange(g);
+    if(act==='sec'){ /* M-177: qué número falta (filas de números seguidos con un hueco) y ordenar de menor a mayor */
+      var L=Math.min(5,rg.length),rows='';
+      for(var r=0;r<5;r++){
+        var st=rg[prand(rg.length-L+1)],hole=prand(L),h='';
+        for(var k=0;k<L;k++)h+=(k===hole?'<i class="pfb sm"></i>':'<span class="pwd">'+(st+k)+'</span>');
+        rows+='<div class="prow comp">'+h+'</div>';
+      }
+      var ord='';
+      for(r=0;r<3;r++){
+        var o0=rg[prand(rg.length-L+1)],nums=shuffle(rng(o0,o0+L-1)),b='';
+        for(k=0;k<L;k++)b+='<i class="pfb sm"></i>';
+        ord+='<div class="prow comp"><span class="pwd">'+nums.join(' ')+'</span></div><div class="prow comp">'+b+'</div>';
+      }
+      return [pPage(pHead(null,'Escribí el número que falta.')+rows+'<p class="hint" style="margin:6px 0 2px;text-align:center">Ordenalos de menor a mayor.</p>'+ord)];
+    }
     if(act==='circ')return sample(rg,2).map(function(t){return pTargetPage(t,rg,'Circulá todos los números como este.',function(x){return String(x);});});
     if(act==='cont'){
       var ct=seq(rg,5);
@@ -3675,11 +3699,11 @@ function printDoc(pages){ /* documento A4 autónomo: se abre fuera del artifact,
   var links=[].map.call(document.querySelectorAll('link[rel=stylesheet],link[rel=preconnect]'),function(x){return x.outerHTML;}).join('');
   return '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pimpa - hojas para imprimir</title>'+links+'<style>'+css+'</style></head><body class="printing"><div id="pv"><div class="pvbar"><button class="btn" type="button" onclick="window.print()">Imprimir</button></div><p class="pvh">Elegí tamaño de papel A4 y escala 100% (por defecto ya viene así).</p>'+pages.join('')+'</div></body></html>';
 }
-function openPrint(area,ls,act,g){
+function openPrint(area,ls,act,g,ds){
   closePrint();
   var o=document.createElement('div');o.id='pv';
   function paint(){
-    var pages=pgBuild(area,ls,act,g);
+    var pages=pgBuild(area,ls,act,g,ds);
     o.innerHTML='<div class="pvbar"><button class="sw" id="pvb" type="button">← Volver</button><button class="sw" id="pvr" type="button">Otra versión</button><button class="btn" id="pvp" type="button">Imprimir</button><button class="sw" id="pvd" type="button">Descargar hoja (A4)</button></div>'+
       '<p class="pvh" id="pvm">'+(pages.length===1?'Hoja A4':pages.length+' hojas A4')+'. Con «Imprimir» se abre la impresión: elegí papel A4 y escala 100%. Si no se abre, usá «Descargar hoja (A4)» y abrí el archivo.</p>'+pages.join('');
     var m=o.querySelector('#pvm');
@@ -3720,21 +3744,23 @@ function renderPrt(n){
   var pick='';
   if(letters)pick='<p class="hint" style="text-align:center;margin:0">Elegí una, varias o todas las letras con las que se trabaja</p>'+
     '<div class="chips">'+letters.map(function(c){return '<button class="chip '+(isV(c)?'v':'c')+(c.length>1?' long':'')+'" data-pl="'+c+'" type="button" aria-pressed="'+(sel.indexOf(c)>-1)+'">'+DH(c)+'</button>';}).join('')+'<button class="chip all" data-pall="1" type="button" aria-pressed="'+all+'">Todas</button></div>';
+  if(area==='sil'){var ds=(n.ds||[]).filter(function(c){return sel.indexOf(c)<0;});n.ds=ds;pick+='<p class="hint" style="text-align:center;margin:8px 0 0">Para «Circular y tachar»: sílabas de otras consonantes como distractores (opcional; si no elegís, se usan las consonantes anteriores)</p><div class="chips">'+PRT_CONS.filter(function(c){return sel.indexOf(c)<0;}).map(function(c){return '<button class="chip '+(isV(c)?'v':'c')+(c.length>1?' long':'')+'" data-pd="'+c+'" type="button" aria-pressed="'+(ds.indexOf(c)>-1)+'">'+DH(c)+'</button>';}).join('')+'</div>';}
   else if(grp)pick='<p class="hint" style="text-align:center;margin:0">Elegí con qué se trabaja</p><div class="row">'+grp.map(function(x){return '<button class="sw" data-pg="'+x[0]+'" type="button" aria-pressed="'+(n.g===x[0])+'">'+x[1]+'</button>';}).join('')+'</div>';
   return topbar('Imprimir en papel')+'<div class="row prtareas">'+areas+'</div>'+pick+
-    '<section class="grp"><h2>Ficha para imprimir</h2><div class="lvgrid">'+acts.map(function(a){var off=(a[0]==='art'&&area==='con'&&sel.some(function(c){return PREM.indexOf(c)<0;}));return '<button class="lvc" data-pa="'+a[0]+'" type="button"'+(off?' disabled':'')+'><span>'+PRT_ICO[a[0]]+' '+a[1]+'</span><span class="hint">'+(off?'Solo con M, P, T, L, S, F':a[2])+'</span></button>';}).join('')+'</div></section>';
+    '<section class="grp"><h2>Ficha para imprimir</h2><div class="lvgrid">'+acts.map(function(a){var big=(area==='num'&&(a[0]==='cont'||a[0]==='unir')&&numRange(n.g).slice(-1)[0]>20),off=big||(a[0]==='art'&&area==='con'&&sel.some(function(c){return PREM.indexOf(c)<0;}));return '<button class="lvc" data-pa="'+a[0]+'" type="button"'+(off?' disabled':'')+'><span>'+PRT_ICO[a[0]]+' '+a[1]+'</span><span class="hint">'+(big?'Solo hasta el 20':(off?'Solo con M, P, T, L, S, F':a[2]))+'</span></button>';}).join('')+'</div></section>';
 }
 function wirePrt(n){
   var letters=prtLetters(n.area)||[];
-  $$('[data-area]',stage).forEach(function(b){b.onclick=function(){n.area=b.dataset.area;var lt=prtLetters(n.area);n.l=lt?lt[0]:'';n.ls=lt?[n.l]:[];n.g=null;renderCamino();};});
+  $$('[data-area]',stage).forEach(function(b){b.onclick=function(){n.area=b.dataset.area;n.ds=[];var lt=prtLetters(n.area);n.l=lt?lt[0]:'';n.ls=lt?[n.l]:[];n.g=null;renderCamino();};});
   $$('[data-pg]',stage).forEach(function(b){b.onclick=function(){n.g=b.dataset.pg;renderCamino();};});
   $$('[data-pl]',stage).forEach(function(b){b.onclick=function(){
     var c=b.dataset.pl,cur=prtSel(n,letters).slice(),i=cur.indexOf(c);
     if(i>-1){if(cur.length>1)cur.splice(i,1);}else cur.push(c);
     n.ls=cur;renderCamino();};});
+  $$('[data-pd]',stage).forEach(function(b){b.onclick=function(){var c=b.dataset.pd,cur=(n.ds||[]).slice(),i=cur.indexOf(c);if(i>-1)cur.splice(i,1);else cur.push(c);n.ds=cur;renderCamino();};});
   $$('[data-pall]',stage).forEach(function(b){b.onclick=function(){
     var cur=prtSel(n,letters);n.ls=cur.length===letters.length?[letters[0]]:letters.slice();renderCamino();};});
-  $$('[data-pa]',stage).forEach(function(b){b.onclick=function(){openPrint(n.area,prtLetters(n.area)?prtSel(n,letters):[''],b.dataset.pa,n.g);};});
+  $$('[data-pa]',stage).forEach(function(b){b.onclick=function(){openPrint(n.area,prtLetters(n.area)?prtSel(n,letters):[''],b.dataset.pa,n.g,n.area==='sil'?(n.ds||[]):null);};});
 }
 
 /* Pantalla completa (mejora Jose): ajuste al alto de la pantalla. En modo juego, si el contenido (Pimpa, progreso, fichas y botón Siguiente) no entra en el alto real de la pantalla, se achica todo junto hasta que entre completo. El lugar de Siguiente se cuenta aunque todavía esté oculto, para que el tamaño no cambie al acertar. */
