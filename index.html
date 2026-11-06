@@ -20,6 +20,51 @@
       <button type="button" id="gcGo" disabled>Empezar</button>
       <button type="button" id="gcOut" class="g2">Salir</button>
     </section>
+    <form id="pf" class="gc pf" hidden novalidate aria-labelledby="pfT">
+      <h2 id="pfT">Contanos quién sos</h2>
+      <p class="gc-hi">Nos ayuda a armar Pimpa pensando en las familias que la usan. Te lleva un minuto.</p>
+      <label class="gwl-l" for="pfNom">Nombre</label>
+      <input id="pfNom" type="text" autocomplete="given-name" maxlength="60">
+      <label class="gwl-l gwl-l2" for="pfApe">Apellido</label>
+      <input id="pfApe" type="text" autocomplete="family-name" maxlength="60">
+      <label class="gwl-l gwl-l2" for="pfRel">Soy</label>
+      <select id="pfRel" autocomplete="off">
+        <option value="">Elegí una opción</option>
+        <option value="madre">Mamá</option>
+        <option value="padre">Papá</option>
+        <option value="abuela_o">Abuela o abuelo</option>
+        <option value="otro_familiar">Otro familiar</option>
+        <option value="docente">Docente</option>
+        <option value="profesional">Profesional de la salud o la educación</option>
+        <option value="otro">Otro</option>
+      </select>
+      <span class="gwl-l gwl-l2" id="pfEdL">Edad del chico o la chica que va a usar Pimpa</span>
+      <div id="pfEdades" role="group" aria-labelledby="pfEdL"></div>
+      <button type="button" id="pfMas" class="g2 pf-mas">+ Sumar otro chico o chica</button>
+      <label class="gwl-l gwl-l2" for="pfPais">País</label>
+      <input id="pfPais" type="text" list="pfPaises" autocomplete="country-name" maxlength="60" value="Argentina">
+      <datalist id="pfPaises"><option value="Argentina"><option value="Uruguay"><option value="Chile"><option value="Paraguay"><option value="Bolivia"><option value="Perú"><option value="Colombia"><option value="Ecuador"><option value="Venezuela"><option value="México"><option value="España"><option value="Estados Unidos"></datalist>
+      <label class="gwl-l gwl-l2" for="pfCiu">Ciudad o localidad</label>
+      <input id="pfCiu" type="text" autocomplete="address-level2" maxlength="80">
+      <label class="gwl-l gwl-l2" for="pfAnio">Año en que naciste <span class="gwl-o">(opcional)</span></label>
+      <input id="pfAnio" type="text" inputmode="numeric" autocomplete="bday-year" maxlength="4" placeholder="Ej.: 1988">
+      <label class="gwl-l gwl-l2" for="pfCel">Celular <span class="gwl-o">(opcional)</span></label>
+      <input id="pfCel" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="+54 9 11 1234 5678">
+      <p class="pf-n">Con código de país. Lo usamos para avisos de tu cuenta y por si hay que contactarte por soporte.</p>
+      <label class="gwl-l gwl-l2" for="pfCom">¿Cómo conociste Pimpa? <span class="gwl-o">(opcional)</span></label>
+      <select id="pfCom" autocomplete="off">
+        <option value="">Elegí una opción</option>
+        <option>Instagram</option>
+        <option>Una recomendación de una profesional</option>
+        <option>Una familia amiga</option>
+        <option>Una charla o un evento</option>
+        <option>Otro</option>
+      </select>
+      <label class="gwl-c"><input type="checkbox" id="pfMk"><span>Quiero recibir novedades, consejos y ofertas de Pimpa por mail y por WhatsApp. Puedo darme de baja cuando quiera. <span class="gwl-o">(opcional)</span></span></label>
+      <p class="pf-n">De los chicos solo guardamos la edad. Más detalle en la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</p>
+      <button type="submit" id="pfGo">Guardar y entrar</button>
+      <p id="pfMsg" class="gwl-m" role="status" aria-live="polite"></p>
+    </form>
     <p id="gateM" class="gmsg">Cargando…</p>
     <button type="button" id="gateGo" hidden><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Entrar con Google</span></button>
     <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
@@ -103,6 +148,17 @@
 #gate .gc-ck{margin:12px 4px 0;color:var(--ink,#17305C)}
 #gate #gcGo{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
 #gate #gcGo:disabled{background:#E7B3AE;border-color:#DDA19B;box-shadow:0 4px 0 #D8C2BE;opacity:1}
+#gate .pf input[type=text],#gate .pf input[type=tel],#gate .pf select{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif)}
+#gate .pf input:focus,#gate .pf select:focus{outline:3px solid #FFD24F;border-color:#2076BD}
+#gate .pf input.bad,#gate .pf select.bad{border-color:#B93A30}
+#gate .pf .gwl-l{margin-bottom:4px}
+#gate .pf-ed{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+#gate .pf-ed select{flex:1}
+#gate .pf-x{width:auto;margin:0;padding:10px 14px;font-size:.85rem;box-shadow:none}
+#gate .pf-mas{margin-top:2px;padding:10px 14px;font-size:.92rem}
+#gate .pf-n{margin:6px 6px 0;font-size:.8rem;line-height:1.35;color:var(--ink-2,#506082)}
+#gate .pf-n a{color:var(--cons,#2076BD);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+#gate #pfGo{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
 @keyframes gfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 @media (prefers-reduced-motion:reduce){#gate .gpimpa{animation:none}}
 @media (max-height:640px){#gate .gpimpa{width:130px}#gate .gtag{display:none}}
@@ -121,7 +177,9 @@ var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 var gate=document.getElementById('gate'),msg=document.getElementById('gateM'),go=document.getElementById('gateGo'),retry=document.getElementById('gateRetry');
 var CK='pimpa-ok-';
 var TV='2026-11-03',TK='pimpa-terms-';
+var pf=document.getElementById('pf'),gmeta={};
 var gc=document.getElementById('gc'),gcOk=document.getElementById('gcOk'),gcGo=document.getElementById('gcGo'),gcOut=document.getElementById('gcOut'),gcHi=document.getElementById('gcHi');
+var cleared=false;/* true solo cuando ya aceptó las condiciones y completó el perfil: sin esto, tryBoot (que también llama la app al cargar) no abre nada */
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
 var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
@@ -151,13 +209,13 @@ async function cupCheck(){
 }
 wlCup.addEventListener('input',function(){cupOk=null;cupSay('',true);try{sessionStorage.removeItem(CUP_KEY);}catch(x){}});
 wlCup.addEventListener('blur',function(){if(String(wlCup.value||'').trim())cupCheck();});
-function show(m,btn,rbtn){gate.hidden=false;gc.hidden=true;msg.hidden=false;wl.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
+function show(m,btn,rbtn){gate.hidden=false;gc.hidden=true;pf.hidden=true;msg.hidden=false;wl.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
 function termsOk(e){try{return localStorage.getItem(TK+e)===TV;}catch(x){return false;}}
 function termsSet(e){try{localStorage.setItem(TK+e,TV);}catch(x){}}
 function showTerms(u){
   pending=u;
   if(!gc.hidden)return;
-  gate.hidden=false;msg.hidden=true;go.hidden=true;retry.hidden=true;wl.hidden=true;
+  gate.hidden=false;pf.hidden=true;msg.hidden=true;go.hidden=true;retry.hidden=true;wl.hidden=true;
   gcHi.textContent='Hola, '+u.nombre+'.';gcOk.checked=false;gcGo.disabled=true;gc.hidden=false;
   try{gc.scrollIntoView({block:'nearest'});}catch(x){}
 }
@@ -185,7 +243,7 @@ function setAcct(){
 }
 document.addEventListener('DOMContentLoaded',setAcct);
 function tryBoot(){
-  if(!pending||booted||!window.__pimpaBoot)return;
+  if(!pending||!cleared||booted||!window.__pimpaBoot)return;
   booted=pending.email;window.__pimpaUser=pending;
   try{window.__pimpaBoot();}
   catch(e){console.error(e);booted=null;show('No se pudo iniciar la app. Recargá la página.',false,true);return;}
@@ -193,9 +251,92 @@ function tryBoot(){
   try{if(location.search.indexOf('code=')>-1||location.hash.indexOf('access_token')>-1){history.replaceState(null,'',location.pathname);}}catch(x){}
 }
 window.__pimpaTry=tryBoot;
-function openFor(u){if(!termsOk(u.email)){showTerms(u);return;}pending=u;tryBoot();}
+/* Datos de la persona adulta (buyer persona + consentimiento de marketing). Se piden una sola vez, después de aceptar las condiciones. */
+var PK='pimpa-perfil-';
+function perfilHecho(e){try{return localStorage.getItem(PK+e)==='1';}catch(x){return false;}}
+function perfilMarcar(e){try{localStorage.setItem(PK+e,'1');}catch(x){}}
+var pfNom=document.getElementById('pfNom'),pfApe=document.getElementById('pfApe'),pfRel=document.getElementById('pfRel'),pfEd=document.getElementById('pfEdades'),pfMas=document.getElementById('pfMas'),pfPais=document.getElementById('pfPais'),pfCiu=document.getElementById('pfCiu'),pfAnio=document.getElementById('pfAnio'),pfCel=document.getElementById('pfCel'),pfCom=document.getElementById('pfCom'),pfMk=document.getElementById('pfMk'),pfGo=document.getElementById('pfGo'),pfMsg=document.getElementById('pfMsg');
+function pfSay(m,ok){pfMsg.textContent=m;pfMsg.className='gwl-m '+(ok?'ok':'err');}
+function pfEdadRow(){
+  var row=document.createElement('div');row.className='pf-ed';
+  var sel=document.createElement('select');sel.className='pf-e';sel.setAttribute('aria-label','Edad del chico o la chica');
+  var o0=document.createElement('option');o0.value='';o0.textContent='Elegí la edad';sel.appendChild(o0);
+  for(var i=0;i<=18;i++){var o=document.createElement('option');o.value=String(i);o.textContent=i===0?'Menos de 1 año':(i===1?'1 año':i+' años');sel.appendChild(o);}
+  row.appendChild(sel);
+  if(pfEd.children.length>0){
+    var x=document.createElement('button');x.type='button';x.className='g2 pf-x';x.textContent='Quitar';
+    x.onclick=function(){pfEd.removeChild(row);pfMas.hidden=false;};row.appendChild(x);
+  }
+  pfEd.appendChild(row);
+  if(pfEd.children.length>=6)pfMas.hidden=true;
+  return sel;
+}
+function pfFocus(el){try{el.focus({preventScroll:true});el.scrollIntoView({block:'center'});}catch(x){}gate.scrollLeft=0;}
+pfMas.onclick=function(){pfFocus(pfEdadRow());};
+function showPerfil(u){
+  pending=u;
+  if(!pf.hidden)return;
+  gate.hidden=false;gc.hidden=true;msg.hidden=true;go.hidden=true;retry.hidden=true;wl.hidden=true;
+  var nom=gmeta.given||'',ape=gmeta.family||'';
+  if(!nom&&gmeta.full){var p=gmeta.full.trim().split(/\s+/);nom=p.shift()||'';ape=ape||p.join(' ');}
+  if(!pfNom.value)pfNom.value=nom;
+  if(!pfApe.value)pfApe.value=ape;
+  if(!pfEd.children.length)pfEdadRow();
+  pfSay('',true);pf.hidden=false;
+  try{pf.scrollIntoView({block:'nearest'});}catch(x){}
+  gate.scrollLeft=0;
+}
+/* Si no se puede comprobar el perfil (red, base), no trabamos a la familia: entra igual y se lo pedimos la próxima vez. */
+async function afterTerms(u){
+  pending=u;
+  if(perfilHecho(u.email)){cleared=true;tryBoot();return;}
+  try{
+    var r=await sb.from('perfiles').select('email').eq('email',u.email).maybeSingle();
+    if(r.error){console.error(r.error);cleared=true;tryBoot();return;}
+    if(r.data){perfilMarcar(u.email);cleared=true;tryBoot();return;}
+    showPerfil(u);
+  }catch(x){console.error(x);cleared=true;tryBoot();}
+}
+pf.addEventListener('submit',async function(e){
+  e.preventDefault();
+  if(!pending||!sb)return;
+  [pfNom,pfApe,pfRel,pfPais,pfCiu,pfAnio,pfCel].forEach(function(i){i.classList.remove('bad');});
+  var sels=[].slice.call(pfEd.querySelectorAll('select'));sels.forEach(function(i){i.classList.remove('bad');});
+  function bad(el,m){el.classList.add('bad');pfSay(m,false);pfFocus(el);}
+  var nom=pfNom.value.trim(),ape=pfApe.value.trim(),pais=pfPais.value.trim(),ciu=pfCiu.value.trim();
+  if(!nom){bad(pfNom,'Escribí tu nombre.');return;}
+  if(!ape){bad(pfApe,'Escribí tu apellido.');return;}
+  if(!pfRel.value){bad(pfRel,'Elegí quién sos.');return;}
+  var edades=[];
+  for(var i=0;i<sels.length;i++){if(sels[i].value===''){bad(sels[i],'Elegí la edad del chico o la chica.');return;}edades.push(parseInt(sels[i].value,10));}
+  if(pais.length<2){bad(pfPais,'Escribí tu país.');return;}
+  if(!ciu){bad(pfCiu,'Escribí tu ciudad o localidad.');return;}
+  var anio=null,ay=pfAnio.value.trim();
+  if(ay){
+    anio=parseInt(ay,10);
+    if(!/^\d{4}$/.test(ay)||anio<1920||anio>new Date().getFullYear()-16){bad(pfAnio,'Revisá el año, por ejemplo 1988.');return;}
+  }
+  var cel=pfCel.value.replace(/[\s().-]/g,'');
+  if(cel&&!/^\+?\d{8,15}$/.test(cel)){bad(pfCel,'Revisá el celular: con código de país, por ejemplo +54 9 11 1234 5678.');return;}
+  pfGo.disabled=true;pfSay('',true);
+  try{
+    var r=await sb.rpc('guardar_perfil',{p_nombre:nom,p_apellido:ape,p_anio_nacimiento:anio,p_pais:pais,p_ciudad:ciu,p_celular:cel||null,p_relacion:pfRel.value,p_edades:edades,p_como:pfCom.value||null,p_marketing:!!pfMk.checked});
+    if(r.error||!r.data||!r.data.ok){
+      console.error(r.error||r.data);
+      pfSay('No pudimos guardar tus datos. Revisalos e intentá de nuevo, o escribinos a pimpa@impactese.com.',false);
+      return;
+    }
+    perfilMarcar(pending.email);
+    pf.hidden=true;msg.hidden=false;msg.textContent='Cargando…';wl.hidden=false;
+    cleared=true;tryBoot();
+  }catch(x){
+    console.error(x);
+    pfSay('No pudimos guardar tus datos. Intentá de nuevo.',false);
+  }finally{pfGo.disabled=false;}
+});
+function openFor(u){if(!termsOk(u.email)){showTerms(u);return;}afterTerms(u);}
 gcOk.addEventListener('change',function(){gcGo.disabled=!gcOk.checked;});
-gcGo.onclick=function(){if(!gcOk.checked||!pending)return;termsSet(pending.email);gc.hidden=true;msg.hidden=false;msg.textContent='Cargando…';wl.hidden=false;tryBoot();};
+gcGo.onclick=function(){if(!gcOk.checked||!pending)return;termsSet(pending.email);gc.hidden=true;msg.hidden=false;msg.textContent='Cargando…';wl.hidden=false;afterTerms(pending);};
 gcOut.onclick=function(){pending=null;if(sb)sb.auth.signOut();else location.reload();};
 async function check(session){
   var email=String(session&&session.user&&session.user.email||'').toLowerCase();
@@ -211,6 +352,7 @@ async function check(session){
     }
     var md=session.user.user_metadata||{};
     var avatar=md.avatar_url||md.picture||'';
+    gmeta={given:String(md.given_name||'').trim(),family:String(md.family_name||'').trim(),full:String(md.full_name||md.name||'').trim()};
     var r=await sb.from('allowed_emails').select('email,nombre,rol').eq('email',email).maybeSingle();
     if(r.error){
       var c=cacheGet(email);

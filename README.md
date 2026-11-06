@@ -50,3 +50,11 @@ Se crearon con `supabase/004_cupones.sql` y se simplificaron con `supabase/005_c
 - Cambiar valores: `update public.coupons set descuento_pct = 15, descuento_anual_pct = 20, comision_pct = 8 where codigo = 'FATI1';`. Apagar uno: `set activo = false`.
 - Cupones cargados: `FATI1` (Fatima, embajadora, 15% por 3 meses o 20% anual, 8% de comisión) y `JOSE1` (Jose, promo, mismo descuento, sin comisión). Los códigos viejos `FATI-0` y `JOSE-3` ya no existen.
 - Todavía no se cobra ni se calcula comisión en la app: el cobro es manual (links de Mercado Pago) y la comisión se calcula mirando `cupones_resumen`.
+
+## Datos de la persona adulta (primer ingreso)
+
+La primera vez que alguien entra (después de aceptar las condiciones) se le pide un perfil: nombre y apellido (vienen precargados de Google), vínculo (mamá, papá, docente, profesional…), edad de cada chico o chica (solo la edad), país y ciudad (se escriben, no se pide ubicación del dispositivo), y de forma opcional año de nacimiento, celular y cómo conoció Pimpa. Aparte hay un casillero de consentimiento de marketing, sin tildar de entrada.
+
+Se guarda en la tabla `perfiles` (`supabase/007_perfiles.sql`, ya corrido). La web solo escribe con `guardar_perfil()`, que valida y toma el mail de la sesión; cada persona solo puede leer su propia fila. Para ver los datos: Supabase > Table Editor > perfiles. `marketing_ok` y `marketing_ok_en` registran el consentimiento y cuándo se dio o se retiró.
+
+Si la base no responde al comprobar el perfil, la persona entra igual y se lo pedimos la próxima vez. Quienes ya tenían cuenta también ven el formulario una vez. Para pedir la pantalla de nuevo en un navegador: borrar la clave `pimpa-perfil-<mail>` del almacenamiento local.
