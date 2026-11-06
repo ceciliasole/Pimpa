@@ -69,17 +69,18 @@
     <button type="button" id="gateGo" hidden><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Entrar con Google</span></button>
     <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
     <form id="wl" class="gwl" novalidate>
-      <h2>Lista de espera</h2>
-      <p class="gwl-t">Ya estamos habilitando las primeras familias. Pimpa es una aplicación por suscripción y se va a abrir de a poco: si te anotás ahora, te escribimos cuando sea tu turno, con un precio de lanzamiento. Dejanos tu mail y te avisamos.</p>
+      <h2>Anotate</h2>
+      <p class="gwl-t">Pimpa es una aplicación por suscripción. Anotate y a la brevedad te habilitamos la cuenta, con un precio de lanzamiento. Dejanos tu mail y te avisamos.</p>
       <label class="gwl-l" for="wlMail">Tu mail</label>
       <input id="wlMail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" maxlength="120" placeholder="tunombre@mail.com">
       <input id="wlHp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <label class="gwl-l gwl-l2" for="wlCup">¿Tenés un código de descuento? <span class="gwl-o">(opcional)</span></label>
       <input id="wlCup" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="Ej.: NOMBRE1">
       <p id="wlCupM" class="gwl-cm" role="status" aria-live="polite"></p>
+      <label class="gwl-c"><input type="checkbox" id="wlFam"><span>Soy familia y usaría Pimpa en casa con mi hijo o hija.</span></label>
       <label class="gwl-c"><input type="checkbox" id="wlPro"><span>Soy profesional de la psicopedagogía o la educación y usaría Pimpa para trabajar con chicos.</span></label>
       <p id="wlProN" class="gwl-pn" hidden>Pimpa para profesionales tiene un plan propio, en función de los pacientes que tengas y de las familias que recomiendes. Te escribimos con los valores cuando salga.</p>
-      <button type="submit" id="wlGo">Anotarme en la lista</button>
+      <button type="submit" id="wlGo">Anotarme</button>
       <p class="gdisc">Pimpa es un complemento y no reemplaza una terapia ni a un profesional. No garantiza que un chico aprenda a leer: cada uno tiene su ritmo y necesita acompañamiento. Usala siempre con un adulto.</p>
       <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
       <p class="gwl-n">Para entrar a Pimpa vas a necesitar una cuenta de Google. Si tu mail no es de Gmail, te avisamos cómo hacerlo.</p>
@@ -181,7 +182,7 @@ var pf=document.getElementById('pf'),gmeta={};
 var gc=document.getElementById('gc'),gcOk=document.getElementById('gcOk'),gcGo=document.getElementById('gcGo'),gcOut=document.getElementById('gcOut'),gcHi=document.getElementById('gcHi');
 var cleared=false;/* true solo cuando ya aceptó las condiciones y completó el perfil: sin esto, tryBoot (que también llama la app al cargar) no abre nada */
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
-var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
+var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlFam=document.getElementById('wlFam'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
 var wlCup=document.getElementById('wlCup'),wlCupM=document.getElementById('wlCupM'),cupOk=null,CUP_KEY='pimpa-cupon';
 function cupNorm(x){x=String(x||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(x.length<3||x.length>13)return null;return x;}
@@ -368,7 +369,7 @@ async function check(session){
     wasDenied=true;
     await sb.auth.signOut();
     if(wlMail&&!wlMail.value)wlMail.value=email;
-    show('La cuenta '+email+' todavía no está habilitada. Dejá tu mail en la lista de espera y te avisamos.',true,false);
+    show('La cuenta '+email+' todavía no está habilitada. Dejá tu mail más abajo y te habilitamos la cuenta a la brevedad.',true,false);
   }catch(e){
     console.error(e);
     show('Algo salió mal al entrar. Intentá de nuevo.',false,true);
@@ -394,10 +395,11 @@ go.onclick=function(){
     if(r&&r.error){show('No se pudo iniciar el ingreso con Google. Intentá de nuevo.',true,false);}
   });
 };
-wlPro.addEventListener('change',function(){wlProN.hidden=!wlPro.checked;});
+wlPro.addEventListener('change',function(){if(wlPro.checked)wlFam.checked=false;wlProN.hidden=!wlPro.checked;});
+wlFam.addEventListener('change',function(){if(wlFam.checked){wlPro.checked=false;wlProN.hidden=true;}});
 wl.addEventListener('submit',async function(e){
   e.preventDefault();
-  if(wlHp.value){wlSay('¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);return;}
+  if(wlHp.value){wlSay('¡Listo! Te anotamos. A la brevedad te habilitamos la cuenta y te avisamos por mail.',true);return;}
   var m=String(wlMail.value||'').trim().toLowerCase();
   if(!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(m)||m.length>120){wlSay('Revisá el mail, por ejemplo tunombre@mail.com.',false);wlMail.focus();return;}
   if(!sb){wlSay('No se pudo conectar. Recargá la página e intentá de nuevo.',false);return;}
@@ -417,9 +419,9 @@ wl.addEventListener('submit',async function(e){
       wlMail.value='';
       wlCup.value='';cupOk=null;cupSay('',true);
       try{sessionStorage.removeItem(CUP_KEY);}catch(x){}
-      wlPro.checked=false;
+      wlPro.checked=false;wlFam.checked=false;
       wlProN.hidden=true;
-      wlSay(usado?'¡Listo! Te anotamos con tu código '+usado+'. Te avisamos por mail cuando puedas entrar.':'¡Listo! Te anotamos. Te avisamos por mail cuando puedas entrar.',true);
+      wlSay(usado?'¡Listo! Te anotamos con tu código '+usado+'. A la brevedad te habilitamos la cuenta y te avisamos por mail.':'¡Listo! Te anotamos. A la brevedad te habilitamos la cuenta y te avisamos por mail.',true);
     }
   }catch(x){
     console.error(x);
