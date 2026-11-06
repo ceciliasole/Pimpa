@@ -27,13 +27,35 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const jwt = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
   if (!jwt) return res.status(401).json({ error: 'Falta iniciar sesión' });
-  if (!process.env.RESEND_API_KEY) {
+  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+  if (!process.env.RESEND_API_KEY && body.modo !== 'vista') {
     return res.status(503).json({ error: 'Falta cargar RESEND_API_KEY en Vercel' });
   }
-  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   const plantilla = body.plantilla;
   const emails = Array.isArray(body.emails) ? body.emails.map(e => String(e).trim().toLowerCase()) : [];
   if (!PLANTILLAS[plantilla]) return res.status(400).json({ error: 'Plantilla desconocida' });
+
+  // Vista previa y prueba: no tocan a nadie más que a quien está logueada.
+  if (body.modo === 'vista' || body.modo === 'prueba') {
+    try {
+      const ok = await rpc('es_socia', {}, jwt);
+      if (ok !== true) return res.status(403).json({ error: 'Sin permiso' });
+    } catch (e) { return res.status(403).json({ error: 'Sin permiso' }); }
+    const m = PLANTILLAS[plantilla]('prueba');
+    if (body.modo === 'vista') return res.status(200).json({ subject: m.subject, html: m.html });
+    const u = await fetch(SB_URL + '/auth/v1/user', { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + jwt } });
+    const yo = u.ok ? (await u.json()).email : null;
+    if (!yo) return res.status(401).json({ error: 'No pude identificar tu mail' });
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + process.env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: FROM, to: [yo], reply_to: REPLY_TO, subject: '[PRUEBA] ' + m.subject, html: m.html, text: m.text }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) return res.status(502).json({ error: d.message || ('Resend ' + r.status) });
+    return res.status(200).json({ enviadoA: yo });
+  }
+
   if (!emails.length || emails.length > 50) return res.status(400).json({ error: 'Entre 1 y 50 mails' });
 
   const resultados = [];

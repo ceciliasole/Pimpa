@@ -27,6 +27,11 @@
   .tabla-wrap{overflow-x:auto}
   .res{background:#FFF6E5;border-radius:12px;padding:8px 12px;font-size:13px}
   .res b{display:block;font-size:12px;text-transform:uppercase;color:#777;margin-bottom:2px}
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:10px;z-index:10}
+  #modal[hidden]{display:none}
+  #modal .caja{background:#fff;border-radius:16px;width:100%;max-width:640px;max-height:96vh;display:flex;flex-direction:column;padding:14px}
+  #modal iframe{flex:1;min-height:360px;border:1px solid #ddd;border-radius:10px;width:100%}
+  #modal .pie{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -73,6 +78,16 @@
     </div>
   </div>
 </main>
+<div id="modal" hidden><div class="caja">
+  <div><strong id="m-asunto"></strong><div class="chico" id="m-para"></div></div>
+  <iframe id="m-frame" sandbox=""></iframe>
+  <div id="m-msg" class="chico" style="min-height:18px;margin-top:6px"></div>
+  <div class="pie">
+    <button id="m-ok">Confirmar y enviar</button>
+    <button id="m-prueba" class="sec">Enviarme una prueba</button>
+    <button id="m-no" class="sec">Cancelar</button>
+  </div>
+</div></div>
 <script src="vendor/supabase-2.45.4.js"></script>
 <script>
 (function(){
@@ -178,16 +193,45 @@
   $('salir').onclick=async function(){await sb.auth.signOut();location.reload()};
   $('b-act').onclick=cargar;
 
-  $('b-listo').onclick=function(){
+  var pend=null;
+  async function llamar(cuerpo){
+    var ses=(await sb.auth.getSession()).data.session;
+    var r=await fetch('/api/enviar',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ses.access_token},body:JSON.stringify(cuerpo)});
+    var d=await r.json().catch(function(){return{}});
+    if(!r.ok)throw new Error(d.error||('Error '+r.status));
+    return d;
+  }
+  async function abrirVista(plantilla,btn){
     var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
-    if(!confirm('¿Enviar "Tu lugar está listo" a '+e.length+' mail(s)?'))return;
-    accion($('b-listo'),async function(){msg('Enviando…');var n=await enviar('listo',e);await cargar();msg('Enviados: '+n)});
+    btn.disabled=true;
+    try{
+      var v=await llamar({modo:'vista',plantilla:plantilla});
+      pend={plantilla:plantilla,emails:e,btn:btn};
+      $('m-asunto').textContent='Asunto: '+v.subject;
+      $('m-para').textContent='Para ('+e.length+'): '+e.join(', ');
+      $('m-frame').srcdoc=v.html;
+      $('m-msg').textContent='';
+      $('m-ok').disabled=false;$('m-prueba').disabled=false;
+      $('modal').hidden=false;
+    }catch(x){msg(x.message,true)}
+    btn.disabled=false;
+  }
+  $('m-no').onclick=function(){$('modal').hidden=true;pend=null};
+  $('m-prueba').onclick=async function(){
+    if(!pend)return;
+    $('m-prueba').disabled=true;$('m-msg').textContent='Enviando prueba…';
+    try{var d=await llamar({modo:'prueba',plantilla:pend.plantilla});$('m-msg').textContent='Prueba enviada a '+d.enviadoA+'. Revisala en tu teléfono.'}
+    catch(x){$('m-msg').textContent='Error: '+x.message}
+    $('m-prueba').disabled=false;
   };
-  $('b-conf').onclick=function(){
-    var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
-    if(!confirm('¿Enviar "Está confirmado" a '+e.length+' mail(s)? Tienen que estar habilitados.'))return;
-    accion($('b-conf'),async function(){msg('Enviando…');var n=await enviar('confirmado',e);await cargar();msg('Enviados: '+n)});
+  $('m-ok').onclick=async function(){
+    if(!pend)return;
+    var p=pend;$('m-ok').disabled=true;$('m-msg').textContent='Enviando…';
+    try{var n=await enviar(p.plantilla,p.emails);$('modal').hidden=true;pend=null;await cargar();msg('Enviados: '+n)}
+    catch(x){$('modal').hidden=true;pend=null;await cargar();msg(x.message,true)}
   };
+  $('b-listo').onclick=function(){abrirVista('listo',$('b-listo'))};
+  $('b-conf').onclick=function(){abrirVista('confirmado',$('b-conf'))};
   $('b-pago').onclick=function(){
     var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
     if(!confirm('¿Habilitar a '+e.length+' mail(s)? Después podés enviarles la confirmación.'))return;
