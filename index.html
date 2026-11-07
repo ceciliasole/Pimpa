@@ -1241,6 +1241,10 @@ html,body{overflow-x:hidden}
 .tstar{position:absolute;right:-12px;top:-12px;width:38px;height:auto;z-index:2;pointer-events:none;max-width:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 .tbub{position:absolute;top:-36px;z-index:3;padding:4px 12px;border-radius:12px;background:#fff;border:2px solid #E0544A;color:#E0544A;font-weight:800;font-size:.85rem;white-space:nowrap}
 .tn.cur{margin-top:30px}
+.tmile img.mp{max-width:none;width:auto}
+.tpim.dec{top:-4px;height:98px;animation:tbob 3.4s ease-in-out infinite;animation-delay:var(--bd,0s)}
+@keyframes tbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.tpim.dec{animation:none}}
 .tpim{position:absolute;top:-8px;height:112px;width:auto;z-index:2;pointer-events:none;max-width:none;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,.2))}
 .tpim.l{right:calc(100% - 6px)}.tpim.r{left:calc(100% - 6px)}
 .tnl{position:relative;z-index:2;margin-top:22px;font-size:.78rem;color:var(--ink);background:rgba(255,255,255,.88);padding:2px 9px;border-radius:10px;max-width:128px;text-align:center;line-height:1.2}
@@ -2527,6 +2531,10 @@ function sqLab(lv){
   return '★';
 }
 var TX=[0,34,50,34,0,-34,-50,-34];
+/* Poses de Pimpa para el camino (assets/camino/*.webp). No se usan las dormidas: no van en el camino. */
+var CAMP={'Vocales':['escucha','lee2','salta'],'Consonantes iniciales':['lupa','escribe','aplaude'],'Clásicas':['explora','crayon','aplaude2'],'Poco frecuentes':['pinta','guitarra','lista'],'Sílabas':['tijera','pega','piensa'],'Sílabas trucos':['lupa2','dibuja','senala'],'Palabras':['lee','dibuja','lupa2'],'Palabras con las clásicas':['lee2','moto','hola'],'Las últimas letras':['corre','moto','estrella'],'Palabras con todas las consonantes':['lee','salta','aplaude2']};
+var CAMD=['hola','salta','aplaude2'];
+function camSrc(k){return 'assets/camino/'+k+'.webp';}
 var SCN={'Vocales':'s0','Consonantes iniciales':'s1','Sílabas':'s2','Palabras':'s3','Clásicas':'s1','Palabras con las clásicas':'s3','Poco frecuentes':'s1','Sílabas trucos':'s2','Las últimas letras':'s0','Palabras con todas las consonantes':'s3'};
 var RIB={s0:'rbB',s1:'rbG',s2:'rbO',s3:'rbV'};
 var DECOS=[['rainbow','mush','flower','butterfly'],['flower','butterfly','mush','stones'],['balloon','flower','mush','stones'],['butterfly','rainbow','balloon','flower']];
@@ -2546,12 +2554,12 @@ function seqHTML(){
       var btn=done?'btnG':(cur?'btnR':(open?'btnB':'btnX'));
       h+='<div class="'+cls+'" style="--x:'+x+'px">'+(cur?'<span class="tbub">¡Empezá!</span>':'')+
         '<img class="tpl" src="'+(big?DEC.patch:DEC.tuft)+'" alt="">'+
-        (cur?'<img class="tpim '+(x>=0?'l':'r')+'" src="'+pimImg(p)+'" alt="">':'')+
+        (cur?'<img class="tpim '+(x>=0?'l':'r')+'" src="'+pimImg(p)+'" alt="">':(k%3===1?'<img class="tpim dec '+(x>0?'l':'r')+'" style="'+(x===0?'height:88px;':'')+'--bd:-'+((k*7)%30)/10+'s" src="'+camSrc(((CAMP[g.sec]||CAMD)[Math.floor(k/3)%((CAMP[g.sec]||CAMD).length)]))+'" alt="" loading="lazy" decoding="async">':''))+
         '<button class="tnb" type="button" data-i="'+i+'" aria-label="'+esc(plainTitle(lv))+'"><img class="tbtn" src="'+DEC2[btn]+'" alt="">'+(open||done?'<span class="tlab">'+sqLab(lv)+'</span>':'<img class="tlock" src="'+DEC2.lock+'" alt="">')+'</button>'+
         (done?'<img class="tstar" src="'+DEC.star+'" alt="">':'')+
         '<span class="tnl">'+richTitle(lv)+codeTag(lv.id,1)+'</span></div>';
     });
-    h+='<div class="tmile'+(dn===g.ix.length?' won':'')+'">'+(dn===g.ix.length?'<img class="mp" src="'+PP2.cofre+'" alt="">':'<img src="'+DEC2.chestC+'" alt="">')+(gi===groups.length-1?'<img class="mp" src="'+(dn===g.ix.length?PP2.podio:PP2.bandera)+'" alt="">':'')+'</div>';
+    h+='<div class="tmile'+(dn===g.ix.length?' won':'')+'">'+(dn===g.ix.length?'<img class="mp" src="'+camSrc('cofre')+'" alt="">':'<img src="'+DEC2.chestC+'" alt="">')+(gi===groups.length-1?'<img class="mp" src="'+(dn===g.ix.length?camSrc('trofeo'):camSrc('bandera'))+'" alt="">':'')+'</div>';
     h+='<img class="tmead" src="'+DEC.meadow+'" alt=""></section>';
   });
   return h+'</div>';
