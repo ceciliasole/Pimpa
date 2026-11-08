@@ -25,14 +25,14 @@ function boton(url, texto) {
 function listo(envioId, codigo) {
   const sinCodigo = !codigo;
   // Con código (JOSE1/FATI1): $17.000 los primeros 3 meses. Sin código: $20.000 (precio de lanzamiento; lista $30.000).
-  const pagar = BASE + (sinCodigo ? '/pagar20' : '/pagar') + '?e=' + envioId;
+  const pagar = BASE + (codigo ? '/?cupon=' + encodeURIComponent(codigo) : '/');
   const precio = sinCodigo ? '$20.000 por mes' : '$17.000 por mes';
   const detalle = sinCodigo
-    ? 'Es el precio de lanzamiento (el de lista es $30.000). Este link cobra <strong>un solo mes</strong>: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.'
-    : 'los primeros 3 meses (15% de descuento). Despu\u00e9s, $20.000 por mes. Este link cobra <strong>un solo mes</strong>: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.';
+    ? 'Es el precio de lanzamiento (el de lista es $30.000). Se cobra <strong>un solo mes</strong>: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.'
+    : 'los primeros 3 meses (15% de descuento). Despu\u00e9s, $20.000 por mes. Se cobra <strong>un solo mes</strong>: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.';
   const detalleTxt = sinCodigo
-    ? 'Es el precio de lanzamiento (el de lista es $30.000). Este link cobra un solo mes: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.'
-    : '$17.000 por mes los primeros 3 meses (15% de descuento). Despu\u00e9s, $20.000 por mes. Este link cobra un solo mes: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.';
+    ? 'Es el precio de lanzamiento (el de lista es $30.000). Se cobra un solo mes: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.'
+    : '$17.000 por mes los primeros 3 meses (15% de descuento). Despu\u00e9s, $20.000 por mes. Se cobra un solo mes: por ahora cada mes te mandamos el link para renovar, y pod\u00e9s dejar de pagar cuando quieras.';
   const html = marco('Tu lugar en Pimpa est\u00e1 listo \u2728',
     '<p style="margin:0 0 14px">\u00a1Hola!</p>'
     + '<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFEDE9" style="border-radius:14px;margin:0 0 18px"><tr><td style="padding:18px 20px;font-size:17px;line-height:1.55;color:#2d3a4a">'
@@ -43,14 +43,14 @@ function listo(envioId, codigo) {
     + '<p style="margin:0 0 4px;font-size:24px;font-weight:bold;color:#2d3a4a">' + precio + '</p>'
     + (codigo ? '<p style="margin:0 0 8px;font-size:14px;color:#2d3a4a">Tu c\u00f3digo de descuento: <strong>' + codigo + '</strong> (ya est\u00e1 aplicado en este precio)</p>' : '')
     + '<p style="margin:0 0 14px;font-size:14px;color:#555555">' + detalle + '</p>'
-    + boton(pagar, 'Pagar un mes')
+    + boton(pagar, 'Activar mi cuenta')
     + '<p style="margin:0;font-size:12px;color:#777777"><a href="' + pagar + '">' + pagar.replace('https://', '').replace(/\?.*$/, '') + '</a></p></td></tr></table>'
-    + '<p style="margin:0 0 14px">Cuando pagues, <strong>respond\u00e9 este mail</strong> con el comprobante y el <strong>Gmail</strong> con el que van a entrar. Te habilitamos y te mandamos la bienvenida.</p>'
+    + '<p style="margin:0 0 14px">Entrá con el <strong>Gmail</strong> con el que van a usar Pimpa y pag\u00e1 con Mercado Pago. <strong>Se habilita sola al instante</strong>, sin esperar ni mandarnos el comprobante.</p>'
     + '<p style="margin:0 0 14px;font-size:14px;color:#555555">Pimpa es un complemento y no reemplaza una terapia ni a un profesional.</p>');
   const text = '\u00a1Hola!\n\nGracias por sumarte a las primeras familias en esta etapa de lanzamiento y prueba, en la que estamos haciendo un precio especial. Estamos muy content@s de poder compartir este juego de Pimpa.\n\n'
     + 'Ya estamos habilitando las primeras familias y ten\u00e9s un lugar reservado.\n\n'
     + 'Plan mensual, sin compromiso: ' + (sinCodigo ? '$20.000 por mes. ' : 'Tu c\u00f3digo de descuento: ' + codigo + ' (ya est\u00e1 aplicado en este precio). ') + detalleTxt + '\n\n'
-    + 'Pagar un mes: ' + pagar + '\n\nCuando pagues, respond\u00e9 este mail con el comprobante y el Gmail con el que van a entrar. Te habilitamos y te mandamos la bienvenida.\n\n'
+    + 'Activar mi cuenta: ' + pagar + '\n\nEntr\u00e1 con el Gmail con el que van a usar Pimpa y pag\u00e1 con Mercado Pago. Se habilita sola al instante, sin esperar ni mandarnos el comprobante.\n\n'
     + 'Pimpa es un complemento y no reemplaza una terapia ni a un profesional.\n\nCon cari\u00f1o,\nEquipo Pimpa\npimpa@impactese.com';
   return { subject: 'Tu lugar en Pimpa est\u00e1 listo \u2728', html, text };
 }

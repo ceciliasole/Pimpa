@@ -420,6 +420,7 @@ function showPay(session,email){
   gate.hidden=false;gc.hidden=true;pf.hidden=true;wl.hidden=true;go.hidden=true;retry.hidden=true;
   msg.hidden=false;msg.textContent='La cuenta '+email+' todavía no tiene un plan activo.';
   pay.hidden=false;payGo.disabled=false;
+  try{var cg=localStorage.getItem('pimpa_cupon');if(cg&&!payCup.value){payCup.value=cg;payCupCheck();}}catch(x){}
   if(payWait){
     paySay('Estamos confirmando tu pago… no cierres esta pantalla.',true);payGo.disabled=true;
     if(payTimer)clearTimeout(payTimer);
@@ -480,6 +481,8 @@ function start(){
     var qe=location.search+'&'+location.hash.replace(/^#/,'');
     if(/(^|[?&])(error|error_code)=/.test(qe)){authErr=true;history.replaceState(null,'',location.pathname);}
     if(/(^|[?&])pago=ok(&|$)/.test(location.search)){payWait=true;history.replaceState(null,'',location.pathname);}
+    var mc=/(^|[?&])cupon=([A-Za-z0-9]{1,20})(&|$)/.exec(location.search);
+    if(mc){try{localStorage.setItem('pimpa_cupon',mc[2].toUpperCase());}catch(x){}history.replaceState(null,'',location.pathname);}
   }catch(x){}
   sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   sb.auth.onAuthStateChange(function(ev,session){
