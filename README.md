@@ -60,3 +60,13 @@ Se guarda en la tabla `perfiles` (`supabase/007_perfiles.sql`, ya corrido). La w
 Si la base no responde al comprobar el perfil, la persona entra igual y se lo pedimos la próxima vez. Quienes ya tenían cuenta también ven el formulario una vez. Para pedir la pantalla de nuevo en un navegador: borrar la clave `pimpa-perfil-<mail>` del almacenamiento local.
 
 El panel /socias muestra los perfiles (con resumen por vínculo, país, edad de los chicos y marketing) mediante `socias_perfiles()` (`supabase/008_socias_perfiles.sql`), que solo responde a founder y cofounder.
+
+## Checkout con Mercado Pago (Orders API)
+
+Quien entra con Google y no está en `allowed_emails` ve "Activá tu cuenta" (en vez del bloqueo): campo de código, botón "Pagar con Mercado Pago". El botón llama a `/api/checkout` con la sesión de Supabase; la función verifica el mail con Supabase Auth, valida el cupón (`validar_cupon`), calcula el precio (mensual de lanzamiento $20.000, con cupón se descuenta `descuento_pct`), registra el pago pendiente (`pago_crear`) y crea una orden de Checkout Pro con `external_reference` = id del pago. Mercado Pago devuelve a `/?pago=ok`, donde la app consulta cada 4 s (hasta ~2 min) si ya fue habilitada.
+
+El aviso de pago llega a `/api/mp` (webhook, evento "Order"). No confía en el cuerpo: consulta la orden a Mercado Pago con el token, exige que sea de Pimpa (`external_reference` UUID de `pagos`), que esté procesada y que el monto cobrado sea al menos el esperado; recién ahí llama `pago_aprobado`, que habilita (`habilitar`), copia el cupón y devuelve el mail para mandar "confirmado" por Resend (queda registrado en `envios`, visible en /socias). Es idempotente. Si `MP_WEBHOOK_SECRET` está cargada, además valida la firma `x-signature`.
+
+Variables de Vercel: `MP_ACCESS_TOKEN` (token de producción de la aplicación "Pimpa" de Mercado Pago), `PAGOS_SECRET` (secreto compartido con la base; `pagos_config.secret_hash` guarda su sha256), `MP_WEBHOOK_SECRET` (opcional), `RESEND_API_KEY` (ya está). Migración: `supabase/010_pagos.sql` (más `insert into pagos_config` con el hash). Las tablas `pagos` y `pagos_config` no tienen políticas: solo se tocan con las funciones `pago_*` (security definer), que exigen el secreto.
+
+Límites actuales: es un pago único por mes, no una suscripción: habilita la cuenta, pero no vence ni renueva (la renovación sigue siendo manual). La forma exacta de las URLs de retorno de la API de Orders aparece de dos maneras en la documentación de Mercado Pago; `api/checkout.js` prueba una y, si Mercado Pago responde 400, la otra.

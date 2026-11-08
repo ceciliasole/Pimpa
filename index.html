@@ -68,6 +68,17 @@
     <p id="gateM" class="gmsg">Cargando…</p>
     <button type="button" id="gateGo" hidden><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Entrar con Google</span></button>
     <button type="button" id="gateRetry" class="g2" hidden>Reintentar</button>
+    <div id="pay" class="gwl" hidden>
+      <h2>Activá tu cuenta</h2>
+      <p class="gwl-t" id="payT">Pimpa es una aplicación por suscripción. Precio de lanzamiento: $20.000 por el primer mes (el de lista es $30.000). Pagás con Mercado Pago y entrás al instante.</p>
+      <label class="gwl-l" for="payCup">¿Tenés un código de descuento? <span class="gwl-o">(opcional)</span></label>
+      <input id="payCup" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="Ej.: NOMBRE1">
+      <p id="payCupM" class="gwl-cm" role="status" aria-live="polite"></p>
+      <button type="button" id="payGo">Pagar con Mercado Pago</button>
+      <button type="button" id="payOut" class="g2">Usar otra cuenta</button>
+      <p id="payM" class="gwl-m" role="status" aria-live="polite"></p>
+      <p class="gwl-n">Si sos profesional de la psicopedagogía o la educación, Pimpa tiene un plan propio: escribinos a pimpa@impactese.com.</p>
+    </div>
     <form id="wl" class="gwl" novalidate>
       <h2>Anotate</h2>
       <p class="gwl-t">Pimpa es una aplicación por suscripción. Anotate y a la brevedad te habilitamos la cuenta, con un precio de lanzamiento. Dejanos tu mail y te avisamos.</p>
@@ -146,6 +157,10 @@
 #gate .gwl button{background:#D8483D;border-color:#B93A30;color:#fff;box-shadow:0 4px 0 #A9332A}
 #gate .gwl button:hover{box-shadow:0 5px 0 #A9332A}
 #gate .gwl button:active{box-shadow:0 1px 0 #A9332A}
+#gate .gwl #payCup{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif);text-transform:uppercase}
+#gate .gwl #payCup::placeholder{text-transform:none}
+#gate .gwl #payCup:focus{outline:3px solid #FFD24F;border-color:#2076BD}
+#gate .gwl button#payOut{background:#fff;border-color:var(--line,#E8DCBF);color:var(--ink,#17305C);box-shadow:none}
 #gate .gwl-m{margin:10px 0 0;min-height:1.3em;font-size:.92rem;font-weight:600;line-height:1.35;text-align:center}
 #gate .gwl-m.ok{color:#2E8A68}
 #gate .gwl-m.err{color:#B93A30}
@@ -205,6 +220,7 @@ var pf=document.getElementById('pf'),gmeta={};
 var gc=document.getElementById('gc'),gcOk=document.getElementById('gcOk'),gcGo=document.getElementById('gcGo'),gcOut=document.getElementById('gcOut'),gcHi=document.getElementById('gcHi');
 var cleared=false;/* true solo cuando ya aceptó las condiciones y completó el perfil: sin esto, tryBoot (que también llama la app al cargar) no abre nada */
 var sb=null,busy=false,wasDenied=false,pending=null,booted=null,cur=null;
+var pay=document.getElementById('pay'),payGo=document.getElementById('payGo'),payOut=document.getElementById('payOut'),payCup=document.getElementById('payCup'),payCupM=document.getElementById('payCupM'),payM=document.getElementById('payM'),payT=document.getElementById('payT'),payOk=null,payWait=false,payTimer=null;
 var wl=document.getElementById('wl'),wlMail=document.getElementById('wlMail'),wlHp=document.getElementById('wlHp'),wlGo=document.getElementById('wlGo'),wlPro=document.getElementById('wlPro'),wlFam=document.getElementById('wlFam'),wlProN=document.getElementById('wlProN'),wlMsg=document.getElementById('wlMsg');
 function wlSay(m,ok){wlMsg.textContent=m;wlMsg.className='gwl-m '+(ok?'ok':'err');}
 var wlCup=document.getElementById('wlCup'),wlCupM=document.getElementById('wlCupM'),cupOk=null,CUP_KEY='pimpa-cupon';
@@ -233,7 +249,7 @@ async function cupCheck(){
 }
 wlCup.addEventListener('input',function(){cupOk=null;cupSay('',true);try{sessionStorage.removeItem(CUP_KEY);}catch(x){}});
 wlCup.addEventListener('blur',function(){if(String(wlCup.value||'').trim())cupCheck();});
-function show(m,btn,rbtn){gate.hidden=false;gc.hidden=true;pf.hidden=true;msg.hidden=false;wl.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
+function show(m,btn,rbtn){pay.hidden=true;gate.hidden=false;gc.hidden=true;pf.hidden=true;msg.hidden=false;wl.hidden=false;msg.textContent=m;go.hidden=!btn;go.disabled=false;retry.hidden=!rbtn;}
 function termsOk(e){try{return localStorage.getItem(TK+e)===TV;}catch(x){return false;}}
 function termsSet(e){try{localStorage.setItem(TK+e,TV);}catch(x){}}
 function showTerms(u){
@@ -358,7 +374,7 @@ pf.addEventListener('submit',async function(e){
     pfSay('No pudimos guardar tus datos. Intentá de nuevo.',false);
   }finally{pfGo.disabled=false;}
 });
-function openFor(u){if(!termsOk(u.email)){showTerms(u);return;}afterTerms(u);}
+function openFor(u){pay.hidden=true;if(payTimer){clearTimeout(payTimer);payTimer=null;}if(!termsOk(u.email)){showTerms(u);return;}afterTerms(u);}
 gcOk.addEventListener('change',function(){gcGo.disabled=!gcOk.checked;});
 gcGo.onclick=function(){if(!gcOk.checked||!pending)return;termsSet(pending.email);gc.hidden=true;msg.hidden=false;msg.textContent='Cargando…';wl.hidden=false;afterTerms(pending);};
 gcOut.onclick=function(){pending=null;if(sb)sb.auth.signOut();else location.reload();};
@@ -389,22 +405,81 @@ async function check(session){
       cacheSet(email,nombre);cacheSet('rol:'+email,rol);openFor({email:email,nombre:nombre,avatar:avatar,rol:rol});return;
     }
     cacheSet(email,null);
-    wasDenied=true;
-    await sb.auth.signOut();
-    if(wlMail&&!wlMail.value)wlMail.value=email;
-    show('La cuenta '+email+' todavía no está habilitada. Dejá tu mail más abajo y te habilitamos la cuenta a la brevedad.',true,false);
+    showPay(session,email);
   }catch(e){
     console.error(e);
     show('Algo salió mal al entrar. Intentá de nuevo.',false,true);
   }finally{busy=false;}
 }
 var authErr=false;
+var PRECIO=20000;
+function peso(n){return '$'+String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+function paySay(m,ok){payM.textContent=m;payM.className='gwl-m '+(ok?'ok':'err');}
+function paySayCup(m,ok){payCupM.textContent=m;payCupM.className='gwl-cm'+(m?(ok?' ok':' err'):'');}
+function showPay(session,email){
+  gate.hidden=false;gc.hidden=true;pf.hidden=true;wl.hidden=true;go.hidden=true;retry.hidden=true;
+  msg.hidden=false;msg.textContent='La cuenta '+email+' todavía no tiene un plan activo.';
+  pay.hidden=false;payGo.disabled=false;
+  if(payWait){
+    paySay('Estamos confirmando tu pago… no cierres esta pantalla.',true);payGo.disabled=true;
+    if(payTimer)clearTimeout(payTimer);
+    pollPay(session,email,0);
+  }
+  try{pay.scrollIntoView({block:'nearest'});}catch(x){}
+}
+async function pollPay(session,email,n){
+  try{
+    var r=await sb.from('allowed_emails').select('email').eq('email',email).maybeSingle();
+    if(r&&r.data){payWait=false;payTimer=null;pay.hidden=true;booted=null;check(session);return;}
+  }catch(x){console.error(x);}
+  if(n>=29){
+    payWait=false;payTimer=null;payGo.disabled=false;
+    paySay('Todavía no vemos tu pago. Si ya pagaste, puede demorar unos minutos: volvé a entrar en un rato o escribinos a pimpa@impactese.com. Si no llegaste a pagar, podés intentarlo de nuevo.',false);
+    return;
+  }
+  payTimer=setTimeout(function(){pollPay(session,email,n+1);},4000);
+}
+async function payCupCheck(){
+  var v=String(payCup.value||'').trim();payOk=null;
+  payT.textContent='Pimpa es una aplicación por suscripción. Precio de lanzamiento: '+peso(PRECIO)+' por el primer mes (el de lista es $30.000). Pagás con Mercado Pago y entrás al instante.';
+  if(!v){paySayCup('',true);return true;}
+  var nrm=cupNorm(v);
+  if(!nrm){paySayCup('Revisá el código: no lo encontramos.',false);return false;}
+  try{
+    var r=await sb.rpc('validar_cupon',{p_codigo:nrm});
+    var d=r&&r.data;
+    if(d&&d.valido){
+      payOk=d.codigo;payCup.value=d.codigo;
+      var tot=Math.round(PRECIO*(100-d.descuento_pct)/100);
+      paySayCup('¡Código aplicado! Tu primer mes es '+peso(tot)+' ('+d.descuento_pct+'% de descuento).',true);
+      return true;
+    }
+    paySayCup('Ese código no existe o ya no está vigente.',false);return false;
+  }catch(x){console.error(x);paySayCup('No pudimos comprobar el código ahora. Probá de nuevo.',false);return false;}
+}
+payCup.addEventListener('blur',function(){if(String(payCup.value||'').trim())payCupCheck();});
+payCup.addEventListener('input',function(){payOk=null;paySayCup('',true);});
+payOut.onclick=function(){if(payTimer){clearTimeout(payTimer);payTimer=null;}payWait=false;if(sb)sb.auth.signOut();else location.reload();};
+payGo.onclick=async function(){
+  payGo.disabled=true;paySay('Abriendo Mercado Pago…',true);
+  try{
+    if(String(payCup.value||'').trim()&&!(await payCupCheck())){payGo.disabled=false;paySay('',true);return;}
+    var ss=await sb.auth.getSession();var tk=ss&&ss.data&&ss.data.session&&ss.data.session.access_token;
+    if(!tk){paySay('Tu sesión venció. Volvé a entrar con Google.',false);payGo.disabled=false;return;}
+    var rs=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+tk},body:JSON.stringify({cupon:payOk||''})});
+    var d=await rs.json().catch(function(){return {};});
+    if(d&&typeof d.url==='string'&&/^https:\/\/([a-z0-9-]+\.)*(mercadopago|mercadolibre)\.com(\.[a-z]{2})?\//i.test(d.url)){location.href=d.url;return;}
+    paySay(d&&d.error==='cupon_invalido'?'Ese código no existe o ya no está vigente.':'No pudimos abrir Mercado Pago. Probá de nuevo en un rato o escribinos a pimpa@impactese.com.',false);
+  }catch(x){console.error(x);paySay('No pudimos abrir Mercado Pago. Probá de nuevo.',false);}
+  payGo.disabled=false;
+};
 function start(){
   if(!window.supabase||!window.supabase.createClient){show('No se pudo cargar el ingreso. Recargá la página.',false,true);return;}
   /* Si volvemos de un login cortado (p. ej. botón atrás: error=bad_oauth_state), limpiamos la URL y avisamos en vez de dejar el error pegado. */
   try{
     var qe=location.search+'&'+location.hash.replace(/^#/,'');
     if(/(^|[?&])(error|error_code)=/.test(qe)){authErr=true;history.replaceState(null,'',location.pathname);}
+    if(/(^|[?&])pago=ok(&|$)/.test(location.search)){payWait=true;history.replaceState(null,'',location.pathname);}
   }catch(x){}
   sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   sb.auth.onAuthStateChange(function(ev,session){
