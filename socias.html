@@ -66,7 +66,7 @@
       </div>
       <p class="chico">Marcá las filas y tocá el botón. Los clics en "Pagar" y "Entrar" se cuentan; las aperturas no son confiables y no las mostramos.</p>
       <div class="tabla-wrap"><table>
-        <thead><tr><th></th><th>Mail</th><th>Cupón</th><th>Acceso</th><th>Listo</th><th>Confirmado</th><th>Clics</th></tr></thead>
+        <thead><tr><th></th><th>Mail</th><th>Cupón</th><th>Acceso</th><th>Listo</th><th>Confirmado</th><th>Clics</th><th>Celular</th></tr></thead>
         <tbody id="filas"></tbody>
       </table></div>
     </div>
@@ -175,7 +175,7 @@
         +'<td>'+(acceso?'<span class="tag ok">habilitada</span>':'<span class="tag pend">pendiente</span>')+'</td>'
         +'<td>'+est(f.listo_estado,f.listo_en)+'</td>'
         +'<td>'+est(f.confirmado_estado,f.confirmado_en)+'</td>'
-        +'<td>'+esc((f.clics_pagar||0)+' pagar · '+(f.clics_entrar||0)+' entrar')+'</td></tr>';
+        +'<td>'+esc((f.clics_pagar||0)+' pagar · '+(f.clics_entrar||0)+' entrar')+'</td><td>'+esc(f.celular||'')+'</td></tr>';
     }).join('');
   }
 

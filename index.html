@@ -85,6 +85,22 @@
       <p id="wlMsg" class="gwl-m" role="status" aria-live="polite"></p>
       <p class="gwl-n">Para entrar a Pimpa vas a necesitar una cuenta de Google. Si tu mail no es de Gmail, te avisamos cómo hacerlo.</p>
     </form>
+    <div id="wlTy" class="gwl" hidden>
+      <h2 id="wlTyH">¡Listo, ya estás anotada!</h2>
+      <p class="gwl-t" id="wlTyT"></p>
+      <div id="wlTyPay" class="wl-pay" hidden>
+        <p class="wl-pay-p" id="wlTyP"></p>
+        <a id="wlTyBtn" class="wl-pay-b" href="/pagar" rel="noopener">Pagar mi primer mes</a>
+        <p class="gwl-n" id="wlTyN">Cuando pagues, respondé el mail que te mandamos con el comprobante y el Gmail con el que van a entrar. Te habilitamos y te avisamos.</p>
+      </div>
+      <form id="wlCel" class="wl-cel" novalidate>
+        <label class="gwl-l" for="wlCelIn">¿Querés que te acompañemos por WhatsApp? <span class="gwl-o">(opcional)</span></label>
+        <input id="wlCelIn" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="Ej.: 11 5555 1234">
+        <p class="gwl-n">Lo usamos solo para ayudarte con el pago y el acceso a Pimpa. No lo compartimos.</p>
+        <button type="submit" id="wlCelGo">Guardar mi celular</button>
+        <p id="wlCelM" class="gwl-m" role="status" aria-live="polite"></p>
+      </form>
+    </div>
     <p class="gfoot"><strong class="gmin">Complemento del trabajo terapéutico. No reemplaza a un profesional.</strong><br>Por ahora el acceso es solo por invitación.<br>Ante cualquier duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a><br>Al ingresar aceptás las <a href="/condiciones">condiciones del servicio</a> y la <a href="/privacidad">política de privacidad</a>.</p>
   </div>
 </div>
@@ -133,6 +149,13 @@
 #gate .gwl-m{margin:10px 0 0;min-height:1.3em;font-size:.92rem;font-weight:600;line-height:1.35;text-align:center}
 #gate .gwl-m.ok{color:#2E8A68}
 #gate .gwl-m.err{color:#B93A30}
+#gate .wl-pay{margin:14px 0 0;padding:14px;border-radius:18px;background:#E8F6EF;text-align:center}
+#gate .wl-pay-p{margin:0 0 10px;font-size:.95rem;line-height:1.4;font-weight:700;color:var(--ink,#17305C)}
+#gate .wl-pay-b{display:block;padding:14px 18px;border-radius:999px;background:#FFD24F;border:2px solid #17305C;color:#17305C;font:800 1.05rem var(--font-body,system-ui,sans-serif);text-decoration:none;box-shadow:0 4px 0 #C99B1E}
+#gate .wl-pay-b:active{box-shadow:0 1px 0 #C99B1E}
+#gate .wl-cel{margin:16px 0 0;padding-top:12px;border-top:2px dashed var(--line,#E8DCBF)}
+#gate .wl-cel input[type=tel]{display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:2px solid var(--line,#E8DCBF);border-radius:999px;background:#fff;color:var(--ink,#17305C);font:600 1rem var(--font-body,system-ui,sans-serif)}
+#gate .wl-cel button{margin-top:10px}
 #gate .gwl-n{margin:6px 0 0;font-size:.8rem;line-height:1.35;text-align:center;color:var(--ink-2,#506082)}
 #gate .gfoot{margin:16px 0 0;font-size:.82rem;line-height:1.45;color:var(--ink-2,#506082)}
 #gate .gfoot a{color:var(--cons,#2076BD);font-weight:600;text-decoration:underline;text-underline-offset:2px}
@@ -395,6 +418,35 @@ go.onclick=function(){
     if(r&&r.error){show('No se pudo iniciar el ingreso con Google. Intentá de nuevo.',true,false);}
   });
 };
+var wlTy=document.getElementById('wlTy'),wlCel=document.getElementById('wlCel'),wlCelIn=document.getElementById('wlCelIn'),wlCelM=document.getElementById('wlCelM'),wlMailTy='';
+function wlGracias(mail,cupon,esPro){
+  wlMailTy=mail;wl.hidden=true;wlTy.hidden=false;
+  document.getElementById('wlTyH').textContent=esPro?'¡Gracias por anotarte!':'¡Listo, ya tenés tu lugar!';
+  var pay=document.getElementById('wlTyPay');
+  if(esPro){
+    document.getElementById('wlTyT').textContent='Pimpa para profesionales tiene un plan propio. Te escribimos a '+mail+' con los valores y cómo seguir.';
+    pay.hidden=true;
+  }else{
+    document.getElementById('wlTyT').textContent='Te mandamos un mail a '+mail+' con tu lugar reservado. Si querés, podés dejar listo el primer mes ahora.';
+    document.getElementById('wlTyP').textContent=cupon?'Con tu código '+cupon+': $17.000 por mes los primeros 3 meses (después $20.000). Sin compromiso.':'Precio de lanzamiento: $20.000 por mes (el de lista es $30.000). Sin compromiso.';
+    document.getElementById('wlTyBtn').href=cupon?'/pagar':'/pagar20';
+    pay.hidden=false;
+  }
+  try{wlTy.scrollIntoView({block:'nearest'});}catch(x){}
+}
+wlCel.addEventListener('submit',async function(e){
+  e.preventDefault();
+  var v=String(wlCelIn.value||'').replace(/[\s().-]/g,'');
+  if(!/^\+?[0-9]{8,15}$/.test(v)){wlCelM.textContent='Revisá el número: solo números, con código de área.';wlCelM.className='gwl-m err';return;}
+  if(!sb){wlCelM.textContent='No se pudo conectar. Probá de nuevo.';wlCelM.className='gwl-m err';return;}
+  var b=document.getElementById('wlCelGo');b.disabled=true;
+  try{
+    var r=await sb.rpc('guardar_celular_lista',{p_email:wlMailTy,p_celular:v});
+    if(r.error||r.data!==true){wlCelM.textContent='No pudimos guardarlo ahora. Si querés, escribinos a pimpa@impactese.com.';wlCelM.className='gwl-m err';}
+    else{wlCelM.textContent='¡Gracias! Lo guardamos.';wlCelM.className='gwl-m ok';wlCelIn.value='';}
+  }catch(x){console.error(x);wlCelM.textContent='No pudimos guardarlo ahora.';wlCelM.className='gwl-m err';}
+  b.disabled=false;
+});
 wlPro.addEventListener('change',function(){if(wlPro.checked)wlFam.checked=false;wlProN.hidden=!wlPro.checked;});
 wlFam.addEventListener('change',function(){if(wlFam.checked){wlPro.checked=false;wlProN.hidden=true;}});
 wl.addEventListener('submit',async function(e){
@@ -415,13 +467,13 @@ wl.addEventListener('submit',async function(e){
         wlSay('No pudimos anotarte ahora. Intentá de nuevo o escribinos a pimpa@impactese.com.',false);
       }
     }else{
-      var usado=r.data.cupon;
+      var usado=r.data.cupon,esPro=wlPro.checked;
       wlMail.value='';
       wlCup.value='';cupOk=null;cupSay('',true);
       try{sessionStorage.removeItem(CUP_KEY);}catch(x){}
       wlPro.checked=false;wlFam.checked=false;
       wlProN.hidden=true;
-      wlSay(usado?'¡Listo! Te anotamos con tu código '+usado+'. A la brevedad te habilitamos la cuenta y te avisamos por mail.':'¡Listo! Te anotamos. A la brevedad te habilitamos la cuenta y te avisamos por mail.',true);
+      wlGracias(m,usado,!!esPro);
     }
   }catch(x){
     console.error(x);
