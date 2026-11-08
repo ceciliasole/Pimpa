@@ -13,9 +13,9 @@ function variantes(ref, email, total, backUrl, notifUrl) {
     payer: { email },
     items: [{ title: 'Pimpa - primer mes', unit_price: total, quantity: 1 }],
   };
-  // La documentación de Mercado Pago muestra dos formas de declarar las URLs de retorno; se prueba una y después la otra.
-  const a = Object.assign({}, base, { config: { notification_url: notifUrl, online: { success_url: backUrl, auto_return: 'approved' } } });
-  const b = Object.assign({}, base, { checkout_pro: { back_urls: { success: backUrl }, auto_return: 'approved' }, config: { notification_url: notifUrl } });
+  // El webhook está configurado en el panel de Mercado Pago (config.notification_url no es aceptado en el pedido).
+  const a = Object.assign({}, base, { config: { online: { success_url: backUrl, auto_return: 'approved' } } });
+  const b = Object.assign({}, base);
   return [a, b];
 }
 
