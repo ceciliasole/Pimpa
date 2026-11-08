@@ -11,7 +11,7 @@ function variantes(ref, email, total, backUrl, notifUrl) {
     total_amount: total,
     external_reference: ref,
     payer: { email },
-    items: [{ title: 'Pimpa - primer mes', unit_price: total, quantity: 1, unit_measure: 'unit' }],
+    items: [{ title: 'Pimpa - primer mes', unit_price: total, quantity: 1 }],
   };
   // La documentación de Mercado Pago muestra dos formas de declarar las URLs de retorno; se prueba una y después la otra.
   const a = Object.assign({}, base, { config: { notification_url: notifUrl, online: { success_url: backUrl, auto_return: 'approved' } } });
@@ -48,6 +48,7 @@ module.exports = async (req, res) => {
     try {
       const r = await mp('/v1/orders', { method: 'POST', headers: { 'X-Idempotency-Key': crypto.randomUUID() }, body: JSON.stringify(cuerpo) });
       ultimo = r;
+      if (!r.ok) console.error('MP create order intento', r.status, JSON.stringify(r.data).slice(0, 500));
       const url = r.ok && r.data && (r.data.checkout_url || r.data.init_point || (r.data.checkout_pro && r.data.checkout_pro.init_point));
       if (url) {
         try { await rpc('pago_orden', { p_secret: process.env.PAGOS_SECRET, p_id: pagoId, p_order_id: String(r.data.id || '') }); } catch (e) { /* el webhook igual lo encuentra por external_reference */ }
