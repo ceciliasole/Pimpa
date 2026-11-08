@@ -22,7 +22,8 @@ function boton(url, texto) {
     + '<a href="' + url + '" style="display:block;padding:15px 34px;font-size:18px;font-weight:bold;color:#1f4e8c;text-decoration:none">' + texto + '</a></td></tr></table>';
 }
 
-function listo(envioId, sinCodigo) {
+function listo(envioId, codigo) {
+  const sinCodigo = !codigo;
   // Con código (JOSE1/FATI1): $17.000 los primeros 3 meses. Sin código: $20.000 (precio de lanzamiento; lista $30.000).
   const pagar = BASE + (sinCodigo ? '/pagar20' : '/pagar') + '?e=' + envioId;
   const precio = sinCodigo ? '$20.000 por mes' : '$17.000 por mes';
@@ -40,6 +41,7 @@ function listo(envioId, sinCodigo) {
     + '<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#E8F6EF" style="border-radius:14px;margin:0 0 18px"><tr><td align="center" style="padding:18px">'
     + '<p style="margin:0 0 4px;font-size:13px;color:#2f6f55;text-transform:uppercase;letter-spacing:.5px">Plan mensual, sin compromiso</p>'
     + '<p style="margin:0 0 4px;font-size:24px;font-weight:bold;color:#2d3a4a">' + precio + '</p>'
+    + (codigo ? '<p style="margin:0 0 8px;font-size:14px;color:#2d3a4a">Tu c\u00f3digo de descuento: <strong>' + codigo + '</strong> (ya est\u00e1 aplicado en este precio)</p>' : '')
     + '<p style="margin:0 0 14px;font-size:14px;color:#555555">' + detalle + '</p>'
     + boton(pagar, 'Pagar un mes')
     + '<p style="margin:0;font-size:12px;color:#777777"><a href="' + pagar + '">' + pagar.replace('https://', '').replace(/\?.*$/, '') + '</a></p></td></tr></table>'
@@ -47,7 +49,7 @@ function listo(envioId, sinCodigo) {
     + '<p style="margin:0 0 14px;font-size:14px;color:#555555">Pimpa es un complemento y no reemplaza una terapia ni a un profesional.</p>');
   const text = '\u00a1Hola!\n\nGracias por sumarte a las primeras familias en esta etapa de lanzamiento y prueba, en la que estamos haciendo un precio especial. Estamos muy content@s de poder compartir este juego de Pimpa.\n\n'
     + 'Ya estamos habilitando las primeras familias y ten\u00e9s un lugar reservado.\n\n'
-    + 'Plan mensual, sin compromiso: ' + (sinCodigo ? '$20.000 por mes. ' : '') + detalleTxt + '\n\n'
+    + 'Plan mensual, sin compromiso: ' + (sinCodigo ? '$20.000 por mes. ' : 'Tu c\u00f3digo de descuento: ' + codigo + ' (ya est\u00e1 aplicado en este precio). ') + detalleTxt + '\n\n'
     + 'Pagar un mes: ' + pagar + '\n\nCuando pagues, respond\u00e9 este mail con el comprobante y el Gmail con el que van a entrar. Te habilitamos y te mandamos la bienvenida.\n\n'
     + 'Pimpa es un complemento y no reemplaza una terapia ni a un profesional.\n\nCon cari\u00f1o,\nEquipo Pimpa\npimpa@impactese.com';
   return { subject: 'Tu lugar en Pimpa est\u00e1 listo \u2728', html, text };
