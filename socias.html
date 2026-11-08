@@ -217,10 +217,12 @@
     var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
     btn.disabled=true;
     try{
-      var v=await llamar({modo:'vista',plantilla:plantilla});
+      var sel=datos.filter(function(f){return e.indexOf(f.email)>=0});
+      var sc=sel.filter(function(f){return !f.cupon}).length, cc=sel.length-sc, pr=sel.filter(function(f){return f.es_profesional}).length;
+      var v=await llamar({modo:'vista',plantilla:plantilla,sinCodigo:!(sel[0]&&sel[0].cupon)});
       pend={plantilla:plantilla,emails:e,btn:btn};
       $('m-asunto').textContent='Asunto: '+v.subject;
-      $('m-para').textContent='Para ('+e.length+'): '+e.join(', ');
+      $('m-para').textContent='Para ('+e.length+'): '+e.join(', ')+(plantilla==='listo'?'  ·  Con código: '+cc+' ($17.000)  ·  Sin código: '+sc+' ($20.000). Cada una recibe su precio; abajo ves el de la primera.'+(pr?'  ·  OJO: '+pr+' profesional(es): este mail es el de familias.':''):'');
       $('m-frame').srcdoc=v.html;
       $('m-msg').textContent='';
       $('m-ok').disabled=false;$('m-prueba').disabled=false;

@@ -32,6 +32,7 @@
   ],
   "rewrites": [
     { "source": "/pagar", "destination": "/api/r?d=pagar" },
+    { "source": "/pagar20", "destination": "/api/r?d=pagar&p=sc" },
     { "source": "/entrar", "destination": "/api/r?d=entrar" }
   ]
 }

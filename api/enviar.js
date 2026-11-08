@@ -9,6 +9,9 @@ const FROM = process.env.MAIL_FROM || 'Pimpa <pimpa@impactese.com>';
 const REPLY_TO = 'pimpa@impactese.com';
 const PLANTILLAS = { listo, confirmado };
 
+// 'listo' lleva el precio según tenga código o no. Se busca en la lista de espera (solo socias).
+function armar(plantilla, id, sinCodigo) { return plantilla === 'listo' ? listo(id, sinCodigo) : confirmado(id); }
+
 async function rpc(nombre, args, jwt) {
   const r = await fetch(SB_URL + '/rest/v1/rpc/' + nombre, {
     method: 'POST',
@@ -41,7 +44,7 @@ module.exports = async (req, res) => {
       const ok = await rpc('es_socia', {}, jwt);
       if (ok !== true) return res.status(403).json({ error: 'Sin permiso' });
     } catch (e) { return res.status(403).json({ error: 'Sin permiso' }); }
-    const m = PLANTILLAS[plantilla]('prueba');
+    const m = armar(plantilla, 'prueba', body.sinCodigo === true);
     if (body.modo === 'vista') return res.status(200).json({ subject: m.subject, html: m.html });
     const u = await fetch(SB_URL + '/auth/v1/user', { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + jwt } });
     const yo = u.ok ? (await u.json()).email : null;
@@ -58,6 +61,10 @@ module.exports = async (req, res) => {
 
   if (!emails.length || emails.length > 50) return res.status(400).json({ error: 'Entre 1 y 50 mails' });
 
+  let sinCod = {};
+  if (plantilla === 'listo') {
+    try { (await rpc('socias_lista', {}, jwt) || []).forEach(f => { sinCod[f.email] = !f.cupon; }); } catch (e) { return res.status(500).json({ error: 'No pude leer la lista' }); }
+  }
   const resultados = [];
   for (const email of emails) {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { resultados.push({ email, ok: false, error: 'Mail inválido' }); continue; }
@@ -70,7 +77,7 @@ module.exports = async (req, res) => {
       continue;
     }
     try {
-      const m = PLANTILLAS[plantilla](id);
+      const m = armar(plantilla, id, sinCod[email] !== false);
       const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + process.env.RESEND_API_KEY, 'Content-Type': 'application/json' },
