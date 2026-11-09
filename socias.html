@@ -59,15 +59,12 @@
     <div id="msg"></div>
     <div class="card">
       <div class="acciones">
-        <button id="b-listo">Enviar "Tu lugar está listo"</button>
-        <button id="b-pago" class="sec">Registrar pago y habilitar</button>
-        <button id="b-conf" class="sec">Enviar "Está confirmado"</button>
-        <button id="b-vieja" class="sec">Marcar las del flujo viejo</button>
-        <button id="b-aviso" class="sec">Enviar "Ahora es directo"</button>
+        <button id="b-pago" class="sec">Habilitar a mano (sin pago)</button>
         <button id="b-act" class="sec">Actualizar</button>
       </div>
+      <p class="chico">Los mails salen solos (ver "Mails automáticos" abajo). "Habilitar a mano" es solo para excepciones: amigas, educadoras o quien pagó por fuera de Mercado Pago.</p>
       <div id="resumen" class="acciones"></div>
-      <p class="chico"><b>Anotada:</b> dejó el mail y no entró · <b>Entró:</b> hizo login y no pagó · <b>Pago sin completar:</b> abrió Mercado Pago y no terminó · <b>Activa:</b> ya puede usar la app (con la fecha en que vence su plan) · <b>Vencida:</b> se le terminó el plan y tiene que renovar. "Entró" cuenta las visitas desde el 9/11; el último ingreso viene de Google. Los "Mails" incluyen los que se mandan solos. Para mandar uno a mano, marcá las filas y tocá el botón.</p>
+      <p class="chico"><b>Anotada:</b> dejó el mail y no entró · <b>Entró, sin pagar:</b> hizo login y no pagó · <b>Pago sin completar:</b> abrió Mercado Pago y no terminó · <b>Activa:</b> ya puede usar la app (con la fecha en que vence su plan) · <b>Vencida:</b> se le terminó el plan y tiene que renovar. "Entró" cuenta las visitas desde el 9/11; el último ingreso viene de Google. Los "Mails" incluyen los que se mandan solos. Para mandar uno a mano, marcá las filas y tocá el botón.</p>
       <div class="tabla-wrap"><table>
         <thead><tr><th></th><th>Mail</th><th>Estado</th><th>Rol</th><th>Entró</th><th>Mails</th><th>Cupón</th><th>Celular</th></tr></thead>
         <tbody id="filas"></tbody>
@@ -177,7 +174,7 @@
     return '<span class="tag '+c+'">'+esc(estado)+'</span><br><span class="chico">'+esc(fecha(fecha_))+'</span>';
   }
 
-  var ESTADO={anotada:['Anotada','pend'],entro:['Entró','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],vencida:['Vencida','err']};
+  var ESTADO={anotada:['Anotada','pend'],entro:['Entró, sin pagar','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],vencida:['Vencida','err']};
   var PLANTXT={mensual:'1 mes',trimestral:'3 meses',anual:'Anual'};
   function dia(f){var d=new Date(f);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'})}
   var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
@@ -189,7 +186,7 @@
       var rol=f.rol?(ROL[f.rol]||f.rol):(f.es_profesional?'Profesional (anotada)':'—');
       var entro=f.ultimo_ingreso?(f.entradas+' visita'+(f.entradas===1?'':'s')+'<br><span class="chico">último: '+esc(fecha(f.ultimo_ingreso))+'</span>'):'<span class="chico">—</span>';
       var mails=f.mails?(f.mails+(f.mail_error?' <span class="tag err">con error</span>':'')+'<br><span class="chico">último: '+esc(f.ultimo_mail||'')+' · '+esc(fecha(f.ultimo_mail_en))+'</span>'):(f.mail_error?'<span class="tag err">con error</span>':'<span class="chico">ninguno</span>');
-      var pago=f.estado==='pago_sin_completar'?'<br><span class="chico">desde '+esc(fecha(f.pago_iniciado))+'</span>':((f.estado==='activa'||f.estado==='vencida')&&f.vence?'<br><span class="chico">'+(f.estado==='vencida'?'venció ':'vence ')+esc(dia(f.vence))+(f.plan?' · '+esc(PLANTXT[f.plan]||f.plan):'')+'</span>':(f.estado==='activa'&&f.plan?'<br><span class="chico">'+esc(PLANTXT[f.plan]||f.plan)+'</span>':''));
+      var pago=(f.estado==='activa'&&!f.vence)?'<br><span class="chico">sin vencimiento</span>':f.estado==='pago_sin_completar'?'<br><span class="chico">desde '+esc(fecha(f.pago_iniciado))+'</span>':((f.estado==='activa'||f.estado==='vencida')&&f.vence?'<br><span class="chico">'+(f.estado==='vencida'?'venció ':'vence ')+esc(dia(f.vence))+(f.plan?' · '+esc(PLANTXT[f.plan]||f.plan):'')+'</span>':(f.estado==='activa'&&f.plan?'<br><span class="chico">'+esc(PLANTXT[f.plan]||f.plan)+'</span>':''));
       return '<tr><td><input type="checkbox" data-i="'+i+'"></td>'
         +'<td>'+esc(f.email)+'</td>'
         +'<td><span class="tag '+e[1]+'">'+e[0]+'</span>'+pago+'</td>'
@@ -203,7 +200,7 @@
   var AUTOS=[
     {k:'listo',nombre:'Tu lugar en Pimpa está listo',cuando:'Apenas alguien se anota (familias y profesionales). Se saltea si ya está habilitada o ya lo recibió. Tope de 30 por día.',estado:'Activo',cl:'ok',ver:[['Ver sin código',null],['Ver con código (ejemplo)','EJEMPLO1']]},
     {k:'confirmado',nombre:'Está confirmado tu acceso',cuando:'Apenas se acredita el pago en Mercado Pago.',estado:'Activo',cl:'ok',ver:[['Ver',null]]},
-    {k:'aviso',nombre:'Ahora es directo (aviso único)',cuando:'Manual, una sola vez: para quienes se anotaron cuando había que mandar el comprobante.',estado:'Manual',cl:'pend',ver:[['Ver',null]]},
+    {k:'aviso',nombre:'Ahora es directo (aviso único)',cuando:'Aviso único, ya enviado: a quienes se anotaron cuando había que mandar el comprobante.',estado:'Enviado el 9/11',cl:'ok',ver:[['Ver',null]]},
     {k:'carrito',nombre:'Carrito abandonado (borrador)',cuando:'Pensado para quien está en "Pago sin completar" hace más de 24 horas. Todavía no se manda a nadie.',estado:'Borrador',cl:'pend',ver:[['Ver',null]]}
   ];
   function pintarAutos(){
@@ -261,23 +258,6 @@
     if(!r.ok)throw new Error(d.error||('Error '+r.status));
     return d;
   }
-  async function abrirVista(plantilla,btn){
-    var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
-    btn.disabled=true;
-    try{
-      var sel=datos.filter(function(f){return e.indexOf(f.email)>=0});
-      var sc=sel.filter(function(f){return !f.cupon}).length, cc=sel.length-sc, pr=sel.filter(function(f){return f.es_profesional}).length;
-      var v=await llamar({modo:'vista',plantilla:plantilla,codigo:(sel[0]&&sel[0].cupon)||null});
-      pend={plantilla:plantilla,emails:e,btn:btn};
-      $('m-asunto').textContent='Asunto: '+v.subject;
-      $('m-para').textContent='Para ('+e.length+'): '+e.join(', ')+(plantilla==='listo'?'  ·  Con código: '+cc+' ($17.000)  ·  Sin código: '+sc+' ($20.000). Cada una recibe su precio; abajo ves el de la primera.'+(pr?'  ·  OJO: '+pr+' profesional(es): este mail es el de familias.':''):'');
-      $('m-frame').srcdoc=v.html;
-      $('m-msg').textContent='';
-      $('m-ok').hidden=false;$('m-ok').disabled=false;$('m-prueba').disabled=false;
-      $('modal').hidden=false;
-    }catch(x){msg(x.message,true)}
-    btn.disabled=false;
-  }
   $('m-no').onclick=function(){$('modal').hidden=true;pend=null};
   $('m-prueba').onclick=async function(){
     if(!pend)return;
@@ -292,29 +272,15 @@
     try{var n=await enviar(p.plantilla,p.emails);$('modal').hidden=true;pend=null;await cargar();msg('Enviados: '+n)}
     catch(x){$('modal').hidden=true;pend=null;await cargar();msg(x.message,true)}
   };
-  $('b-listo').onclick=function(){abrirVista('listo',$('b-listo'))};
-  $('b-conf').onclick=function(){abrirVista('confirmado',$('b-conf'))};
-  $('b-aviso').onclick=function(){abrirVista('aviso',$('b-aviso'))};
-  // Anotadas cuando el mail pedía mandar el comprobante (antes del 8/11 14:50) y que siguen sin habilitar.
-  $('b-vieja').onclick=function(){
-    var corte=Date.parse('2026-11-08T17:50:00Z'),n=0,mal=[];
-    Array.prototype.forEach.call(document.querySelectorAll('#filas input[type=checkbox]'),function(c){
-      var f=datos[+c.dataset.i];
-      var ok=f&&!f.habilitada&&f.mails>0&&f.ultimo_mail_en&&Date.parse(f.ultimo_mail_en)<corte;
-      if(ok&&/\.comcom$/i.test(f.email)){ok=false;mal.push(f.email)}
-      c.checked=!!ok;if(ok)n++;
-    });
-    msg('Marcadas: '+n+(mal.length?' · salteé un mail mal escrito: '+mal.join(', '):'')+'. Ahora tocá "Enviar Ahora es directo" para ver la vista previa.');
-  };
   $('b-pago').onclick=function(){
     var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
-    if(!confirm('¿Habilitar a '+e.length+' mail(s)? Después podés enviarles la confirmación.'))return;
+    if(!confirm('¿Habilitar a '+e.length+' mail(s) sin pago? Quedan activas sin vencimiento.'))return;
     accion($('b-pago'),async function(){
       for(var i=0;i<e.length;i++){
         var r=await sb.rpc('socias_habilitar',{p_email:e[i]});
         if(r.error)throw new Error(e[i]+': '+r.error.message);
       }
-      await cargar();msg('Habilitadas: '+e.length+'. Ahora podés enviar "Está confirmado".');
+      await cargar();msg('Habilitadas: '+e.length+'. Ya pueden entrar.');
     });
   };
   $('b-add').onclick=function(){
