@@ -430,9 +430,11 @@ var authErr=false;
 var PRECIO=20000;
 /* Mismas cuentas que api/_mp.js (precioPlan): si cambia una, cambia la otra. El servidor es el que manda al cobrar. */
 var PLANES={mensual:{m:1,t:'1 mes'},trimestral:{m:3,t:'3 meses'},anual:{m:12,t:'plan anual'}};
+var DTO_TRIM=5;
 function precioPlan(k){
-  var pct=k==='anual'?(payDto?payDto.anual:15):(payDto?payDto.pct:0);
-  return Math.round(PRECIO*PLANES[k].m*(100-pct)/100);
+  if(k==='anual'){var pa=payDto?payDto.anual:15;return Math.round(PRECIO*PLANES[k].m*(100-pa)/100);}
+  var dp=k==='trimestral'?DTO_TRIM:0,dc=payDto?payDto.pct:0;
+  return Math.round(PRECIO*PLANES[k].m*(100-dp)/100*(100-dc)/100);
 }
 function pintarPlanes(){
   Array.prototype.forEach.call(document.querySelectorAll('#payPlans .plx-b'),function(b){

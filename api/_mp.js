@@ -31,14 +31,21 @@ async function mailDe(jwt) {
   return e || null;
 }
 
-// Planes. Base: PRECIO_MENSUAL x meses. Con código: el descuento del código (descuento_pct) en 1 y 3 meses y descuento_anual_pct en el anual.
-// Sin código: sin descuento en 1 y 3 meses, y 15% en el anual. (Mismas cuentas que index.html: si cambia una, cambia la otra.)
+// Planes. Base: PRECIO_MENSUAL x meses. Los descuentos se acumulan: el del plan (trimestral: DESC_TRIMESTRAL) y después el del código (descuento_pct) sobre el precio ya descontado.
+// Anual: descuento_anual_pct con código y DESC_ANUAL_SIN_CODIGO sin código (sin acumular). (Mismas cuentas que index.html: si cambia una, cambia la otra.)
 const PLANES = { mensual: { meses: 1, titulo: '1 mes' }, trimestral: { meses: 3, titulo: '3 meses' }, anual: { meses: 12, titulo: 'plan anual' } };
 const DESC_ANUAL_SIN_CODIGO = 15;
+const DESC_TRIMESTRAL = 5;
 function precioPlan(plan, cupon) {
   const p = PLANES[plan]; if (!p) return null;
-  const pct = plan === 'anual' ? (cupon ? (Number(cupon.descuento_anual_pct) || 20) : DESC_ANUAL_SIN_CODIGO) : (cupon ? Number(cupon.descuento_pct) || 0 : 0);
-  return Math.round(PRECIO_MENSUAL * p.meses * (100 - Math.max(0, Math.min(99, pct))) / 100);
+  const lim = (x) => Math.max(0, Math.min(99, Number(x) || 0));
+  if (plan === 'anual') {
+    const pct = cupon ? (Number(cupon.descuento_anual_pct) || 20) : DESC_ANUAL_SIN_CODIGO;
+    return Math.round(PRECIO_MENSUAL * p.meses * (100 - lim(pct)) / 100);
+  }
+  const dPlan = plan === 'trimestral' ? DESC_TRIMESTRAL : 0;
+  const dCodigo = cupon ? lim(cupon.descuento_pct) : 0;
+  return Math.round(PRECIO_MENSUAL * p.meses * (100 - dPlan) / 100 * (100 - dCodigo) / 100);
 }
 
 function monto(pctDescuento) {
