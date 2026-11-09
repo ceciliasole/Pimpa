@@ -31,6 +31,16 @@ async function mailDe(jwt) {
   return e || null;
 }
 
+// Planes. Base: PRECIO_MENSUAL x meses. Con código: el descuento del código (descuento_pct) en 1 y 3 meses y descuento_anual_pct en el anual.
+// Sin código: sin descuento en 1 y 3 meses, y 15% en el anual. (Mismas cuentas que index.html: si cambia una, cambia la otra.)
+const PLANES = { mensual: { meses: 1, titulo: '1 mes' }, trimestral: { meses: 3, titulo: '3 meses' }, anual: { meses: 12, titulo: 'plan anual' } };
+const DESC_ANUAL_SIN_CODIGO = 15;
+function precioPlan(plan, cupon) {
+  const p = PLANES[plan]; if (!p) return null;
+  const pct = plan === 'anual' ? (cupon ? (Number(cupon.descuento_anual_pct) || 20) : DESC_ANUAL_SIN_CODIGO) : (cupon ? Number(cupon.descuento_pct) || 0 : 0);
+  return Math.round(PRECIO_MENSUAL * p.meses * (100 - Math.max(0, Math.min(99, pct))) / 100);
+}
+
 function monto(pctDescuento) {
   const p = Math.max(0, Math.min(99, Number(pctDescuento) || 0));
   return Math.round(PRECIO_MENSUAL * (100 - p) / 100);
@@ -46,4 +56,4 @@ async function mp(path, opts) {
   return { ok: r.ok, status: r.status, data: d };
 }
 
-module.exports = { SB_URL, SB_KEY, BASE, PRECIO_MENSUAL, rpc, mailDe, monto, fmt, mp };
+module.exports = { SB_URL, SB_KEY, BASE, PRECIO_MENSUAL, PLANES, precioPlan, rpc, mailDe, monto, fmt, mp };
