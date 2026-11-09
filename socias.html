@@ -62,6 +62,8 @@
         <button id="b-listo">Enviar "Tu lugar está listo"</button>
         <button id="b-pago" class="sec">Registrar pago y habilitar</button>
         <button id="b-conf" class="sec">Enviar "Está confirmado"</button>
+        <button id="b-vieja" class="sec">Marcar las del flujo viejo</button>
+        <button id="b-aviso" class="sec">Enviar "Ahora es directo"</button>
         <button id="b-act" class="sec">Actualizar</button>
       </div>
       <div id="resumen" class="acciones"></div>
@@ -201,6 +203,7 @@
   var AUTOS=[
     {k:'listo',nombre:'Tu lugar en Pimpa está listo',cuando:'Apenas alguien se anota (familias y profesionales). Se saltea si ya está habilitada o ya lo recibió. Tope de 30 por día.',estado:'Activo',cl:'ok',ver:[['Ver sin código',null],['Ver con código (ejemplo)','EJEMPLO1']]},
     {k:'confirmado',nombre:'Está confirmado tu acceso',cuando:'Apenas se acredita el pago en Mercado Pago.',estado:'Activo',cl:'ok',ver:[['Ver',null]]},
+    {k:'aviso',nombre:'Ahora es directo (aviso único)',cuando:'Manual, una sola vez: para quienes se anotaron cuando había que mandar el comprobante.',estado:'Manual',cl:'pend',ver:[['Ver',null]]},
     {k:'carrito',nombre:'Carrito abandonado (borrador)',cuando:'Pensado para quien está en "Pago sin completar" hace más de 24 horas. Todavía no se manda a nadie.',estado:'Borrador',cl:'pend',ver:[['Ver',null]]}
   ];
   function pintarAutos(){
@@ -291,6 +294,18 @@
   };
   $('b-listo').onclick=function(){abrirVista('listo',$('b-listo'))};
   $('b-conf').onclick=function(){abrirVista('confirmado',$('b-conf'))};
+  $('b-aviso').onclick=function(){abrirVista('aviso',$('b-aviso'))};
+  // Anotadas cuando el mail pedía mandar el comprobante (antes del 8/11 14:50) y que siguen sin habilitar.
+  $('b-vieja').onclick=function(){
+    var corte=Date.parse('2026-11-08T17:50:00Z'),n=0,mal=[];
+    Array.prototype.forEach.call(document.querySelectorAll('#filas input[type=checkbox]'),function(c){
+      var f=datos[+c.dataset.i];
+      var ok=f&&!f.habilitada&&f.mails>0&&f.ultimo_mail_en&&Date.parse(f.ultimo_mail_en)<corte;
+      if(ok&&/\.comcom$/i.test(f.email)){ok=false;mal.push(f.email)}
+      c.checked=!!ok;if(ok)n++;
+    });
+    msg('Marcadas: '+n+(mal.length?' · salteé un mail mal escrito: '+mal.join(', '):'')+'. Ahora tocá "Enviar Ahora es directo" para ver la vista previa.');
+  };
   $('b-pago').onclick=function(){
     var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
     if(!confirm('¿Habilitar a '+e.length+' mail(s)? Después podés enviarles la confirmación.'))return;

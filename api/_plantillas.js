@@ -102,4 +102,21 @@ function carrito(envioId, codigo) {
   return { subject: 'Tu lugar en Pimpa te sigue esperando \ud83d\udc9b', html, text };
 }
 
-module.exports = { listo, confirmado, carrito, datosCupon };
+// Aviso a quienes se anotaron cuando había que mandar el comprobante: ahora es directo.
+function aviso(envioId) {
+  const html = marco('Ahora es mucho más fácil activar Pimpa 💛',
+    '<p style="margin:0 0 14px">¡Hola!</p>'
+    + '<p style="margin:0 0 16px">Te escribimos porque te anotaste en Pimpa cuando todavía tenías que <strong>mandarnos el comprobante de pago</strong>. Eso ya no hace falta: <strong>ahora es directo</strong>, y te estamos esperando. ✨</p>'
+    + '<ol style="margin:0 0 20px;padding-left:20px"><li style="margin-bottom:6px">Entrá a <a href="' + BASE + '/">pimpa.impactese.com</a> con el <strong>Gmail</strong> con el que van a usar Pimpa.</li>'
+    + '<li style="margin-bottom:6px">Elegí tu plan (1 mes, 3 meses o anual). Si tenés un código de descuento, lo ponés ahí.</li>'
+    + '<li>Pagá con Mercado Pago. <strong>Se habilita sola al instante</strong>, sin esperar ni mandarnos nada.</li></ol>'
+    + '<div style="margin:0 0 22px">' + boton(BASE + '/', 'Entrar a Pimpa') + '</div>'
+    + '<p style="margin:0 0 14px">Si algo no funciona o tenés una duda, respondé este mail o escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a>.</p>'
+    + '<p style="margin:0 0 14px;font-size:14px;color:#555555">Pimpa es un complemento y no reemplaza una terapia ni a un profesional.</p>');
+  const text = '¡Hola!\n\nTe escribimos porque te anotaste en Pimpa cuando todavía tenías que mandarnos el comprobante de pago. Eso ya no hace falta: ahora es directo, y te estamos esperando.\n\n'
+    + '1. Entrá a ' + BASE + '/ con el Gmail con el que van a usar Pimpa.\n2. Elegí tu plan (1 mes, 3 meses o anual). Si tenés un código de descuento, lo ponés ahí.\n3. Pagá con Mercado Pago. Se habilita sola al instante, sin esperar ni mandarnos nada.\n\n'
+    + 'Si algo no funciona o tenés una duda, respondé este mail o escribinos a pimpa@impactese.com.\n\nPimpa es un complemento y no reemplaza una terapia ni a un profesional.\n\nCon cariño,\nEquipo Pimpa';
+  return { subject: 'Ahora activar Pimpa es directo: te esperamos 💛', html, text };
+}
+
+module.exports = { listo, confirmado, carrito, aviso, datosCupon };
