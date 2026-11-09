@@ -1,7 +1,7 @@
-// Lo llama la base (pg_net) cuando alguien se anota en la lista de espera: manda "Tu lugar está listo".
+// Lo llama la base (pg_net): "Tu lugar está listo" cuando alguien se anota, y "Carrito abandonado" (pg_cron, si está prendido).
 // No necesita login: solo puede enviar un envío automático 'pendiente' que creó la base, una única vez,
 // y siempre al mail anotado en ese envío.
-const { listo, datosCupon } = require('./_plantillas');
+const { listo, carrito, datosCupon } = require('./_plantillas');
 
 const SB_URL = process.env.SB_URL || 'https://fhzqiuvubcytuewwktyf.supabase.co';
 const SB_KEY = process.env.SB_KEY || 'sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
   try {
     const dat = await rpc('auto_datos', { p_id: id });
     const v = await datosCupon(rpc, dat && dat.cupon);
-    const m = listo(id, v ? v.codigo : null, v);
+    const m = dat && dat.plantilla === 'carrito' ? carrito(id, v ? v.codigo : null) : listo(id, v ? v.codigo : null, v);
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + process.env.RESEND_API_KEY, 'Content-Type': 'application/json' },

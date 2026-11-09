@@ -129,7 +129,7 @@
     var ok=await sb.rpc('es_socia');
     if(ok.error||ok.data!==true){$('noauth').hidden=false;return}
     $('panel').hidden=false;
-    cargar();
+    cargar();cargarCarrito();
   }
 
   async function cargar(){
@@ -201,14 +201,25 @@
     {k:'listo',nombre:'Tu lugar en Pimpa está listo',cuando:'Apenas alguien se anota (familias y profesionales). Se saltea si ya está habilitada o ya lo recibió. Tope de 30 por día.',estado:'Activo',cl:'ok',ver:[['Ver sin código',null],['Ver con código (ejemplo)','EJEMPLO1']]},
     {k:'confirmado',nombre:'Está confirmado tu acceso',cuando:'Apenas se acredita el pago en Mercado Pago.',estado:'Activo',cl:'ok',ver:[['Ver',null]]},
     {k:'aviso',nombre:'Ahora es directo (aviso único)',cuando:'Aviso único, ya enviado: a quienes se anotaron cuando había que mandar el comprobante.',estado:'Enviado el 9/11',cl:'ok',ver:[['Ver',null]]},
-    {k:'carrito',nombre:'Carrito abandonado (borrador)',cuando:'Pensado para quien está en "Pago sin completar" hace más de 24 horas. Todavía no se manda a nadie.',estado:'Borrador',cl:'pend',ver:[['Ver',null]]}
+    {k:'carrito',nombre:'Carrito abandonado',cuando:'Una sola vez por persona, a las 24 horas de quedar en "Pago sin completar" (hasta 7 días). Se revisa cada hora. Mismo tope diario.',estado:'Apagado',cl:'pend',interruptor:true,ver:[['Ver',null]]}
   ];
+  var carritoOn=false;
+  async function cargarCarrito(){var r=await sb.rpc('socias_carrito_estado');if(!r.error){carritoOn=r.data===true;pintarAutos()}}
   function pintarAutos(){
     $('auto-filas').innerHTML=AUTOS.map(function(a,i){
-      return '<tr><td><b>'+esc(a.nombre)+'</b></td><td class="chico">'+esc(a.cuando)+'</td><td><span class="tag '+a.cl+'">'+a.estado+'</span></td><td>'
+      return '<tr><td><b>'+esc(a.nombre)+'</b></td><td class="chico">'+esc(a.cuando)+'</td><td><span class="tag '+(a.interruptor?(carritoOn?'ok':'pend'):a.cl)+'">'+(a.interruptor?(carritoOn?'Activo':'Apagado'):a.estado)+'</span></td><td>'
+        +(a.interruptor?'<button data-sw="1" style="margin:2px 4px 2px 0;padding:6px 12px">'+(carritoOn?'Apagar':'Prender')+'</button>':'')
         +a.ver.map(function(v,j){return '<button class="sec" data-a="'+i+'" data-v="'+j+'" style="margin:2px 4px 2px 0;padding:6px 12px">'+v[0]+'</button>'}).join('')+'</td></tr>';
     }).join('');
-    Array.prototype.forEach.call(document.querySelectorAll('#auto-filas button'),function(b){
+    Array.prototype.forEach.call(document.querySelectorAll('#auto-filas button[data-sw]'),function(b){
+      b.onclick=async function(){
+        if(!confirm(carritoOn?'¿Apagar el mail de carrito abandonado?':'¿Prender el mail de carrito abandonado? Empieza a salir solo, a las 24 h de quedar el pago sin completar.'))return;
+        var r=await sb.rpc('socias_carrito_set',{p_activo:!carritoOn});
+        if(r.error){msg(r.error.message,true);return}
+        carritoOn=r.data===true;pintarAutos();msg('Carrito abandonado: '+(carritoOn?'prendido':'apagado'));
+      };
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#auto-filas button[data-a]'),function(b){
       b.onclick=function(){verAuto(AUTOS[+b.dataset.a],AUTOS[+b.dataset.a].ver[+b.dataset.v][1])};
     });
   }

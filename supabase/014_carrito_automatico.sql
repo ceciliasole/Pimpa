@@ -1,0 +1,5 @@
+-- Aplicada como migración "carrito_abandonado_automatico" (+ "envios_plantilla_aviso").
+-- pg_cron revisa cada hora (carrito_revisar): quien quedó en "pago sin completar" hace más de auto_config.carrito_horas (24)
+-- y menos de 7 días, sin haber recibido nunca el mail, recibe 'carrito' vía /api/auto. Respeta tope_diario.
+-- Arranca APAGADO: auto_config.carrito_activo = false. Se prende desde /socias (socias_carrito_set).
+-- También: auto_tomar / auto_datos aceptan plantilla 'carrito'; envios_plantilla_check incluye 'aviso' y 'carrito'.
