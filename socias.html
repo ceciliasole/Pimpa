@@ -32,7 +32,7 @@
   th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #eee;vertical-align:top}
   th{font-size:12px;text-transform:uppercase;color:#777}
   .tag{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
-  .ok{background:#E8F6EF;color:#2f6f55}.pend{background:#FFEDE9;color:#b04a35}.err{background:#fde0e0;color:#a11}
+  .neu{background:#E6EEF9;color:#1f4e8c}.ok{background:#E8F6EF;color:#2f6f55}.pend{background:#FFEDE9;color:#b04a35}.err{background:#fde0e0;color:#a11}
   input[type=text],input[type=email]{font:inherit;padding:9px 12px;border:2px solid #ddd;border-radius:12px;min-width:220px}
   #msg{min-height:22px;font-weight:700;margin:8px 0}
   .chico{font-size:12px;color:#777}
@@ -64,9 +64,10 @@
         <button id="b-conf" class="sec">Enviar "Está confirmado"</button>
         <button id="b-act" class="sec">Actualizar</button>
       </div>
-      <p class="chico">Marcá las filas y tocá el botón. Los clics en "Pagar" y "Entrar" se cuentan; las aperturas no son confiables y no las mostramos.</p>
+      <div id="resumen" class="acciones"></div>
+      <p class="chico"><b>Anotada:</b> dejó el mail y no entró · <b>Entró:</b> hizo login y no pagó · <b>Pago sin completar:</b> abrió Mercado Pago y no terminó · <b>Activa:</b> ya puede usar la app. "Entró" cuenta las visitas desde el 9/11; el último ingreso viene de Google. Los "Mails" incluyen los que se mandan solos. Para mandar uno a mano, marcá las filas y tocá el botón.</p>
       <div class="tabla-wrap"><table>
-        <thead><tr><th></th><th>Mail</th><th>Cupón</th><th>Acceso</th><th>Listo</th><th>Confirmado</th><th>Clics</th><th>Celular</th></tr></thead>
+        <thead><tr><th></th><th>Mail</th><th>Estado</th><th>Rol</th><th>Entró</th><th>Mails</th><th>Cupón</th><th>Celular</th></tr></thead>
         <tbody id="filas"></tbody>
       </table></div>
     </div>
@@ -126,7 +127,7 @@
 
   async function cargar(){
     msg('Cargando…');
-    var r=await sb.rpc('socias_lista');
+    var r=await sb.rpc('socias_estado');
     if(r.error){msg('Error: '+r.error.message,true);return}
     datos=r.data||[];
     pintar();
@@ -166,16 +167,24 @@
     return '<span class="tag '+c+'">'+esc(estado)+'</span><br><span class="chico">'+esc(fecha(fecha_))+'</span>';
   }
 
+  var ESTADO={anotada:['Anotada','pend'],entro:['Entró','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok']};
+  var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
   function pintar(){
+    var n={};datos.forEach(function(f){n[f.estado]=(n[f.estado]||0)+1});
+    $('resumen').innerHTML=['pago_sin_completar','entro','anotada','activa'].map(function(k){return '<div class="res"><b>'+ESTADO[k][0]+'</b>'+(n[k]||0)+'</div>'}).join('');
     $('filas').innerHTML=datos.map(function(f,i){
-      var acceso=f.habilitada;
+      var e=ESTADO[f.estado]||[f.estado,'pend'];
+      var rol=f.rol?(ROL[f.rol]||f.rol):(f.es_profesional?'Profesional (anotada)':'—');
+      var entro=f.ultimo_ingreso?(f.entradas+' visita'+(f.entradas===1?'':'s')+'<br><span class="chico">último: '+esc(fecha(f.ultimo_ingreso))+'</span>'):'<span class="chico">—</span>';
+      var mails=f.mails?(f.mails+(f.mail_error?' <span class="tag err">con error</span>':'')+'<br><span class="chico">último: '+esc(f.ultimo_mail||'')+' · '+esc(fecha(f.ultimo_mail_en))+'</span>'):(f.mail_error?'<span class="tag err">con error</span>':'<span class="chico">ninguno</span>');
+      var pago=f.estado==='pago_sin_completar'?'<br><span class="chico">desde '+esc(fecha(f.pago_iniciado))+'</span>':'';
       return '<tr><td><input type="checkbox" data-i="'+i+'"></td>'
         +'<td>'+esc(f.email)+'</td>'
-        +'<td>'+esc(f.cupon||'')+'</td>'
-        +'<td>'+(acceso?'<span class="tag ok">habilitada</span>':'<span class="tag pend">pendiente</span>')+'</td>'
-        +'<td>'+est(f.listo_estado,f.listo_en)+'</td>'
-        +'<td>'+est(f.confirmado_estado,f.confirmado_en)+'</td>'
-        +'<td>'+esc((f.clics_pagar||0)+' pagar · '+(f.clics_entrar||0)+' entrar')+'</td><td>'+esc(f.celular||'')+'</td></tr>';
+        +'<td><span class="tag '+e[1]+'">'+e[0]+'</span>'+pago+'</td>'
+        +'<td>'+esc(rol)+'</td>'
+        +'<td>'+entro+'</td>'
+        +'<td>'+mails+'</td>'
+        +'<td>'+esc(f.cupon||'')+'</td><td>'+esc(f.celular||'')+'</td></tr>';
     }).join('');
   }
 

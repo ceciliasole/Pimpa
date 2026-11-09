@@ -488,6 +488,7 @@ function start(){
   sb.auth.onAuthStateChange(function(ev,session){
     if(ev==='SIGNED_OUT'&&wasDenied){wasDenied=false;return;}
     if(ev==='INITIAL_SESSION'||ev==='SIGNED_IN'||ev==='SIGNED_OUT'){setTimeout(function(){check(session);},0);}
+    if(session&&(ev==='INITIAL_SESSION'||ev==='SIGNED_IN')){try{if(!sessionStorage.getItem('pimpa_ing')){sessionStorage.setItem('pimpa_ing','1');sb.rpc('registrar_ingreso').then(function(){},function(){});}}catch(x){}}
   });
 }
 go.onclick=function(){
