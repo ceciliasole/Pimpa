@@ -1,7 +1,7 @@
 // Envía los mails de Pimpa por Resend. Solo lo puede usar una socia logueada (founder o cofounder):
 // el permiso lo chequea la base (es_socia) con el token de quien llama, sin claves de administrador.
 // Variables de Vercel: RESEND_API_KEY (obligatoria), MAIL_FROM (opcional).
-const { listo, confirmado, carrito } = require('./_plantillas');
+const { listo, confirmado, carrito, datosCupon } = require('./_plantillas');
 
 const SB_URL = process.env.SB_URL || 'https://fhzqiuvubcytuewwktyf.supabase.co';
 const SB_KEY = process.env.SB_KEY || 'sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
@@ -10,7 +10,7 @@ const REPLY_TO = 'pimpa@impactese.com';
 const PLANTILLAS = { listo, confirmado, carrito };
 
 // 'listo' lleva el precio según tenga código o no. Se busca en la lista de espera (solo socias).
-function armar(plantilla, id, codigo) { return plantilla === 'listo' ? listo(id, codigo) : (plantilla === 'carrito' ? carrito(id, codigo) : confirmado(id)); }
+function armar(plantilla, id, codigo, desc) { return plantilla === 'listo' ? listo(id, codigo, desc) : (plantilla === 'carrito' ? carrito(id, codigo) : confirmado(id)); }
 
 async function rpc(nombre, args, jwt) {
   const r = await fetch(SB_URL + '/rest/v1/rpc/' + nombre, {
@@ -67,6 +67,7 @@ module.exports = async (req, res) => {
     try { (await rpc('socias_lista', {}, jwt) || []).forEach(f => { sinCod[f.email] = f.cupon || null; }); } catch (e) { return res.status(500).json({ error: 'No pude leer la lista' }); }
   }
   const resultados = [];
+  const cacheCup = {};
   for (const email of emails) {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { resultados.push({ email, ok: false, error: 'Mail inválido' }); continue; }
     let id;
@@ -78,7 +79,9 @@ module.exports = async (req, res) => {
       continue;
     }
     try {
-      const m = armar(plantilla, id, sinCod[email] || null);
+      let v;
+      if (plantilla === 'listo' && sinCod[email]) { if (!(sinCod[email] in cacheCup)) cacheCup[sinCod[email]] = await datosCupon(rpc, sinCod[email]); v = cacheCup[sinCod[email]]; }
+      const m = plantilla === 'listo' ? armar(plantilla, id, v ? v.codigo : null, sinCod[email] ? v : undefined) : armar(plantilla, id, null);
       const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + process.env.RESEND_API_KEY, 'Content-Type': 'application/json' },

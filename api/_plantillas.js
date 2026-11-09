@@ -24,10 +24,18 @@ function boton(url, texto) {
     + '<a href="' + url + '" style="display:block;padding:15px 34px;font-size:18px;font-weight:bold;color:#1f4e8c;text-decoration:none">' + texto + '</a></td></tr></table>';
 }
 
-function listo(envioId, codigo) {
-  // Precios de lanzamiento (el de lista es $30.000 por mes). Con código se aplican los descuentos estándar (15% en 1 y 3 meses, 20% en el anual).
+// desc = datos reales del código (validar_cupon). Sin desc se usan los estándar (15% en 1 y 3 meses, 20% en el anual): solo para vistas previas.
+// Si se manda desc === null, el código no es válido: se muestra sin código y sin descuento.
+async function datosCupon(rpc, codigo) {
+  if (!codigo) return null;
+  try { const v = await rpc('validar_cupon', { p_codigo: String(codigo) }); return v && v.valido ? v : null; } catch (e) { return null; }
+}
+
+function listo(envioId, codigo, desc) {
   const STD = { descuento_pct: 15, descuento_anual_pct: 20 };
-  const plan = (t, k) => ({ t, p: peso(precioPlan(k, codigo ? STD : null)) });
+  if (desc === null) codigo = null;
+  const dc = desc || STD;
+  const plan = (t, k) => ({ t, p: peso(precioPlan(k, codigo ? dc : null)) });
   const planes = [plan('1 mes', 'mensual'), plan('3 meses', 'trimestral'), plan('Plan anual', 'anual')];
   const pagar = BASE + (codigo ? '/?cupon=' + encodeURIComponent(codigo) : '/');
   const nota = 'Es el precio de lanzamiento (el de lista es $30.000 por mes). Cuando termina tu plan, lo renov\u00e1s desde la app.';
@@ -94,4 +102,4 @@ function carrito(envioId, codigo) {
   return { subject: 'Tu lugar en Pimpa te sigue esperando \ud83d\udc9b', html, text };
 }
 
-module.exports = { listo, confirmado, carrito };
+module.exports = { listo, confirmado, carrito, datosCupon };
