@@ -75,4 +75,23 @@ function confirmado(envioId) {
   return { subject: 'Está confirmado tu acceso a Pimpa ✨', html, text };
 }
 
-module.exports = { listo, confirmado };
+// Carrito abandonado: BORRADOR. Todavía no se envía a nadie (falta definir el disparador y el texto final).
+// Pensado para quien abrió Mercado Pago y no terminó el pago (estado "pago sin completar" del panel).
+function carrito(envioId, codigo) {
+  const volver = BASE + (codigo ? '/?cupon=' + encodeURIComponent(codigo) : '/');
+  const html = marco('Tu lugar en Pimpa te sigue esperando \ud83d\udc9b',
+    '<p style="margin:0 0 14px">\u00a1Hola!</p>'
+    + '<p style="margin:0 0 16px">Vimos que empezaste a activar tu cuenta de Pimpa y no llegaste a terminar el pago. No pasa nada: <strong>tu lugar sigue reservado</strong>.</p>'
+    + '<p style="margin:0 0 18px">Cuando quieras, entr\u00e1 con el mismo Gmail y retom\u00e1 desde donde quedaste. Se habilita sola apenas se acredita el pago.</p>'
+    + '<div style="margin:0 0 22px">' + boton(volver, 'Terminar mi activaci\u00f3n') + '</div>'
+    + '<p style="margin:0 0 14px">Si algo no funcion\u00f3 con Mercado Pago o ten\u00e9s una duda, escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a> y lo resolvemos.</p>'
+    + '<p style="margin:0 0 14px;font-size:14px;color:#555555">Pimpa es un complemento y no reemplaza una terapia ni a un profesional.</p>');
+  const text = '\u00a1Hola!\n\nVimos que empezaste a activar tu cuenta de Pimpa y no llegaste a terminar el pago. No pasa nada: tu lugar sigue reservado.\n\n'
+    + 'Cuando quieras, entr\u00e1 con el mismo Gmail y retom\u00e1 desde donde quedaste. Se habilita sola apenas se acredita el pago.\n\n'
+    + 'Terminar mi activaci\u00f3n: ' + volver + '\n\n'
+    + 'Si algo no funcion\u00f3 con Mercado Pago o ten\u00e9s una duda, escribinos a pimpa@impactese.com y lo resolvemos.\n\n'
+    + 'Pimpa es un complemento y no reemplaza una terapia ni a un profesional.\n\nCon cari\u00f1o,\nEquipo Pimpa';
+  return { subject: 'Tu lugar en Pimpa te sigue esperando \ud83d\udc9b', html, text };
+}
+
+module.exports = { listo, confirmado, carrito };

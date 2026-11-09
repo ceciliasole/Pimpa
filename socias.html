@@ -72,6 +72,14 @@
       </table></div>
     </div>
     <div class="card">
+      <strong>Mails automáticos</strong>
+      <p class="chico">Acá están todos los mails que salen solos, con su nombre y cuándo se mandan. "Ver" abre el texto; "Enviarme una prueba" te lo manda a vos. Los textos se cambian por acá con Claude, no desde el panel.</p>
+      <div class="tabla-wrap"><table>
+        <thead><tr><th>Nombre</th><th>Cuándo sale</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="auto-filas"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
       <strong>Quiénes entraron</strong>
       <p class="chico">Datos que cada persona completó la primera vez que entró. De los chicos solo está la edad. El celular y el mail son datos personales: no los compartas fuera del equipo y escribile por marketing solo a quien dice "sí".</p>
       <div id="p-res" class="acciones" style="margin-top:8px"></div>
@@ -188,6 +196,32 @@
     }).join('');
   }
 
+  var AUTOS=[
+    {k:'listo',nombre:'Tu lugar en Pimpa está listo',cuando:'Apenas alguien se anota (familias y profesionales). Se saltea si ya está habilitada o ya lo recibió. Tope de 30 por día.',estado:'Activo',cl:'ok',ver:[['Ver sin código',null],['Ver con código','JOSE1']]},
+    {k:'confirmado',nombre:'Está confirmado tu acceso',cuando:'Apenas se acredita el pago en Mercado Pago.',estado:'Activo',cl:'ok',ver:[['Ver',null]]},
+    {k:'carrito',nombre:'Carrito abandonado (borrador)',cuando:'Pensado para quien está en "Pago sin completar" hace más de 24 horas. Todavía no se manda a nadie.',estado:'Borrador',cl:'pend',ver:[['Ver',null]]}
+  ];
+  function pintarAutos(){
+    $('auto-filas').innerHTML=AUTOS.map(function(a,i){
+      return '<tr><td><b>'+esc(a.nombre)+'</b></td><td class="chico">'+esc(a.cuando)+'</td><td><span class="tag '+a.cl+'">'+a.estado+'</span></td><td>'
+        +a.ver.map(function(v,j){return '<button class="sec" data-a="'+i+'" data-v="'+j+'" style="margin:2px 4px 2px 0;padding:6px 12px">'+v[0]+'</button>'}).join('')+'</td></tr>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('#auto-filas button'),function(b){
+      b.onclick=function(){verAuto(AUTOS[+b.dataset.a],AUTOS[+b.dataset.a].ver[+b.dataset.v][1])};
+    });
+  }
+  async function verAuto(a,codigo){
+    try{
+      var v=await llamar({modo:'vista',plantilla:a.k,codigo:codigo});
+      pend={plantilla:a.k,emails:[],btn:null,soloVer:true};
+      $('m-asunto').textContent='Asunto: '+v.subject;
+      $('m-para').textContent=a.nombre+(a.k==='carrito'?' · BORRADOR, todavía no se envía':'');
+      $('m-frame').srcdoc=v.html;$('m-msg').textContent='';
+      $('m-ok').hidden=true;$('m-prueba').disabled=false;
+      $('modal').hidden=false;
+    }catch(x){msg(x.message,true)}
+  }
+
   function elegidos(){
     return Array.prototype.slice.call(document.querySelectorAll('#filas input:checked')).map(function(c){return datos[+c.dataset.i].email});
   }
@@ -234,7 +268,7 @@
       $('m-para').textContent='Para ('+e.length+'): '+e.join(', ')+(plantilla==='listo'?'  ·  Con código: '+cc+' ($17.000)  ·  Sin código: '+sc+' ($20.000). Cada una recibe su precio; abajo ves el de la primera.'+(pr?'  ·  OJO: '+pr+' profesional(es): este mail es el de familias.':''):'');
       $('m-frame').srcdoc=v.html;
       $('m-msg').textContent='';
-      $('m-ok').disabled=false;$('m-prueba').disabled=false;
+      $('m-ok').hidden=false;$('m-ok').disabled=false;$('m-prueba').disabled=false;
       $('modal').hidden=false;
     }catch(x){msg(x.message,true)}
     btn.disabled=false;
@@ -276,6 +310,7 @@
     });
   };
 
+  pintarAutos();
   iniciar();
 })();
 </script>
