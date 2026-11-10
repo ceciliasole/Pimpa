@@ -1,15 +1,15 @@
 // /pagar y /entrar: registran el clic (si el link viene de un mail enviado desde /socias) y redirigen.
 const SB_URL = process.env.SB_URL || 'https://fhzqiuvubcytuewwktyf.supabase.co';
 const SB_KEY = process.env.SB_KEY || 'sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
-const PAGO_URL = process.env.PAGO_URL || 'https://mpago.la/1yMJ5uy';
-const PAGO_SC_URL = process.env.PAGO_SC_URL || 'https://mpago.la/1EqRgMH';
-const DESTINOS = { pagar: PAGO_URL, entrar: '/' };
+// Todo pago pasa por el checkout de la app (login con Google -> elegir plan -> Mercado Pago), que habilita la cuenta solo al pagar.
+// Los links viejos /pagar y /pagar20 (mails y pantallas anteriores) ya no van al link fijo de Mercado Pago: llevan a la app.
+const DESTINOS = { pagar: '/', entrar: '/' };
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 module.exports = async (req, res) => {
   const d = String(req.query.d || '');
   const e = String(req.query.e || '');
-  const destino = (d === 'pagar' && String(req.query.p || '') === 'sc') ? PAGO_SC_URL : DESTINOS[d];
+  const destino = DESTINOS[d];
   res.setHeader('Cache-Control', 'no-store');
   if (!destino) { res.writeHead(302, { Location: '/' }); return res.end(); }
   if (UUID.test(e)) {
