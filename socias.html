@@ -22,28 +22,62 @@
   body{margin:0;font-family:"Nunito","Trebuchet MS",Arial,sans-serif;background:#FFF6E5;color:#2d3a4a}
   header{background:#FFE9A6;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:6px solid #4A90D9}
   header h1{margin:0;font-size:20px}
-  main{max-width:960px;margin:0 auto;padding:16px}
-  button{font:inherit;font-weight:700;border:2px solid #1f4e8c;background:#FFD54F;color:#1f4e8c;border-radius:999px;padding:10px 18px;cursor:pointer}
+  main{max-width:1040px;margin:0 auto;padding:16px 16px 90px}
+  button{font:inherit;font-weight:700;border:2px solid #1f4e8c;background:#FFD54F;color:#1f4e8c;border-radius:999px;padding:9px 16px;cursor:pointer}
   button.sec{background:#fff}
+  button.peli{background:#fff;border-color:#b04a35;color:#b04a35}
+  button.peli.fuerte{background:#b04a35;color:#fff}
+  button.chica{padding:5px 12px;font-size:13px}
   button:disabled{opacity:.5;cursor:default}
   .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-  .acciones{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+  .barra .esp{flex:1}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:2px solid #eee}
+  .tab{background:none;border:none;border-bottom:4px solid transparent;border-radius:0;padding:8px 14px;color:#777;font-size:15px}
+  .tab.on{color:#1f4e8c;border-bottom-color:#4A90D9}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .chip{background:#fff;border:2px solid #ddd;color:#2d3a4a;padding:5px 12px;font-size:13px}
+  .chip.on{background:#E6EEF9;border-color:#1f4e8c;color:#1f4e8c}
+  .chip b{margin-left:4px}
   table{width:100%;border-collapse:collapse;font-size:14px}
   th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #eee;vertical-align:top}
   th{font-size:12px;text-transform:uppercase;color:#777}
+  tr.fila{cursor:pointer}
+  tr.fila:hover{background:#FFF9EC}
   .tag{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
   .neu{background:#E6EEF9;color:#1f4e8c}.ok{background:#E8F6EF;color:#2f6f55}.pend{background:#FFEDE9;color:#b04a35}.err{background:#fde0e0;color:#a11}
-  input[type=text],input[type=email]{font:inherit;padding:9px 12px;border:2px solid #ddd;border-radius:12px;min-width:220px}
-  #msg{min-height:22px;font-weight:700;margin:8px 0}
+  input[type=text],input[type=email],input[type=search],input[type=date],select{font:inherit;padding:9px 12px;border:2px solid #ddd;border-radius:12px;background:#fff;color:#2d3a4a}
+  #q{min-width:260px}
+  #msg{min-height:22px;font-weight:700;margin:0 0 8px}
   .chico{font-size:12px;color:#777}
   .tabla-wrap{overflow-x:auto}
   .res{background:#FFF6E5;border-radius:12px;padding:8px 12px;font-size:13px}
   .res b{display:block;font-size:12px;text-transform:uppercase;color:#777;margin-bottom:2px}
-  #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:10px;z-index:10}
+  /* Ficha de la persona */
+  #ficha{position:fixed;top:0;right:0;height:100%;width:min(480px,100%);background:#fff;box-shadow:-6px 0 20px rgba(0,0,0,.25);overflow-y:auto;padding:18px;z-index:20}
+  #ficha[hidden]{display:none}
+  #ficha h2{margin:0 0 4px;font-size:18px;word-break:break-all}
+  #ficha h3{margin:18px 0 6px;font-size:13px;text-transform:uppercase;color:#777}
+  .dato{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid #f1f1f1;font-size:14px}
+  .dato span:first-child{width:130px;color:#777;flex:none}
+  .acc{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .hist{list-style:none;margin:0;padding:0}
+  .hist li{padding:7px 0 7px 14px;border-left:3px solid #E6EEF9;margin-left:4px;font-size:14px}
+  .hist li .chico{display:block}
+  /* Barra de selección */
+  #sel{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1f4e8c;color:#fff;border-radius:999px;padding:8px 10px 8px 18px;display:flex;gap:8px;align-items:center;z-index:15;box-shadow:0 4px 16px rgba(0,0,0,.3);flex-wrap:wrap;max-width:96vw}
+  #sel[hidden]{display:none}
+  #sel button{padding:6px 14px;font-size:14px}
+  /* Ventana */
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:10px;z-index:30}
   #modal[hidden]{display:none}
-  #modal .caja{background:#fff;border-radius:16px;width:100%;max-width:640px;max-height:96vh;display:flex;flex-direction:column;padding:14px}
-  #modal iframe{flex:1;min-height:360px;border:1px solid #ddd;border-radius:10px;width:100%}
-  #modal .pie{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  #modal .caja{background:#fff;border-radius:16px;width:100%;max-width:640px;max-height:96vh;overflow-y:auto;display:flex;flex-direction:column;padding:16px}
+  #modal .mo-t{font-weight:800;font-size:17px;margin-bottom:8px}
+  #modal iframe{min-height:340px;border:1px solid #ddd;border-radius:10px;width:100%}
+  #modal .pie{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  #modal label.f{display:block;margin:10px 0 4px;font-size:13px;font-weight:700;color:#555}
+  #modal select,#modal input[type=text],#modal input[type=email],#modal input[type=date]{width:100%}
+  #modal .lista{font-size:13px;background:#FFF6E5;border-radius:10px;padding:8px 12px;max-height:110px;overflow:auto;margin:6px 0}
 </style>
 </head>
 <body>
@@ -56,58 +90,74 @@
   <div id="noauth" class="card" hidden><p>Este mail no tiene permiso para este panel.</p></div>
 
   <div id="panel" hidden>
-    <div id="msg"></div>
-    <div class="card">
-      <div class="acciones">
-        <button id="b-pago" class="sec">Habilitar a mano (sin pago)</button>
-        <button id="b-act" class="sec">Actualizar</button>
+    <div id="msg" role="status" aria-live="polite"></div>
+    <div class="tabs">
+      <button class="tab on" data-t="personas">Personas</button>
+      <button class="tab" data-t="autos">Mails automáticos</button>
+      <button class="tab" data-t="perfiles">Perfiles</button>
+    </div>
+
+    <div id="t-personas" class="card">
+      <div class="barra">
+        <input type="search" id="q" placeholder="Buscar por mail…">
+        <span class="esp"></span>
+        <button class="sec" id="b-act">Actualizar</button>
+        <button id="b-add">+ Agregar persona</button>
       </div>
-      <p class="chico">Los mails salen solos (ver "Mails automáticos" abajo). "Habilitar a mano" es solo para excepciones: amigas, educadoras o quien pagó por fuera de Mercado Pago.</p>
-      <div id="resumen" class="acciones"></div>
-      <p class="chico"><b>Anotada:</b> dejó el mail y no entró · <b>Entró, sin pagar:</b> hizo login y no pagó · <b>Pago sin completar:</b> abrió Mercado Pago y no terminó · <b>Activa:</b> ya puede usar la app (con la fecha en que vence su plan) · <b>Vencida:</b> se le terminó el plan y tiene que renovar. "Entró" cuenta las visitas desde el 9/11; el último ingreso viene de Google. Los "Mails" incluyen los que se mandan solos. Para mandar uno a mano, marcá las filas y tocá el botón.</p>
+      <div class="chips" id="chips"></div>
       <div class="tabla-wrap"><table>
-        <thead><tr><th></th><th>Mail</th><th>Estado</th><th>Rol</th><th>Entró</th><th>Mails</th><th>Cupón</th><th>Celular</th></tr></thead>
+        <thead><tr><th><input type="checkbox" id="todas" title="Marcar todas las que se ven"></th><th>Persona</th><th>Estado</th><th>Rol</th><th>Entró</th><th>Último mail</th><th>Cupón</th></tr></thead>
         <tbody id="filas"></tbody>
       </table></div>
+      <p class="chico" id="vacio" hidden>No hay nadie con ese filtro.</p>
+      <p class="chico">Tocá una persona para abrir su ficha: ahí ves todo su historial y podés mandarle un mail, habilitarla, cambiarle el vencimiento o eliminarla. Para actuar sobre varias a la vez, marcá las casillas: abajo aparece la barra de acciones.</p>
     </div>
-    <div class="card">
+
+    <div id="t-autos" class="card" hidden>
       <strong>Mails automáticos</strong>
-      <p class="chico">Acá están todos los mails que salen solos, con su nombre y cuándo se mandan. "Ver" abre el texto; "Enviarme una prueba" te lo manda a vos. Los textos se cambian por acá con Claude, no desde el panel.</p>
+      <p class="chico">Estos mails salen solos. "Ver" abre el texto; adentro podés mandarte una prueba. Los textos se cambian con Claude, no desde el panel.</p>
       <div class="tabla-wrap"><table>
         <thead><tr><th>Nombre</th><th>Cuándo sale</th><th>Estado</th><th></th></tr></thead>
         <tbody id="auto-filas"></tbody>
       </table></div>
     </div>
-    <div class="card">
+
+    <div id="t-perfiles" class="card" hidden>
       <strong>Quiénes entraron</strong>
       <p class="chico">Datos que cada persona completó la primera vez que entró. De los chicos solo está la edad. El celular y el mail son datos personales: no los compartas fuera del equipo y escribile por marketing solo a quien dice "sí".</p>
-      <div id="p-res" class="acciones" style="margin-top:8px"></div>
+      <div id="p-res" class="barra" style="margin-top:8px"></div>
       <div class="tabla-wrap"><table>
         <thead><tr><th>Persona</th><th>Vínculo</th><th>Dónde</th><th>Chicos</th><th>Contacto</th><th>Marketing</th><th>Llegó por</th></tr></thead>
         <tbody id="p-filas"></tbody>
       </table></div>
     </div>
-    <div class="card">
-      <strong>Agregar un mail</strong>
-      <div class="acciones" style="margin-top:8px">
-        <input type="email" id="n-mail" placeholder="mail@ejemplo.com">
-        <input type="text" id="n-cupon" placeholder="Cupón (opcional, ej. JOSE1)" style="min-width:180px">
-        <label><input type="checkbox" id="n-prof"> es profesional</label>
-        <button id="b-add">Agregar</button>
-      </div>
-    </div>
   </div>
 </main>
-<div id="modal" hidden><div class="caja">
-  <div><strong id="m-asunto"></strong><div class="chico" id="m-para"></div></div>
-  <iframe id="m-frame" sandbox=""></iframe>
-  <div id="m-msg" class="chico" style="min-height:18px;margin-top:6px"></div>
-  <div class="pie">
-    <button id="m-ok">Confirmar y enviar</button>
-    <button id="m-prueba" class="sec">Enviarme una prueba</button>
-    <button id="m-no" class="sec">Cancelar</button>
+
+<div id="sel" hidden>
+  <span id="sel-n"></span>
+  <button id="s-mail" class="sec">Enviar mail</button>
+  <button id="s-hab" class="sec">Habilitar</button>
+  <button id="s-del" class="peli">Eliminar</button>
+  <button id="s-no" class="sec">Quitar marcas</button>
+</div>
+
+<aside id="ficha" hidden aria-label="Ficha de la persona">
+  <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+    <div><h2 id="fi-mail"></h2><div id="fi-est"></div></div>
+    <button class="sec chica" id="fi-x">Cerrar ✕</button>
   </div>
+  <div class="acc" id="fi-acc"></div>
+  <div id="fi-body"></div>
+</aside>
+
+<div id="modal" hidden><div class="caja">
+  <div class="mo-t" id="mo-t"></div>
+  <div id="mo-b"></div>
+  <div id="mo-m" class="chico" style="min-height:18px;margin-top:6px" role="status" aria-live="polite"></div>
+  <div class="pie" id="mo-pie"></div>
 </div></div>
+
 <script src="vendor/supabase-2.45.4.js"></script>
 <script>
 (function(){
@@ -115,16 +165,28 @@
   var SB_KEY='sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
   var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true}});
   var $=function(id){return document.getElementById(id)};
-  var datos=[];
+  var datos=[], filtro='todas', busca='', marcadas={}, fichaMail=null, miMail='';
 
   function msg(t,mal){var m=$('msg');m.textContent=t||'';m.style.color=mal?'#a11':'#2f6f55'}
-  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function fecha(f){if(!f)return '';var d=new Date(f);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}
+  function dia(f){var d=new Date(f);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'})}
+  function plata(n){return '$'+Number(n).toLocaleString('es-AR')}
+
+  var ESTADO={anotada:['Anotada','pend'],entro:['Entró, sin pagar','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],vencida:['Vencida','err']};
+  var PLANTXT={mensual:'1 mes',trimestral:'3 meses',anual:'Anual'};
+  var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
+  var MAILNOM={listo:'Tu lugar está listo',confirmado:'Está confirmado tu acceso',aviso:'Ahora es directo',carrito:'Carrito abandonado'};
+  var REL={madre:'Mamá',padre:'Papá',abuela_o:'Abuela/o',otro_familiar:'Otro familiar',docente:'Docente',profesional:'Profesional',otro:'Otro'};
+
+  function esSocia(f){return f&&(f.rol==='founder'||f.rol==='cofounder')}
+  function persona(m){for(var i=0;i<datos.length;i++)if(datos[i].email===m)return datos[i];return null}
 
   async function iniciar(){
     var r=await sb.auth.getSession();
     var ses=r.data.session;
     if(!ses){$('login').hidden=false;return}
+    miMail=(ses.user&&ses.user.email||'').toLowerCase();
     $('salir').hidden=false;
     var ok=await sb.rpc('es_socia');
     if(ok.error||ok.data!==true){$('noauth').hidden=false;return}
@@ -133,16 +195,369 @@
   }
 
   async function cargar(){
-    msg('Cargando…');
     var r=await sb.rpc('socias_estado');
     if(r.error){msg('Error: '+r.error.message,true);return}
     datos=r.data||[];
+    Object.keys(marcadas).forEach(function(m){if(!persona(m))delete marcadas[m]});
     pintar();
-    msg(datos.length+' mails');
     cargarPerfiles();
   }
 
-  var REL={madre:'Mamá',padre:'Papá',abuela_o:'Abuela/o',otro_familiar:'Otro familiar',docente:'Docente',profesional:'Profesional',otro:'Otro'};
+  /* ---------- Lista de personas ---------- */
+  var FILTROS=[['todas','Todas'],['activa','Activas'],['pago_sin_completar','Pago sin completar'],['entro','Entraron, sin pagar'],['anotada','Anotadas'],['vencida','Vencidas']];
+  function visibles(){
+    return datos.filter(function(f){
+      if(filtro!=='todas'&&f.estado!==filtro)return false;
+      if(busca&&f.email.indexOf(busca)<0)return false;
+      return true;
+    });
+  }
+  function pintar(){
+    var n={};datos.forEach(function(f){n[f.estado]=(n[f.estado]||0)+1});
+    $('chips').innerHTML=FILTROS.map(function(x){
+      var c=x[0]==='todas'?datos.length:(n[x[0]]||0);
+      return '<button class="chip'+(filtro===x[0]?' on':'')+'" data-f="'+x[0]+'">'+x[1]+'<b>'+c+'</b></button>';
+    }).join('');
+    var v=visibles();
+    $('vacio').hidden=v.length>0;
+    $('filas').innerHTML=v.map(function(f){
+      var e=ESTADO[f.estado]||[f.estado,'pend'];
+      var rol=f.rol?(ROL[f.rol]||f.rol):(f.es_profesional?'Profesional (anotada)':'—');
+      var entro=f.ultimo_ingreso?(f.entradas+' visita'+(f.entradas===1?'':'s')+'<br><span class="chico">último: '+esc(fecha(f.ultimo_ingreso))+'</span>'):'<span class="chico">—</span>';
+      var mails=f.mails?(esc(MAILNOM[f.ultimo_mail]||f.ultimo_mail||'')+(f.mail_error?' <span class="tag err">con error</span>':'')+'<br><span class="chico">'+f.mails+' en total · '+esc(fecha(f.ultimo_mail_en))+'</span>'):(f.mail_error?'<span class="tag err">con error</span>':'<span class="chico">ninguno</span>');
+      var sub='';
+      if(f.estado==='pago_sin_completar')sub='<br><span class="chico">desde '+esc(fecha(f.pago_iniciado))+'</span>';
+      else if(f.estado==='activa'||f.estado==='vencida')sub='<br><span class="chico">'+(f.vence?((f.estado==='vencida'?'venció ':'vence ')+esc(dia(f.vence))):'sin vencimiento')+(f.plan?' · '+esc(PLANTXT[f.plan]||f.plan):'')+'</span>';
+      return '<tr class="fila" data-m="'+esc(f.email)+'"><td><input type="checkbox" data-m="'+esc(f.email)+'"'+(marcadas[f.email]?' checked':'')+'></td>'
+        +'<td><b>'+esc(f.email)+'</b></td><td><span class="tag '+e[1]+'">'+e[0]+'</span>'+sub+'</td>'
+        +'<td>'+esc(rol)+'</td><td>'+entro+'</td><td>'+mails+'</td><td>'+esc(f.cupon||'')+'</td></tr>';
+    }).join('');
+    pintarSel();
+  }
+  function cantMarcadas(){return Object.keys(marcadas).length}
+  function pintarSel(){
+    var n=cantMarcadas();
+    $('sel').hidden=n===0;
+    $('sel-n').textContent=n+(n===1?' persona marcada':' personas marcadas');
+  }
+
+  $('chips').onclick=function(e){var b=e.target.closest('button[data-f]');if(!b)return;filtro=b.dataset.f;pintar()};
+  $('q').oninput=function(){busca=this.value.trim().toLowerCase();pintar()};
+  $('todas').onchange=function(){
+    var on=this.checked;
+    visibles().forEach(function(f){if(on)marcadas[f.email]=1;else delete marcadas[f.email]});
+    pintar();
+  };
+  $('filas').onclick=function(e){
+    var ck=e.target.closest('input[type=checkbox]');
+    if(ck){if(ck.checked)marcadas[ck.dataset.m]=1;else delete marcadas[ck.dataset.m];pintarSel();return}
+    var tr=e.target.closest('tr[data-m]');
+    if(tr)abrirFicha(tr.dataset.m);
+  };
+  $('b-act').onclick=async function(){msg('Actualizando…');await cargar();if(fichaMail)abrirFicha(fichaMail,true);msg(datos.length+' personas')};
+  $('s-no').onclick=function(){marcadas={};pintar()};
+  $('s-mail').onclick=function(){modalEnviar(Object.keys(marcadas))};
+  $('s-hab').onclick=function(){modalHabilitar(Object.keys(marcadas))};
+  $('s-del').onclick=function(){modalEliminar(Object.keys(marcadas))};
+
+  document.querySelector('.tabs').onclick=function(e){
+    var b=e.target.closest('.tab');if(!b)return;
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'),function(t){t.classList.toggle('on',t===b)});
+    ['personas','autos','perfiles'].forEach(function(k){$('t-'+k).hidden=(k!==b.dataset.t)});
+    $('sel').hidden=(b.dataset.t!=='personas')||cantMarcadas()===0;
+  };
+
+  /* ---------- Ventana ---------- */
+  function modal(titulo,cuerpo,botones){
+    $('mo-t').textContent=titulo;$('mo-b').innerHTML=cuerpo;$('mo-m').textContent='';
+    var pie=$('mo-pie');pie.innerHTML='';
+    botones.forEach(function(b){
+      var el=document.createElement('button');el.textContent=b.t;el.className=b.cls||'sec';
+      el.onclick=function(){b.fn(el)};pie.appendChild(el);
+    });
+    $('modal').hidden=false;
+  }
+  function cerrar(){$('modal').hidden=true;$('mo-b').innerHTML='';$('mo-pie').innerHTML=''}
+  function mmsg(t,mal){var m=$('mo-m');m.textContent=t||'';m.style.color=mal?'#a11':'#2f6f55'}
+  function listaHTML(emails){return '<div class="lista">'+emails.map(esc).join('<br>')+'</div>'}
+  function conSocias(emails){return emails.filter(function(m){return esSocia(persona(m))})}
+
+  async function llamar(cuerpo){
+    var ses=(await sb.auth.getSession()).data.session;
+    var r=await fetch('/api/enviar',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ses.access_token},body:JSON.stringify(cuerpo)});
+    var d=await r.json().catch(function(){return{}});
+    if(!r.ok)throw new Error(d.error||('Error '+r.status));
+    return d;
+  }
+  async function enviar(plantilla,emails){
+    var ok=0,mal=[];
+    for(var i=0;i<emails.length;i+=50){
+      var d=await llamar({plantilla:plantilla,emails:emails.slice(i,i+50)});
+      d.resultados.forEach(function(x){if(x.ok)ok++;else mal.push(x.email+': '+x.error)});
+    }
+    return {ok:ok,mal:mal};
+  }
+  async function despues(texto,mal){
+    cerrar();await cargar();
+    if(fichaMail&&persona(fichaMail)!==null)await abrirFicha(fichaMail,true);else cerrarFicha();
+    msg(texto,mal);
+  }
+
+  /* ---------- Enviar mail ---------- */
+  function modalEnviar(emails){
+    if(!emails.length)return;
+    var p=persona(emails[0]);
+    var def=(emails.length===1&&p&&p.estado==='activa')?'confirmado':'listo';
+    var opts=['listo','confirmado','aviso'].map(function(k){return '<option value="'+k+'"'+(k===def?' selected':'')+'>'+esc(MAILNOM[k])+'</option>'}).join('');
+    modal('Enviar mail a '+(emails.length===1?emails[0]:emails.length+' personas'),
+      (emails.length>1?listaHTML(emails):'')
+      +'<label class="f" for="mo-sel">¿Cuál mail?</label><select id="mo-sel">'+opts+'</select>'
+      +'<div class="chico" id="mo-asu" style="margin:8px 0 4px"></div><iframe id="mo-f" sandbox=""></iframe>'
+      +'<div class="chico" style="margin-top:4px">Salen desde pimpa@impactese.com. La vista previa es de ejemplo'+(emails.length>1?': cada persona recibe el suyo, con su cupón.':'.')+'</div>',
+      [{t:'Enviar a '+emails.length+(emails.length===1?' persona':' personas'),cls:'',fn:async function(b){
+          b.disabled=true;mmsg('Enviando…');
+          try{
+            var r=await enviar($('mo-sel').value,emails);
+            if(r.mal.length){await despues('Enviados: '+r.ok+'. Con error: '+r.mal.join(' | '),true)}
+            else await despues('Mail enviado a '+r.ok+(r.ok===1?' persona.':' personas.'));
+          }catch(x){mmsg('Error: '+x.message,true);b.disabled=false}
+        }},
+       {t:'Enviarme una prueba',fn:async function(b){
+          b.disabled=true;mmsg('Enviando prueba…');
+          try{var d=await llamar({modo:'prueba',plantilla:$('mo-sel').value});mmsg('Prueba enviada a '+d.enviadoA+'.')}
+          catch(x){mmsg('Error: '+x.message,true)}
+          b.disabled=false;
+        }},
+       {t:'Cancelar',fn:cerrar}]);
+    async function ver(){
+      mmsg('');
+      try{var v=await llamar({modo:'vista',plantilla:$('mo-sel').value,codigo:(p&&p.cupon)||null});
+        $('mo-asu').textContent='Asunto: '+v.subject;$('mo-f').srcdoc=v.html}
+      catch(x){mmsg('No pude cargar la vista previa: '+x.message,true)}
+    }
+    $('mo-sel').onchange=ver;ver();
+  }
+
+  /* ---------- Habilitar ---------- */
+  function modalHabilitar(emails){
+    if(!emails.length)return;
+    var soc=conSocias(emails);
+    if(soc.length){msg('Las socias ya tienen acceso completo: sacalas de la selección ('+soc.join(', ')+').',true);return}
+    modal('Habilitar a '+(emails.length===1?emails[0]:emails.length+' personas'),
+      (emails.length>1?listaHTML(emails):'')
+      +'<label class="f" for="mo-rol">Rol</label><select id="mo-rol"><option value="familia">Familia</option><option value="educador">Educadora</option></select>'
+      +'<label class="f" for="mo-plan">Por cuánto tiempo</label><select id="mo-plan"><option value="0">Sin vencimiento</option><option value="1" selected>1 mes</option><option value="3">3 meses</option><option value="12">1 año</option></select>'
+      +'<label class="f" style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="mo-env" checked> Mandarle el mail “Está confirmado tu acceso” (para que sepa que ya puede entrar)</label>'
+      +'<button class="sec chica" id="mo-ver" style="margin-top:8px">Ver el mail</button><iframe id="mo-f" sandbox="" hidden style="margin-top:8px"></iframe>',
+      [{t:'Habilitar',cls:'',fn:async function(b){
+          b.disabled=true;mmsg('Habilitando…');
+          var meses=+$('mo-plan').value,rol=$('mo-rol').value,env=$('mo-env').checked,vence=null;
+          if(meses){var d=new Date();d.setMonth(d.getMonth()+meses);vence=d.toISOString()}
+          var hechas=[],mal=[];
+          for(var i=0;i<emails.length;i++){
+            var r=await sb.rpc('socias_habilitar2',{p_email:emails[i],p_vence:vence,p_rol:rol});
+            if(r.error)mal.push(emails[i]+': '+r.error.message);else hechas.push(emails[i]);
+          }
+          var txt='Habilitadas: '+hechas.length+'.';
+          if(env&&hechas.length){
+            try{var e=await enviar('confirmado',hechas);txt+=' Mail de confirmación enviado a '+e.ok+'.';if(e.mal.length){txt+=' Con error: '+e.mal.join(' | ');mal=mal.concat(e.mal)}}
+            catch(x){txt+=' No pude mandar el mail: '+x.message;mal.push(x.message)}
+          }
+          if(mal.length&&!hechas.length){mmsg(mal.join(' | '),true);b.disabled=false;return}
+          marcadas={};
+          await despues(txt+(mal.length&&hechas.length?' Hubo problemas: '+mal.join(' | '):''),mal.length>0);
+        }},
+       {t:'Cancelar',fn:cerrar}]);
+    $('mo-ver').onclick=async function(){
+      try{var v=await llamar({modo:'vista',plantilla:'confirmado'});$('mo-f').hidden=false;$('mo-f').srcdoc=v.html}
+      catch(x){mmsg('No pude cargar la vista previa: '+x.message,true)}
+    };
+  }
+
+  /* ---------- Deshabilitar, vencimiento, eliminar ---------- */
+  function modalDeshabilitar(m){
+    modal('Deshabilitar a '+m,
+      '<p>Pierde el acceso a la app ahora mismo. Queda en la lista, con todo su historial, y la podés volver a habilitar cuando quieras.</p>',
+      [{t:'Sí, deshabilitar',cls:'peli fuerte',fn:async function(b){
+          b.disabled=true;
+          var r=await sb.rpc('socias_deshabilitar',{p_email:m});
+          if(r.error){mmsg(r.error.message,true);b.disabled=false;return}
+          await despues('Deshabilitada: '+m);
+        }},{t:'Cancelar',fn:cerrar}]);
+  }
+  function modalVence(m){
+    var p=persona(m);
+    var base=p&&p.vence?new Date(p.vence):(function(){var d=new Date();d.setMonth(d.getMonth()+1);return d})();
+    var iso=base.getFullYear()+'-'+('0'+(base.getMonth()+1)).slice(-2)+'-'+('0'+base.getDate()).slice(-2);
+    modal('Vencimiento de '+m,
+      '<label class="f" for="mo-d">Vence el</label><input type="date" id="mo-d" value="'+iso+'">'
+      +'<label class="f" style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="mo-sin"'+(p&&!p.vence?' checked':'')+'> Sin vencimiento</label>',
+      [{t:'Guardar',cls:'',fn:async function(b){
+          var v=null;
+          if(!$('mo-sin').checked){
+            if(!$('mo-d').value){mmsg('Elegí una fecha',true);return}
+            v=new Date($('mo-d').value+'T23:59:00').toISOString();
+          }
+          b.disabled=true;
+          var r=await sb.rpc('socias_vencimiento',{p_email:m,p_vence:v});
+          if(r.error){mmsg(r.error.message,true);b.disabled=false;return}
+          await despues('Vencimiento actualizado: '+m);
+        }},{t:'Cancelar',fn:cerrar}]);
+  }
+  function modalEliminar(emails){
+    if(!emails.length)return;
+    var soc=conSocias(emails);
+    if(soc.length){msg('Las socias no se pueden eliminar: sacalas de la selección ('+soc.join(', ')+').',true);return}
+    modal('Eliminar '+(emails.length===1?emails[0]:emails.length+' personas'),
+      (emails.length>1?listaHTML(emails):'')
+      +'<p><b>Se borra todo</b>: su cuenta, la lista de espera, los mails enviados, los ingresos y los datos del perfil. <b>No se puede deshacer.</b></p>'
+      +'<p class="chico">Pensado para cuentas de prueba. Si alguien tiene un pago acreditado, no se elimina: en ese caso usá “Deshabilitar”.</p>',
+      [{t:'Sí, eliminar',cls:'peli fuerte',fn:async function(b){
+          b.disabled=true;mmsg('Eliminando…');
+          var ok=0,mal=[];
+          for(var i=0;i<emails.length;i++){
+            var r=await sb.rpc('socias_eliminar',{p_email:emails[i]});
+            if(r.error)mal.push(emails[i]+': '+r.error.message);else{ok++;delete marcadas[emails[i]];if(fichaMail===emails[i])fichaMail=null}
+          }
+          await despues('Eliminadas: '+ok+(mal.length?'. No se pudo: '+mal.join(' | '):''),mal.length>0);
+        }},{t:'Cancelar',fn:cerrar}]);
+  }
+  function modalAgregar(){
+    modal('Agregar persona',
+      '<label class="f" for="a-m">Mail</label><input type="email" id="a-m" placeholder="mail@ejemplo.com">'
+      +'<label class="f" for="a-c">Cupón (opcional, ej. JOSE1)</label><input type="text" id="a-c" autocapitalize="characters">'
+      +'<label class="f" style="display:flex;gap:8px;align-items:center;font-weight:400"><input type="checkbox" id="a-p"> Es profesional</label>'
+      +'<p class="chico">La agrega a la lista como “Anotada”. No le manda ningún mail: eso lo decidís desde su ficha.</p>',
+      [{t:'Agregar',cls:'',fn:async function(b){
+          var m=$('a-m').value.trim();if(!m){mmsg('Falta el mail',true);return}
+          b.disabled=true;
+          var r=await sb.rpc('socias_agregar',{p_email:m,p_es_profesional:$('a-p').checked,p_cupon:$('a-c').value.trim()||null});
+          if(r.error){mmsg(r.error.message,true);b.disabled=false;return}
+          await despues('Agregada: '+m);
+        }},{t:'Cancelar',fn:cerrar}]);
+  }
+  $('b-add').onclick=modalAgregar;
+
+  /* ---------- Ficha de la persona ---------- */
+  function cerrarFicha(){fichaMail=null;$('ficha').hidden=true}
+  $('fi-x').onclick=cerrarFicha;
+  async function abrirFicha(m,silencioso){
+    fichaMail=m;
+    var f=persona(m);
+    $('ficha').hidden=false;
+    $('fi-mail').textContent=m;
+    var e=f?(ESTADO[f.estado]||[f.estado,'pend']):['',''];
+    $('fi-est').innerHTML=f?'<span class="tag '+e[1]+'">'+e[0]+'</span>':'';
+    var soc=esSocia(f),hab=f&&(f.estado==='activa'||f.estado==='vencida');
+    var acc='<button data-a="mail">Enviar mail</button>';
+    if(!soc){
+      acc+=hab?'<button class="sec" data-a="venc">Cambiar vencimiento</button><button class="sec" data-a="deshab">Deshabilitar</button>':'<button class="sec" data-a="hab">Habilitar a mano</button>';
+      acc+='<button class="peli" data-a="del">Eliminar</button>';
+    }else acc+='<span class="chico" style="align-self:center">Es socia: tiene acceso completo.</span>';
+    $('fi-acc').innerHTML=acc;
+    if(!silencioso)$('fi-body').innerHTML='<p class="chico">Cargando…</p>';
+    var r=await sb.rpc('socias_ficha',{p_email:m});
+    if(fichaMail!==m)return;
+    if(r.error){$('fi-body').innerHTML='<p style="color:#a11">'+esc(r.error.message)+'</p>';return}
+    $('fi-body').innerHTML=fichaHTML(r.data,f);
+  }
+  $('fi-acc').onclick=function(e){
+    var b=e.target.closest('button[data-a]');if(!b||!fichaMail)return;
+    var a=b.dataset.a,m=fichaMail;
+    if(a==='mail')modalEnviar([m]);
+    else if(a==='hab')modalHabilitar([m]);
+    else if(a==='venc')modalVence(m);
+    else if(a==='deshab')modalDeshabilitar(m);
+    else if(a==='del')modalEliminar([m]);
+  };
+  function dato(k,v){return v?'<div class="dato"><span>'+esc(k)+'</span><span>'+v+'</span></div>':''}
+  function fichaHTML(d,f){
+    var a=d.acceso,w=d.waitlist,pf=d.perfil,h='';
+    h+='<h3>Acceso</h3>';
+    if(a){
+      h+=dato('Rol',esc(ROL[a.rol]||a.rol));
+      h+=dato('Vencimiento',a.vence?esc(dia(a.vence)):'Sin vencimiento');
+      if(f&&f.plan)h+=dato('Plan',esc(PLANTXT[f.plan]||f.plan));
+      h+=dato('Habilitada el',esc(fecha(a.created_at)));
+    }else h+='<div class="dato"><span>Estado</span><span>Sin acceso todavía</span></div>';
+    h+=dato('Cupón',esc((a&&a.cupon)||(w&&w.cupon)||''));
+    h+=dato('Celular',esc((w&&w.celular)||(pf&&pf.celular)||''));
+    if(w&&w.es_profesional)h+=dato('Se anotó como','Profesional');
+    if(pf){
+      h+='<h3>Perfil</h3>';
+      h+=dato('Nombre',esc(pf.nombre+' '+pf.apellido));
+      h+=dato('Vínculo',esc(REL[pf.relacion]||pf.relacion));
+      h+=dato('Dónde',esc(pf.ciudad+', '+pf.pais));
+      h+=dato('Edades de los chicos',esc((pf.edades_chicos||[]).join(', ')));
+      h+=dato('Llegó por',esc(pf.como_nos_conociste||''));
+      h+=dato('Acepta marketing',pf.marketing_ok?'Sí':'No');
+    }
+    var ev=[];
+    if(w)ev.push({t:w.created_at,x:'Se anotó en la lista'});
+    if(a)ev.push({t:a.created_at,x:'Se habilitó su acceso'+(a.vence?' · vence '+dia(a.vence):'')});
+    (d.pagos||[]).forEach(function(p){
+      var est=p.estado==='pagado'?'Pago acreditado':(p.estado==='pendiente'?'Empezó un pago (sin completar)':'Pago con error');
+      ev.push({t:p.pagado_en||p.creado,x:est+' · '+(PLANTXT[p.plan]||p.plan)+' · '+plata(p.monto)+(p.cupon?' · cupón '+p.cupon:'')});
+    });
+    (d.envios||[]).forEach(function(v){
+      var x='Mail “'+(MAILNOM[v.plantilla]||v.plantilla)+'” '+(v.estado==='enviado'?'enviado':(v.estado==='error'?'con error':'en cola'))+(v.enviado_por&&v.enviado_por!=='auto'?' por '+v.enviado_por:(v.enviado_por==='auto'?' (automático)':''));
+      var sub=(v.clics||[]).map(function(c){return 'Hizo clic en “'+(c.destino==='pagar'?'pagar':'entrar')+'” · '+fecha(c.creado)}).join('<br>');
+      if(v.error)sub+=(sub?'<br>':'')+'Error: '+esc(v.error);
+      ev.push({t:v.creado,x:esc(x),sub:sub,html:true});
+    });
+    if(d.ingresos&&d.ingresos.n>0)ev.push({t:d.ingresos.ultimo,x:'Último ingreso a la app ('+d.ingresos.n+' visita'+(d.ingresos.n===1?'':'s')+' desde el 9/11)'});
+    ev.sort(function(p,q){return new Date(q.t)-new Date(p.t)});
+    h+='<h3>Historial</h3>';
+    h+=ev.length?'<ul class="hist">'+ev.map(function(x){return '<li>'+(x.html?x.x:esc(x.x))+'<span class="chico">'+esc(fecha(x.t))+'</span>'+(x.sub?'<span class="chico">'+x.sub+'</span>':'')+'</li>'}).join('')+'</ul>':'<p class="chico">Todavía no hay actividad.</p>';
+    return h;
+  }
+
+  /* ---------- Mails automáticos ---------- */
+  var AUTOS=[
+    {k:'listo',nombre:'Tu lugar en Pimpa está listo',cuando:'Apenas alguien se anota (familias y profesionales). Se saltea si ya está habilitada o ya lo recibió. Tope de 30 por día.',estado:'Activo',cl:'ok',ver:[['Ver sin código',null],['Ver con código (ejemplo)','EJEMPLO1']]},
+    {k:'confirmado',nombre:'Está confirmado tu acceso',cuando:'Apenas se acredita el pago en Mercado Pago. También se puede mandar a mano desde la ficha o al habilitar.',estado:'Activo',cl:'ok',ver:[['Ver',null]]},
+    {k:'aviso',nombre:'Ahora es directo (aviso único)',cuando:'Aviso único, ya enviado: a quienes se anotaron cuando había que mandar el comprobante.',estado:'Enviado el 9/11',cl:'ok',ver:[['Ver',null]]},
+    {k:'carrito',nombre:'Carrito abandonado',cuando:'Una sola vez por persona, a las 24 horas de quedar en "Pago sin completar" (hasta 7 días). Se revisa cada hora. Mismo tope diario.',estado:'Apagado',cl:'pend',interruptor:true,ver:[['Ver',null]]}
+  ];
+  var carritoOn=false;
+  async function cargarCarrito(){var r=await sb.rpc('socias_carrito_estado');if(!r.error){carritoOn=r.data===true}pintarAutos()}
+  function pintarAutos(){
+    $('auto-filas').innerHTML=AUTOS.map(function(a,i){
+      return '<tr><td><b>'+esc(a.nombre)+'</b></td><td class="chico">'+esc(a.cuando)+'</td><td><span class="tag '+(a.interruptor?(carritoOn?'ok':'pend'):a.cl)+'">'+(a.interruptor?(carritoOn?'Activo':'Apagado'):a.estado)+'</span></td><td>'
+        +(a.interruptor?'<button data-sw="1" class="chica" style="margin:2px 4px 2px 0">'+(carritoOn?'Apagar':'Prender')+'</button>':'')
+        +a.ver.map(function(v,j){return '<button class="sec chica" data-a="'+i+'" data-v="'+j+'" style="margin:2px 4px 2px 0">'+v[0]+'</button>'}).join('')+'</td></tr>';
+    }).join('');
+  }
+  $('auto-filas').onclick=function(e){
+    var sw=e.target.closest('button[data-sw]');
+    if(sw){
+      modal(carritoOn?'¿Apagar el mail de carrito abandonado?':'¿Prender el mail de carrito abandonado?',
+        '<p>'+(carritoOn?'Deja de salir solo.':'Empieza a salir solo, a las 24 h de quedar el pago sin completar.')+'</p>',
+        [{t:carritoOn?'Sí, apagar':'Sí, prender',cls:'',fn:async function(b){
+            b.disabled=true;
+            var r=await sb.rpc('socias_carrito_set',{p_activo:!carritoOn});
+            if(r.error){mmsg(r.error.message,true);b.disabled=false;return}
+            carritoOn=r.data===true;pintarAutos();cerrar();msg('Carrito abandonado: '+(carritoOn?'prendido':'apagado'));
+          }},{t:'Cancelar',fn:cerrar}]);
+      return;
+    }
+    var b=e.target.closest('button[data-a]');if(!b)return;
+    verAuto(AUTOS[+b.dataset.a],AUTOS[+b.dataset.a].ver[+b.dataset.v][1]);
+  };
+  async function verAuto(a,codigo){
+    modal(a.nombre+(a.k==='carrito'?' · BORRADOR, todavía no se envía a mano':''),
+      '<div class="chico" id="mo-asu"></div><iframe id="mo-f" sandbox=""></iframe>',
+      [{t:'Enviarme una prueba',fn:async function(b){
+          b.disabled=true;mmsg('Enviando prueba…');
+          try{var d=await llamar({modo:'prueba',plantilla:a.k,codigo:codigo});mmsg('Prueba enviada a '+d.enviadoA+'.')}
+          catch(x){mmsg('Error: '+x.message,true)}
+          b.disabled=false;
+        }},{t:'Cerrar',fn:cerrar}]);
+    try{var v=await llamar({modo:'vista',plantilla:a.k,codigo:codigo});$('mo-asu').textContent='Asunto: '+v.subject;$('mo-f').srcdoc=v.html}
+    catch(x){mmsg('No pude cargar la vista previa: '+x.message,true)}
+  }
+
+  /* ---------- Perfiles ---------- */
   function cuenta(arr){var o={};arr.forEach(function(k){o[k]=(o[k]||0)+1});return Object.keys(o).sort(function(a,b){return o[b]-o[a]}).map(function(k){return esc(k)+' '+o[k]}).join(' · ')||'—'}
   async function cargarPerfiles(){
     var r=await sb.rpc('socias_perfiles');
@@ -150,13 +565,13 @@
     var d=r.data||[];
     var mk=d.filter(function(f){return f.marketing_ok}).length;
     var edades=[];d.forEach(function(f){(f.edades_chicos||[]).forEach(function(e){edades.push(e<=5?'0-5':(e<=9?'6-9':(e<=13?'10-13':'14-18')))})});
-    var res=[['Perfiles',d.length+' de '+datos.filter(function(f){return f.habilitada}).length+' habilitadas'],
-      ['Aceptan marketing',d.length?mk+' ('+Math.round(100*mk/d.length)+'%)':'—'],
+    var res=[['Perfiles',esc(d.length+' de '+datos.filter(function(f){return f.habilitada}).length+' habilitadas')],
+      ['Aceptan marketing',esc(d.length?mk+' ('+Math.round(100*mk/d.length)+'%)':'—')],
       ['Vínculo',cuenta(d.map(function(f){return REL[f.relacion]||f.relacion}))],
       ['País',cuenta(d.map(function(f){return f.pais}))],
       ['Edad de los chicos',cuenta(edades)],
       ['Llegaron por',cuenta(d.filter(function(f){return f.como_nos_conociste}).map(function(f){return f.como_nos_conociste}))]];
-    $('p-res').innerHTML=res.map(function(x){return '<div class="res"><b>'+x[0]+'</b>'+(x[0]==='Perfiles'||x[0]==='Aceptan marketing'?esc(x[1]):x[1])+'</div>'}).join('');
+    $('p-res').innerHTML=res.map(function(x){return '<div class="res"><b>'+x[0]+'</b>'+x[1]+'</div>'}).join('');
     $('p-filas').innerHTML=d.length?d.map(function(f){
       return '<tr><td>'+esc(f.nombre+' '+f.apellido)+'<br><span class="chico">'+esc(f.email)+(f.anio_nacimiento?' · nació en '+esc(f.anio_nacimiento):'')+'</span></td>'
         +'<td>'+esc(REL[f.relacion]||f.relacion)+'</td>'
@@ -168,141 +583,11 @@
     }).join(''):'<tr><td colspan="7" class="chico">Todavía nadie completó el perfil.</td></tr>';
   }
 
-  function est(estado,fecha_){
-    if(!estado)return '<span class="chico">—</span>';
-    var c=estado==='enviado'?'ok':(estado==='error'?'err':'pend');
-    return '<span class="tag '+c+'">'+esc(estado)+'</span><br><span class="chico">'+esc(fecha(fecha_))+'</span>';
-  }
-
-  var ESTADO={anotada:['Anotada','pend'],entro:['Entró, sin pagar','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],vencida:['Vencida','err']};
-  var PLANTXT={mensual:'1 mes',trimestral:'3 meses',anual:'Anual'};
-  function dia(f){var d=new Date(f);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'})}
-  var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
-  function pintar(){
-    var n={};datos.forEach(function(f){n[f.estado]=(n[f.estado]||0)+1});
-    $('resumen').innerHTML=['pago_sin_completar','vencida','entro','anotada','activa'].map(function(k){return '<div class="res"><b>'+ESTADO[k][0]+'</b>'+(n[k]||0)+'</div>'}).join('');
-    $('filas').innerHTML=datos.map(function(f,i){
-      var e=ESTADO[f.estado]||[f.estado,'pend'];
-      var rol=f.rol?(ROL[f.rol]||f.rol):(f.es_profesional?'Profesional (anotada)':'—');
-      var entro=f.ultimo_ingreso?(f.entradas+' visita'+(f.entradas===1?'':'s')+'<br><span class="chico">último: '+esc(fecha(f.ultimo_ingreso))+'</span>'):'<span class="chico">—</span>';
-      var mails=f.mails?(f.mails+(f.mail_error?' <span class="tag err">con error</span>':'')+'<br><span class="chico">último: '+esc(f.ultimo_mail||'')+' · '+esc(fecha(f.ultimo_mail_en))+'</span>'):(f.mail_error?'<span class="tag err">con error</span>':'<span class="chico">ninguno</span>');
-      var pago=(f.estado==='activa'&&!f.vence)?'<br><span class="chico">sin vencimiento</span>':f.estado==='pago_sin_completar'?'<br><span class="chico">desde '+esc(fecha(f.pago_iniciado))+'</span>':((f.estado==='activa'||f.estado==='vencida')&&f.vence?'<br><span class="chico">'+(f.estado==='vencida'?'venció ':'vence ')+esc(dia(f.vence))+(f.plan?' · '+esc(PLANTXT[f.plan]||f.plan):'')+'</span>':(f.estado==='activa'&&f.plan?'<br><span class="chico">'+esc(PLANTXT[f.plan]||f.plan)+'</span>':''));
-      return '<tr><td><input type="checkbox" data-i="'+i+'"></td>'
-        +'<td>'+esc(f.email)+'</td>'
-        +'<td><span class="tag '+e[1]+'">'+e[0]+'</span>'+pago+'</td>'
-        +'<td>'+esc(rol)+'</td>'
-        +'<td>'+entro+'</td>'
-        +'<td>'+mails+'</td>'
-        +'<td>'+esc(f.cupon||'')+'</td><td>'+esc(f.celular||'')+'</td></tr>';
-    }).join('');
-  }
-
-  var AUTOS=[
-    {k:'listo',nombre:'Tu lugar en Pimpa está listo',cuando:'Apenas alguien se anota (familias y profesionales). Se saltea si ya está habilitada o ya lo recibió. Tope de 30 por día.',estado:'Activo',cl:'ok',ver:[['Ver sin código',null],['Ver con código (ejemplo)','EJEMPLO1']]},
-    {k:'confirmado',nombre:'Está confirmado tu acceso',cuando:'Apenas se acredita el pago en Mercado Pago.',estado:'Activo',cl:'ok',ver:[['Ver',null]]},
-    {k:'aviso',nombre:'Ahora es directo (aviso único)',cuando:'Aviso único, ya enviado: a quienes se anotaron cuando había que mandar el comprobante.',estado:'Enviado el 9/11',cl:'ok',ver:[['Ver',null]]},
-    {k:'carrito',nombre:'Carrito abandonado',cuando:'Una sola vez por persona, a las 24 horas de quedar en "Pago sin completar" (hasta 7 días). Se revisa cada hora. Mismo tope diario.',estado:'Apagado',cl:'pend',interruptor:true,ver:[['Ver',null]]}
-  ];
-  var carritoOn=false;
-  async function cargarCarrito(){var r=await sb.rpc('socias_carrito_estado');if(!r.error){carritoOn=r.data===true;pintarAutos()}}
-  function pintarAutos(){
-    $('auto-filas').innerHTML=AUTOS.map(function(a,i){
-      return '<tr><td><b>'+esc(a.nombre)+'</b></td><td class="chico">'+esc(a.cuando)+'</td><td><span class="tag '+(a.interruptor?(carritoOn?'ok':'pend'):a.cl)+'">'+(a.interruptor?(carritoOn?'Activo':'Apagado'):a.estado)+'</span></td><td>'
-        +(a.interruptor?'<button data-sw="1" style="margin:2px 4px 2px 0;padding:6px 12px">'+(carritoOn?'Apagar':'Prender')+'</button>':'')
-        +a.ver.map(function(v,j){return '<button class="sec" data-a="'+i+'" data-v="'+j+'" style="margin:2px 4px 2px 0;padding:6px 12px">'+v[0]+'</button>'}).join('')+'</td></tr>';
-    }).join('');
-    Array.prototype.forEach.call(document.querySelectorAll('#auto-filas button[data-sw]'),function(b){
-      b.onclick=async function(){
-        if(!confirm(carritoOn?'¿Apagar el mail de carrito abandonado?':'¿Prender el mail de carrito abandonado? Empieza a salir solo, a las 24 h de quedar el pago sin completar.'))return;
-        var r=await sb.rpc('socias_carrito_set',{p_activo:!carritoOn});
-        if(r.error){msg(r.error.message,true);return}
-        carritoOn=r.data===true;pintarAutos();msg('Carrito abandonado: '+(carritoOn?'prendido':'apagado'));
-      };
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('#auto-filas button[data-a]'),function(b){
-      b.onclick=function(){verAuto(AUTOS[+b.dataset.a],AUTOS[+b.dataset.a].ver[+b.dataset.v][1])};
-    });
-  }
-  async function verAuto(a,codigo){
-    try{
-      var v=await llamar({modo:'vista',plantilla:a.k,codigo:codigo});
-      pend={plantilla:a.k,emails:[],btn:null,soloVer:true};
-      $('m-asunto').textContent='Asunto: '+v.subject;
-      $('m-para').textContent=a.nombre+(a.k==='carrito'?' · BORRADOR, todavía no se envía':'');
-      $('m-frame').srcdoc=v.html;$('m-msg').textContent='';
-      $('m-ok').hidden=true;$('m-prueba').disabled=false;
-      $('modal').hidden=false;
-    }catch(x){msg(x.message,true)}
-  }
-
-  function elegidos(){
-    return Array.prototype.slice.call(document.querySelectorAll('#filas input:checked')).map(function(c){return datos[+c.dataset.i].email});
-  }
-
-  async function enviar(plantilla,emails){
-    var ses=(await sb.auth.getSession()).data.session;
-    var r=await fetch('/api/enviar',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ses.access_token},body:JSON.stringify({plantilla:plantilla,emails:emails})});
-    var d=await r.json().catch(function(){return{}});
-    if(!r.ok)throw new Error(d.error||('Error '+r.status));
-    var mal=d.resultados.filter(function(x){return !x.ok});
-    if(mal.length)throw new Error(mal.map(function(x){return x.email+': '+x.error}).join(' | '));
-    return d.resultados.length;
-  }
-
-  async function accion(btn,fn){
-    btn.disabled=true;
-    try{await fn()}catch(e){msg(e.message,true);btn.disabled=false;await cargar();msg(e.message,true);return}
-    btn.disabled=false;
-  }
-
   $('entrar').onclick=function(){
     sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+'/socias'}});
   };
   $('salir').onclick=async function(){await sb.auth.signOut();location.reload()};
-  $('b-act').onclick=cargar;
-
-  var pend=null;
-  async function llamar(cuerpo){
-    var ses=(await sb.auth.getSession()).data.session;
-    var r=await fetch('/api/enviar',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+ses.access_token},body:JSON.stringify(cuerpo)});
-    var d=await r.json().catch(function(){return{}});
-    if(!r.ok)throw new Error(d.error||('Error '+r.status));
-    return d;
-  }
-  $('m-no').onclick=function(){$('modal').hidden=true;pend=null};
-  $('m-prueba').onclick=async function(){
-    if(!pend)return;
-    $('m-prueba').disabled=true;$('m-msg').textContent='Enviando prueba…';
-    try{var d=await llamar({modo:'prueba',plantilla:pend.plantilla});$('m-msg').textContent='Prueba enviada a '+d.enviadoA+'. Revisala en tu teléfono.'}
-    catch(x){$('m-msg').textContent='Error: '+x.message}
-    $('m-prueba').disabled=false;
-  };
-  $('m-ok').onclick=async function(){
-    if(!pend)return;
-    var p=pend;$('m-ok').disabled=true;$('m-msg').textContent='Enviando…';
-    try{var n=await enviar(p.plantilla,p.emails);$('modal').hidden=true;pend=null;await cargar();msg('Enviados: '+n)}
-    catch(x){$('modal').hidden=true;pend=null;await cargar();msg(x.message,true)}
-  };
-  $('b-pago').onclick=function(){
-    var e=elegidos();if(!e.length){msg('Marcá al menos un mail',true);return}
-    if(!confirm('¿Habilitar a '+e.length+' mail(s) sin pago? Quedan activas sin vencimiento.'))return;
-    accion($('b-pago'),async function(){
-      for(var i=0;i<e.length;i++){
-        var r=await sb.rpc('socias_habilitar',{p_email:e[i]});
-        if(r.error)throw new Error(e[i]+': '+r.error.message);
-      }
-      await cargar();msg('Habilitadas: '+e.length+'. Ya pueden entrar.');
-    });
-  };
-  $('b-add').onclick=function(){
-    var m=$('n-mail').value.trim();if(!m){msg('Falta el mail',true);return}
-    accion($('b-add'),async function(){
-      var r=await sb.rpc('socias_agregar',{p_email:m,p_es_profesional:$('n-prof').checked,p_cupon:$('n-cupon').value.trim()||null});
-      if(r.error)throw new Error(r.error.message);
-      $('n-mail').value='';$('n-cupon').value='';$('n-prof').checked=false;
-      await cargar();msg('Agregado');
-    });
-  };
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!$('modal').hidden)cerrar();else if(!$('ficha').hidden)cerrarFicha()}});
 
   pintarAutos();
   iniciar();
