@@ -2,13 +2,12 @@
 -- Mismas columnas que antes (CREATE OR REPLACE), cambia cómo se calcula "estado" y el orden.
 -- Estados:
 --   equipo               socias (founder/cofounder) y Caro, Fati: acceso permanente, no pagan
---   activa               tiene un pago acreditado y su acceso está vigente
---   prueba               acceso vigente SIN pago acreditado (cupón de regalo o habilitada a mano)
+--   activa               acceso vigente (pagó: por Mercado Pago automático o por link a mano y la habilitó Cecilia)
 --   vencida              tuvo acceso y venció
 --   pago_sin_completar   empezó una orden en Mercado Pago y no la completó
---   entro                hizo login pero no tiene acceso ni empezó a pagar
---   prelanzamiento       se anotó antes del aviso "Ahora es directo" (cuando todavía no se podía pagar)
---   anotada              se anotó después de ese aviso (ya podía pagar) y no pagó
+--   entro                hizo login con Google SIN haberse anotado en la lista (no tiene acceso ni empezó a pagar)
+--   prelanzamiento       se anotó antes del aviso "Ahora es directo" (cuando todavía no se podía pagar), haya entrado o no
+--   anotada              se anotó después de ese aviso (ya podía pagar) y no pagó, haya entrado o no
 -- Orden: por orden de entrada (la más antigua primero); al final, siempre: Caro, Fati, Jose y Cecilia (última).
 -- (Aplicada en Supabase como migración "estados_claros".)
 
@@ -55,10 +54,9 @@ begin
   select x.e, coalesce(x.prof, false), x.cup, x.anot, x.rl, (x.hab and not x.vencida),
     case when x.rl in ('founder', 'cofounder') or x.pos is not null then 'equipo'
          when x.hab and x.vencida then 'vencida'
-         when x.hab and x.pago_ok then 'activa'
-         when x.hab then 'prueba'
+         when x.hab then 'activa'
          when x.pago_ini is not null then 'pago_sin_completar'
-         when x.entro then 'entro'
+         when x.anot is null and x.entro then 'entro'
          when x.anot is not null and fin_pre is not null and x.anot < fin_pre then 'prelanzamiento'
          else 'anotada' end,
     x.nent,
