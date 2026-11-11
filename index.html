@@ -2409,7 +2409,8 @@ function followOf(lv){
   }
   return null;
 }
-function canGo(lv,pass){return eduOn()||(pass&&!!nextLevelOf(lv));}
+function inSeq(lv){return seqIds.length===SEQ.length&&seqIds[0]===SEQ[0].id&&seqIds.indexOf(lv.id)>-1;}
+function canGo(lv,pass){return (eduOn()&&!inSeq(lv))||(pass&&!!nextLevelOf(lv));}
 function goNext(lv){var nx=followOf(lv);if(nx)openLevelObj(nx);else showTab('camino');}
 function endNav(canNext,mainNext){
   return '<div class="endnav"><button class="ebtn" id="home" type="button"><span class="eic">'+IC_HOME+'</span><span>Volver</span></button>'+
@@ -2687,7 +2688,7 @@ function sq(h,lv){SEQ.push(reg(lv));SEQH.push(h);}
   ['y','z'].forEach(function(c){poco(c,'Las últimas letras');});
   sq('Palabras con todas las consonantes',LV['pal-3']);sq('Palabras con todas las consonantes',LV['pal-3b']);
 })();
-function seqOpen(i){return eduOn()||i===0||passedId(SEQ[i-1].id);}
+function seqOpen(i){return i===0||passedId(SEQ[i-1].id);} /* Mi camino: bloqueado para todos, también en modo adulto; el avance es de cada chico (M-208, M-230) */
 function seqNext(){for(var i=0;i<SEQ.length;i++){if(!passedId(SEQ[i].id))return i;}return -1;}
 function seqStat(p){var st=statOf(SEQ.map(function(l){return l.id;}),p),d=0;SEQ.forEach(function(l){var r=p.progress&&p.progress[l.id];if((r&&r.passed)||(p.skipped&&p.skipped[l.id]))d++;});st.done=d;if(d)st.touched=Math.max(st.touched,d);return st;}
 function sqLab(lv){
@@ -2713,7 +2714,7 @@ var DECOS=[['rainbow','mush','flower','butterfly'],['flower','butterfly','mush',
 var DECOW={rainbow:104,balloon:44,butterfly:54,mush:60,flower:58,stones:74};
 function seqHTML(){
   var nx=seqNext(),kid=store.mode==='familia',p=curProfile(),h=topbar('Mi camino');
-  h+='<p class="hint" style="text-align:center;margin:0">'+(kid?'Tocá el círculo de Pimpa. Podés repasar los que ya hiciste.':'Modo adulto: podés entrar a cualquier paso.')+'</p><div class="trail">';
+  h+='<p class="hint" style="text-align:center;margin:0">'+(kid?'Tocá el círculo de Pimpa. Podés repasar los que ya hiciste.':'Cada chico tiene su propio camino y se va desbloqueando a medida que avanza. Si ya sabe un paso, puede hacer la prueba para saltearlo.')+'</p><div class="trail">';
   var groups=[];SEQ.forEach(function(lv,i){var g=groups[groups.length-1];if(!g||g.sec!==SEQH[i]){g={sec:SEQH[i],ix:[]};groups.push(g);}g.ix.push(i);});
   var plan=camPlan(groups);
   groups.forEach(function(g,gi){
