@@ -173,7 +173,7 @@
   function dia(f){var d=new Date(f);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'})}
   function plata(n){return '$'+Number(n).toLocaleString('es-AR')}
 
-  var ESTADO={anotada:['Anotada','pend'],entro:['Entró, sin pagar','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],vencida:['Vencida','err']};
+  var ESTADO={prelanzamiento:['Inscripta pre-lanzamiento','pend'],anotada:['Inscripta','pend'],entro:['Entró, sin acceso','neu'],pago_sin_completar:['Pago sin completar','err'],prueba:['En prueba, sin pago','neu'],activa:['Activa','ok'],equipo:['Equipo','ok'],vencida:['Vencida','err']};
   var PLANTXT={mensual:'1 mes',trimestral:'3 meses',anual:'Anual'};
   var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
   var MAILNOM={listo:'Tu lugar está listo',confirmado:'Está confirmado tu acceso',aviso:'Ahora es directo',carrito:'Carrito abandonado'};
@@ -204,7 +204,7 @@
   }
 
   /* ---------- Lista de personas ---------- */
-  var FILTROS=[['todas','Todas'],['activa','Activas'],['pago_sin_completar','Pago sin completar'],['entro','Entraron, sin pagar'],['anotada','Anotadas'],['vencida','Vencidas']];
+  var FILTROS=[['todas','Todas'],['prelanzamiento','Inscriptas pre-lanzamiento'],['anotada','Inscriptas'],['entro','Entraron, sin acceso'],['pago_sin_completar','Pago sin completar'],['prueba','En prueba, sin pago'],['activa','Activas'],['equipo','Equipo'],['vencida','Vencidas']];
   function visibles(){
     return datos.filter(function(f){
       if(filtro!=='todas'&&f.estado!==filtro)return false;
@@ -227,7 +227,7 @@
       var mails=f.mails?(esc(MAILNOM[f.ultimo_mail]||f.ultimo_mail||'')+(f.mail_error?' <span class="tag err">con error</span>':'')+'<br><span class="chico">'+f.mails+' en total · '+esc(fecha(f.ultimo_mail_en))+'</span>'):(f.mail_error?'<span class="tag err">con error</span>':'<span class="chico">ninguno</span>');
       var sub='';
       if(f.estado==='pago_sin_completar')sub='<br><span class="chico">desde '+esc(fecha(f.pago_iniciado))+'</span>';
-      else if(f.estado==='activa'||f.estado==='vencida')sub='<br><span class="chico">'+(f.vence?((f.estado==='vencida'?'venció ':'vence ')+esc(dia(f.vence))):'sin vencimiento')+(f.plan?' · '+esc(PLANTXT[f.plan]||f.plan):'')+'</span>';
+      else if(f.estado==='activa'||f.estado==='prueba'||f.estado==='vencida')sub='<br><span class="chico">'+(f.vence?((f.estado==='vencida'?'venció ':'vence ')+esc(dia(f.vence))):'sin vencimiento')+(f.plan?' · '+esc(PLANTXT[f.plan]||f.plan):'')+'</span>';
       return '<tr class="fila" data-m="'+esc(f.email)+'"><td><input type="checkbox" data-m="'+esc(f.email)+'"'+(marcadas[f.email]?' checked':'')+'></td>'
         +'<td><b>'+esc(f.email)+'</b></td><td><span class="tag '+e[1]+'">'+e[0]+'</span>'+sub+'</td>'
         +'<td>'+esc(rol)+'</td><td>'+entro+'</td><td>'+mails+'</td><td>'+esc(f.cupon||'')+'</td></tr>';
@@ -307,7 +307,7 @@
   function modalEnviar(emails){
     if(!emails.length)return;
     var p=persona(emails[0]);
-    var def=(emails.length===1&&p&&p.estado==='activa')?'confirmado':'listo';
+    var def=(emails.length===1&&p&&(p.estado==='activa'||p.estado==='prueba'))?'confirmado':'listo';
     var opts=['listo','confirmado','aviso'].map(function(k){return '<option value="'+k+'"'+(k===def?' selected':'')+'>'+esc(MAILNOM[k])+'</option>'}).join('');
     modal('Enviar mail a '+(emails.length===1?emails[0]:emails.length+' personas'),
       (emails.length>1?listaHTML(emails):'')
@@ -448,7 +448,7 @@
     $('fi-mail').textContent=m;
     var e=f?(ESTADO[f.estado]||[f.estado,'pend']):['',''];
     $('fi-est').innerHTML=f?'<span class="tag '+e[1]+'">'+e[0]+'</span>':'';
-    var soc=esSocia(f),hab=f&&(f.estado==='activa'||f.estado==='vencida');
+    var soc=esSocia(f),hab=f&&(f.estado==='activa'||f.estado==='prueba'||f.estado==='equipo'||f.estado==='vencida');
     var acc='<button data-a="mail">Enviar mail</button>';
     if(!soc){
       acc+=hab?'<button class="sec" data-a="venc">Cambiar vencimiento</button><button class="sec" data-a="deshab">Deshabilitar</button>':'<button class="sec" data-a="hab">Habilitar a mano</button>';
