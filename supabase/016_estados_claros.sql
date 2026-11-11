@@ -1,13 +1,13 @@
 -- Pimpa: estados claros en /socias + orden fijo. (10 nov 2026)
 -- Mismas columnas que antes (CREATE OR REPLACE), cambia cómo se calcula "estado" y el orden.
 -- Estados:
---   equipo               socias (founder/cofounder) y Caro, Fati: acceso permanente, no pagan
---   activa               acceso vigente (pagó: por Mercado Pago automático o por link a mano y la habilitó Cecilia)
+--   socia                Jose y Cecilia (founder/cofounder): licencia permanente
+--   aliada               Caro y Fati: licencia free
+--   activa               acceso vigente (pagó: Mercado Pago automático, o link a mano y la habilitó Cecilia)
 --   vencida              tuvo acceso y venció
 --   pago_sin_completar   empezó una orden en Mercado Pago y no la completó
---   entro                hizo login con Google SIN haberse anotado en la lista (no tiene acceso ni empezó a pagar)
---   prelanzamiento       se anotó antes del aviso "Ahora es directo" (cuando todavía no se podía pagar), haya entrado o no
---   anotada              se anotó después de ese aviso (ya podía pagar) y no pagó, haya entrado o no
+--   prelanzamiento       Inscripta pre-lanzamiento: apareció (se anotó o hizo login) antes del aviso "Ahora es directo"
+--   anotada              Inscripta post-lanzamiento: apareció después de ese aviso y no pagó
 -- Orden: por orden de entrada (la más antigua primero); al final, siempre: Caro, Fati, Jose y Cecilia (última).
 -- (Aplicada en Supabase como migración "estados_claros".)
 
@@ -52,12 +52,12 @@ begin
     left join public.allowed_emails a on a.email = b.e
   )
   select x.e, coalesce(x.prof, false), x.cup, x.anot, x.rl, (x.hab and not x.vencida),
-    case when x.rl in ('founder', 'cofounder') or x.pos is not null then 'equipo'
+    case when x.rl in ('founder', 'cofounder') then 'socia'
+         when x.pos is not null then 'aliada'
          when x.hab and x.vencida then 'vencida'
          when x.hab then 'activa'
          when x.pago_ini is not null then 'pago_sin_completar'
-         when x.anot is null and x.entro then 'entro'
-         when x.anot is not null and fin_pre is not null and x.anot < fin_pre then 'prelanzamiento'
+         when x.primera is not null and fin_pre is not null and x.primera < fin_pre then 'prelanzamiento'
          else 'anotada' end,
     x.nent,
     greatest(x.ult_login, x.ult_ing),

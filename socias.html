@@ -173,7 +173,7 @@
   function dia(f){var d=new Date(f);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'})}
   function plata(n){return '$'+Number(n).toLocaleString('es-AR')}
 
-  var ESTADO={prelanzamiento:['Inscripta pre-lanzamiento','pend'],anotada:['Inscripta','pend'],entro:['Entró sin inscribirse','neu'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],equipo:['Equipo','ok'],vencida:['Vencida','err']};
+  var ESTADO={prelanzamiento:['Inscripta pre-lanzamiento','pend'],anotada:['Inscripta post-lanzamiento','pend'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],socia:['Socia','ok'],aliada:['Aliada','neu'],vencida:['Vencida','err']};
   var PLANTXT={mensual:'1 mes',trimestral:'3 meses',anual:'Anual'};
   var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
   var MAILNOM={listo:'Tu lugar está listo',confirmado:'Está confirmado tu acceso',aviso:'Ahora es directo',carrito:'Carrito abandonado'};
@@ -204,7 +204,7 @@
   }
 
   /* ---------- Lista de personas ---------- */
-  var FILTROS=[['todas','Todas'],['prelanzamiento','Inscriptas pre-lanzamiento'],['anotada','Inscriptas'],['pago_sin_completar','Pago sin completar'],['entro','Entraron sin inscribirse'],['activa','Activas'],['equipo','Equipo'],['vencida','Vencidas']];
+  var FILTROS=[['todas','Todas'],['prelanzamiento','Inscriptas pre-lanzamiento'],['anotada','Inscriptas post-lanzamiento'],['pago_sin_completar','Pago sin completar'],['activa','Activas'],['vencida','Vencidas'],['aliada','Aliadas'],['socia','Socias']];
   function visibles(){
     return datos.filter(function(f){
       if(filtro!=='todas'&&f.estado!==filtro)return false;
@@ -448,7 +448,7 @@
     $('fi-mail').textContent=m;
     var e=f?(ESTADO[f.estado]||[f.estado,'pend']):['',''];
     $('fi-est').innerHTML=f?'<span class="tag '+e[1]+'">'+e[0]+'</span>':'';
-    var soc=esSocia(f),hab=f&&(f.estado==='activa'||f.estado==='equipo'||f.estado==='vencida');
+    var soc=esSocia(f),hab=f&&(f.estado==='activa'||f.estado==='aliada'||f.estado==='vencida');
     var acc='<button data-a="mail">Enviar mail</button>';
     if(!soc){
       acc+=hab?'<button class="sec" data-a="venc">Cambiar vencimiento</button><button class="sec" data-a="deshab">Deshabilitar</button>':'<button class="sec" data-a="hab">Habilitar a mano</button>';
