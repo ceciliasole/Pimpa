@@ -701,6 +701,7 @@ h1{font-family:var(--font-display);font-size:1.7rem;font-weight:600;margin:0;let
 
 .map{width:100%;display:grid;gap:24px}
 .grp h2{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:0 0 10px}
+.grp-sub h2{color:var(--vowel)}
 .lvgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .lvc{display:flex;flex-direction:column;gap:8px;align-items:flex-start;justify-content:space-between;text-align:left;min-height:88px;padding:12px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-size:1rem;font-weight:600;cursor:pointer}
 .lvc:disabled{opacity:.55;cursor:not-allowed}
@@ -1648,7 +1649,7 @@ var FIRST={
  ll:[['lluvia','🌧️'],['llave','🔑'],['llama','🦙']],
  ch:[['chocolate','🍫'],['choclo','🌽'],['chancho','🐷'],['chaleco','🦺'],['chupetín','🍭']],
  q:[['queso','🧀'],['quiosco','🏪']],
- y:[['yoyó','🪀'],['yate','⛵'],['yema','🥚'],['yogur','🥣'],['yerba','🌿']],
+ y:[['yoyó','🪀'],['yema','🥚'],['yogur','🥣'],['yerba','🌿']],
  z:[['zapato','👟'],['zorro','🦊'],['zanahoria','🥕'],['zapallo','🎃']]
 };
 /* Palabras para leer: [palabra, sílabas, dibujo]. Solo sílabas CV o vocal sola.
@@ -1667,7 +1668,7 @@ var WORDS=[
  ['sapito',['sa','pi','to'],'🐸'],['maleta',['ma','le','ta'],'🧳'],
  ['banana',['ba','na','na'],'🍌'],['moneda',['mo','ne','da'],'🪙'],['camino',['ca','mi','no'],'🛣️'],['conejo',['co','ne','jo'],'🐰'],
  ['gato',['ga','to'],'🐱'],['vaca',['va','ca'],'🐄'],['rosa',['ro','sa'],'🌹'],['vela',['ve','la'],'🕯️'],['queso',['que','so'],'🧀'],
- ['yate',['ya','te'],'⛵'],['pera',['pe','ra'],'🍐'],['yema',['ye','ma'],'🥚'],
+ ['pera',['pe','ra'],'🍐'],['yema',['ye','ma'],'🥚'],
  ['zapato',['za','pa','to'],'👟'],['camisa',['ca','mi','sa'],'👕'],
  /* 2 nov: más palabras con foto para que los niveles no repitan siempre las mismas (a validar con Jo) */
  ['ballena',['ba','lle','na'],'🐳'],['caballo',['ca','ba','llo'],'🐴'],['chaleco',['cha','le','co'],'🦺'],['cuchara',['cu','cha','ra'],'🥄'],['gallina',['ga','lli','na'],'🐔'],['gorila',['go','ri','la'],'🦍'],['gusano',['gu','sa','no'],'🪱'],['jirafa',['ji','ra','fa'],'🦒'],['jugo',['ju','go'],'🧃'],['leche',['le','che'],'🥛'],['lechuga',['le','chu','ga'],'🥬'],['llama',['lla','ma'],'🦙'],['llave',['lla','ve'],'🔑'],['loro',['lo','ro'],'🦜'],['noche',['no','che'],'🌃'],['paloma',['pa','lo','ma'],'🕊️'],['payaso',['pa','ya','so'],'🤡'],['rana',['ra','na'],'🐸'],['regalo',['re','ga','lo'],'🎁'],['silla',['si','lla'],'🪑'],['taza',['ta','za'],'☕'],['tijera',['ti','je','ra'],'✂️'],['toro',['to','ro'],'🐂'],['yoyó',['yo','yo'],'🪀'],['zapallo',['za','pa','llo'],'🎃']
@@ -2820,7 +2821,7 @@ function renderCamino(){
     }).join('')+'</div><div class="row">'+pre+'</div>'+
       '<button class="btn" id="go" type="button"'+(sel.length<(g2==='voc'?1:2)?' disabled':'')+'>Empezar</button>';
   }else if(n.s==='list'){
-    h=topbar(esc(n.title))+(n.groups?n.groups.map(function(g){return '<section class="grp"><h2>'+esc(g.t)+'</h2><div class="lvgrid">'+g.ids.filter(function(id){return LV[id];}).map(function(id){return lvBtn(LV[id]);}).join('')+'</div></section>';}).join(''):'<div class="lvgrid">'+n.ids.map(function(id){return lvBtn(LV[id]);}).join('')+'</div>');
+    h=topbar(esc(n.title))+(n.groups?n.groups.map(function(g){return '<section class="grp grp-sub"><h2>'+esc(g.t)+'</h2><div class="lvgrid">'+g.ids.filter(function(id){return LV[id];}).map(function(id){return lvBtn(LV[id]);}).join('')+'</div></section>';}).join(''):'<div class="lvgrid">'+n.ids.map(function(id){return lvBtn(LV[id]);}).join('')+'</div>');
   }else if(n.s==='sil'){
     h=topbar('Sílabas')+'<div class="hgrid">'+
       hcard('sil-a','Aprendo sílabas','',null,'')+
@@ -3424,7 +3425,7 @@ function vBuild(area,it,auto){
 var lessonT=[],lessonTok=0;
 function clearLesson(){lessonTok++;lessonT.forEach(clearTimeout);lessonT=[];}
 function lt(fn,ms){var id=setTimeout(fn,ms);lessonT.push(id);return id;}
-var LESSONW={m:'manzana',p:'pelota',t:'tomate',l:'luna',s:'sol',f:'frutilla',r:'ratón',g:'gato',v:'vaca',ll:'lluvia',ch:'chocolate',q:'queso',y:'yate',z:'zapato'};
+var LESSONW={m:'manzana',p:'pelota',t:'tomate',l:'luna',s:'sol',f:'frutilla',r:'ratón',g:'gato',v:'vaca',ll:'lluvia',ch:'chocolate',q:'queso',y:'yogur',z:'zapato'};
 function lessonWord(c){var n=LESSONW[c];return FIRST[c].filter(function(w){return w[0]===n;})[0]||FIRST[c][0];}
 function drawLesson(){
   clearLesson();stopSpeech();
