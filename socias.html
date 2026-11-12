@@ -176,7 +176,7 @@
   var ESTADO={prelanzamiento:['Inscripta pre-lanzamiento','pend'],anotada:['Inscripta post-lanzamiento','pend'],pago_sin_completar:['Pago sin completar','err'],activa:['Activa','ok'],socia:['Socia','ok'],aliada:['Aliada','neu'],vencida:['Vencida','err']};
   var PLANTXT={mensual:'1 mes',trimestral:'3 meses',anual:'Anual'};
   var ROL={founder:'Fundadora',cofounder:'Cofundadora',educador:'Educadora',familia:'Familia'};
-  var MAILNOM={listo:'Tu lugar está listo',confirmado:'Está confirmado tu acceso',aviso:'Ahora es directo',carrito:'Carrito abandonado'};
+  var MAILNOM={listo:'Tu lugar está listo',confirmado:'Está confirmado tu acceso',aviso:'Ahora es directo',invitacion:'Invitación de prueba (educadoras)',carrito:'Carrito abandonado'};
   var REL={madre:'Mamá',padre:'Papá',abuela_o:'Abuela/o',otro_familiar:'Otro familiar',docente:'Docente',profesional:'Profesional',otro:'Otro'};
 
   function esSocia(f){return f&&(f.rol==='founder'||f.rol==='cofounder')}
@@ -308,7 +308,7 @@
     if(!emails.length)return;
     var p=persona(emails[0]);
     var def=(emails.length===1&&p&&p.estado==='activa')?'confirmado':'listo';
-    var opts=['listo','confirmado','aviso'].map(function(k){return '<option value="'+k+'"'+(k===def?' selected':'')+'>'+esc(MAILNOM[k])+'</option>'}).join('');
+    var opts=['listo','confirmado','aviso','invitacion'].map(function(k){return '<option value="'+k+'"'+(k===def?' selected':'')+'>'+esc(MAILNOM[k])+'</option>'}).join('');
     modal('Enviar mail a '+(emails.length===1?emails[0]:emails.length+' personas'),
       (emails.length>1?listaHTML(emails):'')
       +'<label class="f" for="mo-sel">¿Cuál mail?</label><select id="mo-sel">'+opts+'</select>'

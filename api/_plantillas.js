@@ -102,6 +102,37 @@ function carrito(envioId, codigo) {
   return { subject: 'Tu lugar en Pimpa te sigue esperando \ud83d\udc9b', html, text };
 }
 
+// Invitación de prueba para educadoras/profesionales (acceso de un mes, sin descuentos ni promesas).
+function invitacion(envioId) {
+  const entrar = BASE + '/entrar?e=' + envioId;
+  const html = marco('Tu acceso a Pimpa ya está listo 💛',
+    '<p style="margin:0 0 14px">¡Hola!</p>'
+    + '<p style="margin:0 0 16px">Gracias por querer probar Pimpa. Ya te habilitamos el acceso.</p>'
+    + '<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFEDE9" style="border-radius:14px;margin:0 0 18px"><tr><td style="padding:16px 18px;font-size:16px;line-height:1.55;color:#2d3a4a">'
+    + '<strong>Qué es Pimpa.</strong> Una app de ejercicios de lectoescritura y conciencia fonológica para chicos con síndrome de Down, dislexia o retraso madurativo, pensada para hacer en casa con la familia. La armamos con una psicopedagoga, que define el contenido pedagógico.</td></tr></table>'
+    + '<p style="margin:0 0 10px"><strong>Cómo entrar:</strong></p>'
+    + '<ol style="margin:0 0 20px;padding-left:20px"><li style="margin-bottom:6px">Abrí <a href="' + entrar + '">pimpa.impactese.com</a>.</li>'
+    + '<li style="margin-bottom:6px">Tocá <strong>Entrar con Google</strong> y elegí este mismo Gmail. Con otra cuenta te va a pedir un pago.</li>'
+    + '<li>Elegí con quién trabajamos hoy y empezá.</li></ol>'
+    + '<div style="margin:0 0 22px">' + boton(entrar, 'Entrar a Pimpa') + '</div>'
+    + '<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#E8F6EF" style="border-radius:14px;margin:0 0 18px"><tr><td style="padding:16px 18px;font-size:15px;line-height:1.55;color:#2d3a4a">'
+    + '<strong>Cómo funciona:</strong><ul style="margin:8px 0 0;padding-left:18px">'
+    + '<li style="margin-bottom:4px">Tenés el <strong>modo educador</strong>, distinto al de las familias: podés crear un perfil por cada chico, ver el progreso de cada uno y saltear etapas del camino.</li>'
+    + '<li style="margin-bottom:4px">Los ejercicios van por niveles: letras y sonidos, sílabas, palabras y trazo de letras, entre otros. “Mi camino” ordena el avance, y también podés elegir qué letra o grupo practicar.</li>'
+    + '<li>Los chicos juntan estrellas y premios con Pimpa, la mascota.</li></ul></td></tr></table>'
+    + '<p style="margin:0 0 14px"><strong>Tu acceso</strong> es de prueba y dura un mes. No tenés que hacer nada para que termine. Si te sirve, después te contamos cómo es el programa de embajadoras.</p>'
+    + '<p style="margin:0 0 14px">Si algo no funciona o tenés una duda, respondé este mail o escribinos a <a href="mailto:pimpa@impactese.com">pimpa@impactese.com</a>.</p>'
+    + '<p style="margin:0 0 14px;font-size:14px;color:#555555">Pimpa es un complemento y no reemplaza una terapia ni a un profesional.</p>');
+  const text = '¡Hola!\n\nGracias por querer probar Pimpa. Ya te habilitamos el acceso.\n\n'
+    + 'Qué es Pimpa: una app de ejercicios de lectoescritura y conciencia fonológica para chicos con síndrome de Down, dislexia o retraso madurativo, pensada para hacer en casa con la familia. La armamos con una psicopedagoga, que define el contenido pedagógico.\n\n'
+    + 'Cómo entrar:\n1. Abrí ' + entrar + '\n2. Tocá "Entrar con Google" y elegí este mismo Gmail. Con otra cuenta te va a pedir un pago.\n3. Elegí con quién trabajamos hoy y empezá.\n\n'
+    + 'Cómo funciona:\n- Tenés el modo educador, distinto al de las familias: podés crear un perfil por cada chico, ver el progreso de cada uno y saltear etapas del camino.\n'
+    + '- Los ejercicios van por niveles: letras y sonidos, sílabas, palabras y trazo de letras, entre otros. "Mi camino" ordena el avance, y también podés elegir qué letra o grupo practicar.\n- Los chicos juntan estrellas y premios con Pimpa, la mascota.\n\n'
+    + 'Tu acceso es de prueba y dura un mes. No tenés que hacer nada para que termine. Si te sirve, después te contamos cómo es el programa de embajadoras.\n\n'
+    + 'Si algo no funciona o tenés una duda, respondé este mail o escribinos a pimpa@impactese.com.\n\nPimpa es un complemento y no reemplaza una terapia ni a un profesional.\n\nCon cariño,\nEquipo Pimpa';
+  return { subject: 'Tu acceso a Pimpa ya está listo 💛', html, text };
+}
+
 // Aviso a quienes se anotaron cuando había que mandar el comprobante: ahora es directo.
 function aviso(envioId) {
   const html = marco('Ahora es mucho más fácil activar Pimpa 💛',
@@ -119,4 +150,4 @@ function aviso(envioId) {
   return { subject: 'Ahora activar Pimpa es directo: te esperamos 💛', html, text };
 }
 
-module.exports = { listo, confirmado, carrito, aviso, datosCupon };
+module.exports = { listo, confirmado, carrito, aviso, invitacion, datosCupon };

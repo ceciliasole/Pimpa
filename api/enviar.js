@@ -1,16 +1,16 @@
 // Envía los mails de Pimpa por Resend. Solo lo puede usar una socia logueada (founder o cofounder):
 // el permiso lo chequea la base (es_socia) con el token de quien llama, sin claves de administrador.
 // Variables de Vercel: RESEND_API_KEY (obligatoria), MAIL_FROM (opcional).
-const { listo, confirmado, carrito, aviso, datosCupon } = require('./_plantillas');
+const { listo, confirmado, carrito, aviso, invitacion, datosCupon } = require('./_plantillas');
 
 const SB_URL = process.env.SB_URL || 'https://fhzqiuvubcytuewwktyf.supabase.co';
 const SB_KEY = process.env.SB_KEY || 'sb_publishable__sz2tzDsQH0If8jjuUGqvg_B_n3taZ9';
 const FROM = process.env.MAIL_FROM || 'Pimpa <pimpa@impactese.com>';
 const REPLY_TO = 'pimpa@impactese.com';
-const PLANTILLAS = { listo, confirmado, carrito, aviso };
+const PLANTILLAS = { listo, confirmado, carrito, aviso, invitacion };
 
 // 'listo' lleva el precio según tenga código o no. Se busca en la lista de espera (solo socias).
-function armar(plantilla, id, codigo, desc) { return plantilla === 'listo' ? listo(id, codigo, desc) : (plantilla === 'carrito' ? carrito(id, codigo) : (plantilla === 'aviso' ? aviso(id) : confirmado(id))); }
+function armar(plantilla, id, codigo, desc) { return plantilla === 'listo' ? listo(id, codigo, desc) : (plantilla === 'carrito' ? carrito(id, codigo) : (plantilla === 'aviso' ? aviso(id) : (plantilla === 'invitacion' ? invitacion(id) : confirmado(id)))); }
 
 async function rpc(nombre, args, jwt) {
   const r = await fetch(SB_URL + '/rest/v1/rpc/' + nombre, {
